@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#028ad7</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorTabGray">#666666</color>
+
+    <!-- 主色调 -->
+    <color name="colorMain">#3b5999</color>
+    <!-- 辅助色 -->
+    <color name="colorSub">#ff7300</color>
+    <!-- 背景色 -->
+    <color name="main_background">#f5f5f5</color>
+    <!-- 分割线颜色 -->
+    <color name="divider_color">#e6e6e6</color>
+    <!-- 字体颜色 -->
+    <color name="text_color">#4c4c4c</color>
+    <!-- 辅助字体颜色 -->
+    <color name="text_color_sub">#999999</color>
+
+    <color name="goods_recommend_backcolor">#F5F5F5</color>
+    <color name="goods_categroy_list_textcolor">#41A7E0</color>
+    <color name="viewpager_bgcolor">#EFF2F4</color>
+    <color name="tab_bgcolor">#00C3E4</color>
+
+    <color name="gplus_color_1">#3e802f</color>
+    <color name="gplus_color_2">#f4b400</color>
+    <color name="gplus_color_3">#427fed</color>
+    <color name="gplus_color_4">#b23424</color>
+
+    <color name="about_tab_bgcolor">#D3E8F6</color>
+    <color name="about_tab_bgcolor_selected">#A5D8F7</color>
+
+    <!-- drawable -->
+    <drawable name="transparent">@color/transparent</drawable>
+    <drawable name="half_transparent">#d9d9d9</drawable>
+    <drawable name="light_grey">#f5f5f5</drawable>
+    <drawable name="divider">@color/divider_color</drawable>
+</resources>

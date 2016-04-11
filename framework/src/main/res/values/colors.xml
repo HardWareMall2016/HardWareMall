@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#ffffffff</color>
+    <color name="black">#ff000000</color>
+    <!-- 蓝色 -->
+    <color name="blue">#20a6fb</color>
+    <!--<color name="blue_pressed">#1b8dd6</color>-->
+    <!-- 状态栏颜色 -->
+    <color name="status_bar_bg_color">@color/blue</color>
+    <!-- 状态栏颜色 -->
+    <color name="action_bar_bg_color">@color/blue</color>
+    <!-- 分割线颜色 -->
+    <color name="divider_color">#dddddd</color>
+    <color name="transparent">#00000000</color>
+    <!-- drawable -->
+    <drawable name="transparent">@color/transparent</drawable>
+    <color name="main_background">#f5f5f5</color>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="WheelView">
+        <attr name="divierDrawable" format="reference" />
+        <attr name="mainTextColor" format="color" />
+        <attr name="mainTextSize" format="dimension" />
+        <attr name="secondTextColor" format="color" />
+        <attr name="secondTextSize" format="dimension" />
+        <attr name="thirdTextColor" format="color" />
+        <attr name="thirdTextSize" format="dimension" />
+        <attr name="lableTextColor" format="color" />
+        <attr name="lableTextSize" format="dimension" />
+        <attr name="centerDrawable" format="reference" />
+        <attr name="shadowColor" format="color" />
+    </declare-styleable>
+</resources>

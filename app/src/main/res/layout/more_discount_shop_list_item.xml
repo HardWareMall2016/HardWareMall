@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="1234"
+        android:textColor="@color/black"
+        android:textSize="@dimen/body_text_small" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/businesssphere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="经营模式"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text_small" />
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="距离你2.035公里"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text_small" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/createDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="1年"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text_small" />
+
+        <TextView
+            android:id="@+id/productnumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@+id/createDate"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="件产品 |"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text_small" />
+
+        <TextView
+            android:id="@+id/orderproduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@+id/productnumber"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="位买家"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text_small" />
+
+        <TextView
+            android:id="@+id/companyaddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="上海"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text_small" />
+    </RelativeLayout>
+
+</LinearLayout>

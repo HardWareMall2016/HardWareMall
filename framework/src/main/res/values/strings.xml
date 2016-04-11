@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Framework</string>
+    <string name="network_timeout">请求超时，请重试!</string>
+    <string name="network_disconnect">没有可用网络!</string>
+    <string name="request_canceled">取消请求!</string>
+    <string name="go_back">返回</string>
+</resources>

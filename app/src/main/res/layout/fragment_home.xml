@@ -1,0 +1,234 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f5f5f5f5"
+    android:orientation="vertical"
+    tools:context="com.hardware.ui.main.HomeFragment">
+
+    <RelativeLayout
+        android:id="@+id/student_frag_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="?attr/actionBarSize"
+            android:text="五金商城"
+            android:textColor="@color/blue"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:minHeight="?attr/actionBarSize"
+            android:src="@drawable/icon_message" />
+    </RelativeLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="180dip">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="20dip"
+                    android:layout_gravity="bottom"
+                    android:background="#20000000"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <!-- <TextView
+                         android:id="@+id/title"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center_horizontal"
+                         android:layout_marginTop="3dip"
+                         android:text="这是标题"
+                         android:textColor="@android:color/white" />-->
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dip"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:id="@+id/dot1"
+                            android:layout_width="5dip"
+                            android:layout_height="5dip"
+                            android:layout_marginLeft="3dip"
+                            android:layout_marginRight="3dip"
+                            android:background="@drawable/dot_focused" />
+
+                        <View
+                            android:id="@+id/dot2"
+                            android:layout_width="5dip"
+                            android:layout_height="5dip"
+                            android:layout_marginLeft="3dip"
+                            android:layout_marginRight="3dip"
+                            android:background="@drawable/dot_normal" />
+
+                        <View
+                            android:id="@+id/dot3"
+                            android:layout_width="5dip"
+                            android:layout_height="5dip"
+                            android:layout_marginLeft="3dip"
+                            android:layout_marginRight="3dip"
+                            android:background="@drawable/dot_normal" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <com.hardware.view.MyGridView
+                android:id="@+id/home_gridView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="80dp"
+                android:numColumns="auto_fit"
+                android:stretchMode="columnWidth" />
+
+            <LinearLayout
+                android:id="@+id/setting_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white"
+                android:minHeight="@dimen/min_item_height"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="6"
+                    android:text="折扣特卖"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/sale_more"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/default_backgroud"
+                    android:text="更多"
+                    android:textColor="@color/text_color" />
+            </LinearLayout>
+
+            <com.hardware.view.MyGridView
+                android:id="@+id/home_special_offer_gridView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="80dp"
+                android:numColumns="3"
+                android:stretchMode="columnWidth" />
+
+            <LinearLayout
+                android:id="@+id/home_protype"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_white"
+                android:minHeight="@dimen/min_item_height"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="6"
+                    android:text="@string/home_protype_more"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/home_protype_more"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="更多"
+                    android:textColor="@color/text_color" />
+            </LinearLayout>
+
+            <com.hardware.view.MyGridView
+                android:id="@+id/home_protype_gridview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnWidth="80dp"
+                android:numColumns="3"
+                android:stretchMode="columnWidth" />
+
+            <LinearLayout
+                android:id="@+id/home_shop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_white"
+                android:minHeight="@dimen/min_item_height"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="6"
+                    android:text="人气店铺"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/home_shop_more"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="更多"
+                    android:textColor="@color/text_color" />
+            </LinearLayout>
+
+            <com.hardware.view.HorizontalListView
+                android:id="@+id/home_horizon_listview"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:background="@drawable/bg_white"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

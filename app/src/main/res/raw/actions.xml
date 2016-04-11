@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<app-settings>
+	<setting type="base_url">
+		<des>服务地址</des>
+		<value>http://121.43.111.133:50013/</value>
+	</setting>
+
+</app-settings>

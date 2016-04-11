@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 红色下边框 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- 第一层的颜色为纯红色 -->
+    <item>
+        <shape>
+            <solid android:color="@color/blue" />
+        </shape>
+    </item>
+    <!-- 第二层的颜色，也就是最上面的一层，因为第二层相对于View的底部上移一个dp所以第一层会露出一个dp的红色色所以给人一种只有底部边框的假象 -->
+    <item android:bottom="2dp"
+        >
+
+        <shape>
+            <solid android:color="#ffffff" />
+        </shape>
+    </item>
+</layer-list>

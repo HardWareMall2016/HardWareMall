@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 触摸模式按下时的背景图片 -->
+    <item android:drawable="@drawable/action_bar_icon_back_pressed" android:state_pressed="true"/>
+    <item android:drawable="@drawable/action_bar_icon_back_pressed" android:state_enabled="true" android:state_focused="true"/>
+    <!-- 获得焦点时的图片背景 -->
+    <item android:drawable="@drawable/action_bar_icon_back_pressed" android:state_focused="true"/>
+    
+    <!-- 没有焦点时的背景图片 -->
+    <item android:drawable="@drawable/action_bar_icon_back" android:state_enabled="true" android:state_window_focused="false"/>
+    <item android:drawable="@drawable/action_bar_icon_back" android:state_enabled="true"/>
+    
+</selector>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingLeft="10dp"
+    android:paddingTop="8dp">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/image"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="Name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/body_text_small" />
+
+    <TextView
+        android:id="@+id/businesssphere"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/name"
+        android:layout_below="@id/name"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="主营产品"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/body_text_small" />
+
+
+    <TextView
+        android:id="@+id/num_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/name"
+        android:layout_below="@id/businesssphere"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="1年"
+        android:textColor="@color/black"
+        android:textSize="@dimen/body_text_small" />
+
+    <TextView
+        android:id="@+id/companyaddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/name"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/num_info"
+        android:text="上海"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/body_text_small" />
+
+</RelativeLayout>

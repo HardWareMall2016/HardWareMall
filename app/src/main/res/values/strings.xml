@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">搜搜五金城</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--首页-->
+    <string name="sale_more">折扣特卖</string>
+    <string name="home_protype_more">热销单品</string>
+    <string name="home_shop_more_title">人气店铺商</string>
+</resources>

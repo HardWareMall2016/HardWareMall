@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@drawable/bg_white_small">
+
+        <ImageView
+            android:id="@+id/iv_home_protype_shop"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:src="@drawable/ic_launcher" />
+
+        <TextView
+            android:id="@+id/home_protype_shopname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_home_protype_shop"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxEms="6"
+            android:singleLine="true"
+            android:text="箭牌实木浴。。。。。"
+            android:textColor="@color/black"
+            android:textSize="@dimen/notes"/>
+
+        <TextView
+            android:id="@+id/home_protype_shop_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/home_protype_shopname"
+            android:gravity="center"
+            android:text="8729.0元"
+            android:textColor="#ff7300"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp" />
+</RelativeLayout>

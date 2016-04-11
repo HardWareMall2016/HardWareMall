@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <LinearLayout
+        android:id="@+id/student_frag_ll"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/detail_picture"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_dark_blue_underline"
+            android:gravity="center"
+            android:text="图文详情"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text" />
+        <TextView
+            android:id="@+id/detail_products"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="产品属性"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text" />
+        <TextView
+            android:id="@+id/detail_recommend"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="同店推荐"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/detail_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+</LinearLayout>

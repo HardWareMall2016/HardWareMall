@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<app-settings>
+
+    <setting-array index="0" type="root_path">
+        <des>应用程序相对sdcard的相对路径目录，所有的文件都存储在这个文件夹中</des>
+        <setting>
+            <value>android</value>
+        </setting>
+    </setting-array>
+
+    <setting-array index="0" type="com_m_common_json">
+        <des>业务数据sdcard缓存路径，相对root_path路径</des>
+        <setting>
+            <value>app_data</value>
+        </setting>
+    </setting-array>
+
+    <setting-array index="0" type="com_m_common_image">
+        <des>图片数据sdcard缓存路径，相对root_path路径</des>
+        <setting>
+            <value>app_image</value>
+        </setting>
+    </setting-array>
+
+    <setting type="crashlogenable">
+        <des>错误日志记录</des>
+        <value>true</value>
+    </setting>
+
+    <setting type="crashlog">
+        <des>错误日志目录</des>
+        <value>crashlog</value>
+    </setting>
+
+    <setting type="debug">
+        <des>APP是否是DEBUG模式</des>
+        <value>false</value>
+    </setting>
+
+    <!--<setting type="fragment_helper">
+        <des>Fragment帮助类</des>
+        <value>com.zhan.vip_teacher.utils.FragmentHelper</value>
+    </setting>-->
+
+    <!--<setting type="activity_helper">
+        <des>Activity帮助类</des>
+        <value>org.aisen.weibo.sina.ui.activity.basic.AisenActivityHelper</value>
+    </setting>-->
+
+
+</app-settings>
