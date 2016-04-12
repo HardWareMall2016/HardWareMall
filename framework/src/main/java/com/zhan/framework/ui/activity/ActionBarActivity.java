@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,7 +30,7 @@ public abstract class ActionBarActivity extends AppCompatActivity{
     /*action_bar_layout*/
     private View mActionbarLayout;
     private View mDefActionbarContent;
-    private TextView mbtnBack;
+    private ImageView mbtnBack;
     private TextView mTvTtile;
     private LinearLayout mActionBarRightContent;
     private TextView mTvMenu;
@@ -231,14 +232,14 @@ public abstract class ActionBarActivity extends AppCompatActivity{
 
         mDefActionbarContent=mActionbarLayout.findViewById(R.id.def_content);
 
-        mbtnBack =(TextView)mActionbarLayout.findViewById(R.id.go_back);
+        mbtnBack =(ImageView)mActionbarLayout.findViewById(R.id.go_back);
         mbtnBack.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 onBackPressed();
             }
         });
-        mbtnBack.setText(R.string.go_back);
+        //mbtnBack.setText(R.string.go_back);
         mbtnBack.setVisibility(mShowBackIcon ? View.VISIBLE : View.GONE);
 
         mTvTtile=(TextView)mActionbarLayout.findViewById(R.id.title);

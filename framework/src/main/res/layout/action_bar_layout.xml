@@ -9,29 +9,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<ImageView
-            android:id="@+id/img_back"
+        <ImageView
+            android:id="@+id/go_back"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/action_bar_icon_back_selector" />-->
+            android:scaleType="center"
+            android:background="@drawable/default_bg"
+            android:src="@drawable/action_bar_icon_back_selector" />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/go_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
             android:gravity="center_vertical"
             android:background="@drawable/action_bar_icon_back_selector"
             android:textColor="@drawable/text_color_white_selector"
-            android:textSize="18sp" />
+            android:textSize="18sp" />-->
 
         <TextView
             android:id="@+id/title"
@@ -40,7 +42,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <LinearLayout
@@ -50,8 +52,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
             android:orientation="horizontal" />
 
         <TextView
@@ -61,10 +63,10 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
             android:gravity="center"
-            android:textColor="@drawable/text_color_white_selector"
+            android:textColor="@drawable/text_color_black_selector"
             android:textSize="18sp" />
         <!-- android:textColor="@drawable/text_color_dark_red_selector" -->
 
