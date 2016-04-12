@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -17,9 +18,12 @@ import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshGridViewWithHeaderAndFooter;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
+import com.hardware.base.Constants;
+import com.hardware.bean.ProductContent;
 import com.hardware.bean.ShopProductsListResponse;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.ui.activity.GoodsListActivity;
+import com.hardware.ui.products.ProductDetailFragment;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -41,7 +45,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/4/8.
  */
-public class ShopHomePageFragment extends ABaseFragment {
+public class ShopHomePageFragment extends ABaseFragment implements AdapterView.OnItemClickListener {
     private final static String ARG_KEY_SHOP_ID = "shopId";
     private final static String ARG_KEY_SHOP_IMG = "shopImg";
 
@@ -124,6 +128,7 @@ public class ShopHomePageFragment extends ABaseFragment {
         args.add(ARG_KEY_SHOP_IMG, shopImg);
         FragmentContainerActivity.launch(from, ShopHomePageFragment.class, args);
     }
+
 
     private class Product{
         private int Id;
@@ -208,8 +213,8 @@ public class ShopHomePageFragment extends ABaseFragment {
                 startActivity(intent);
             }
         });
-
         mGridView.addHeaderView(header);
+        mGridView.setOnItemClickListener(this);
 
         refreshViews();
         mPullRefreshGridView.setAdapter(mAdpater);
@@ -436,6 +441,13 @@ public class ShopHomePageFragment extends ABaseFragment {
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ProductContent content = new ProductContent();
+        content.setId(mProducts.get((int) id).getId());
+        content.setDistrict(Constants.REGION_NAME);
+        ProductDetailFragment.launch(getActivity(), content);
+    }
 
     private void setTabSelected(TextView tab,boolean isSelelcted,int selDrawableRes,int unSelDrawableRes){
         int selColor=getResources().getColor(R.color.blue);
@@ -503,7 +515,6 @@ public class ShopHomePageFragment extends ABaseFragment {
         TextView price;
         TextView salseNum;
     }
-
 
     private String getTimeSpanStr(String startTime) {
         String diff = "";
