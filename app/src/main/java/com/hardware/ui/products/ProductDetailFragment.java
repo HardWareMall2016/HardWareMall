@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
+import com.hardware.base.Constants;
 import com.hardware.bean.ProductContent;
 import com.hardware.bean.ProductsDetailResponse;
 import com.hardware.bean.ShopRecommendListRespon;
@@ -102,6 +104,7 @@ public class ProductDetailFragment extends ABaseFragment {
 
     private ProductContent content;
     private int id;
+    private int shopid ;
     private String district;
     private int RecommendFrameLayoutfalg = 0 ;
     private List<ShopRecommendListRespon.MessageEntity> mRecommendList = new ArrayList<>();
@@ -182,6 +185,7 @@ public class ProductDetailFragment extends ABaseFragment {
                                 });
 
                                 mProductDetailPrictue.setText(response.getMessage().getDescription());
+                                shopid = response.getMessage().getShopid();
 
                             }
                             break;
@@ -195,17 +199,16 @@ public class ProductDetailFragment extends ABaseFragment {
             }, HttpRequestUtils.RequestType.GET);
         }else{
             RequestParams requestParams = new RequestParams();
-            requestParams.put("shopid", id);
+            requestParams.put("shopid", shopid);
             requestParams.put("page", 1);
             startRequest(ApiConstants.PRODUCTS_SHOPSPRODUCTS, requestParams, new HttpRequestHandler() {
                 @Override
                 public void onRequestFinished(ResultCode resultCode, String result) {
                     switch (resultCode) {
                         case success:
-                            //tempProducts.clear();
                             ShopRecommendListRespon response = ToolsHelper.parseJson(result, ShopRecommendListRespon.class);
                             if (response != null && response.getFlag() == 1 && response.getMessage() != null) {
-                                List<Recommend> tempProducts = new LinkedList<>();
+                                final List<Recommend> tempProducts = new LinkedList<>();
                                 for (ShopRecommendListRespon.MessageEntity messageEntity : response.getMessage()) {
                                     Recommend recommend = new Recommend();
                                     recommend.setId(messageEntity.getId());
@@ -216,6 +219,15 @@ public class ProductDetailFragment extends ABaseFragment {
                                     tempProducts.add(recommend);
                                 }
                                 mRecommengGridView.setAdapter(new RecommendAdpater(tempProducts));
+                                mRecommengGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        ProductContent content = new ProductContent();
+                                        content.setId(tempProducts.get(position).getId());
+                                        content.setDistrict(Constants.REGION_NAME);
+                                        ProductDetailFragment.launch(getActivity(), content);
+                                    }
+                                });
                             }
                             break;
                         case canceled:

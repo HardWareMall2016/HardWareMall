@@ -337,8 +337,10 @@ public class ShopHomePageFragment extends ABaseFragment {
             case R.id.collect_shop:
                 break;
             case R.id.products_type:
+                ProductsTypeFragment.launch(getActivity(), mShopId);
                 break;
             case R.id.company_info:
+                CompangyInfoFragment.launch(getActivity(), mShopId);
                 break;
         }
     }

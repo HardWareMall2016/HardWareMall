@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
+import com.hardware.base.Constants;
 import com.hardware.bean.HomeProductsBean;
 import com.hardware.bean.ProductContent;
 import com.hardware.ui.home.HomeListFragment;
@@ -115,10 +116,9 @@ public class HomeFragment extends ABaseFragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int priductId = mSaleList.get(position).getId() ;
-                String district = "江苏省南通市启东市";
                 ProductContent content = new ProductContent();
                 content.setId(priductId);
-                content.setDistrict(district);
+                content.setDistrict(Constants.REGION_NAME);
                 ProductDetailFragment.launch(getActivity(), content);
             }
         });
@@ -126,10 +126,9 @@ public class HomeFragment extends ABaseFragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int priductId = mProTypeList.get(position).getId() ;
-                String district = "江苏省南通市启东市";
                 ProductContent content = new ProductContent();
                 content.setId(priductId);
-                content.setDistrict(district);
+                content.setDistrict(Constants.REGION_NAME);
                 ProductDetailFragment.launch(getActivity(), content);
 
             }
@@ -145,7 +144,7 @@ public class HomeFragment extends ABaseFragment{
     @Override
     public void requestData() {
         RequestParams requestParams=new RequestParams();
-        requestParams.put("regionName","江苏省南通市");
+        requestParams.put("regionName", Constants.REGION_NAME);
         startRequest(ApiConstants.MOBILE_HOME_PRODUCTS_LIST, requestParams, new BaseHttpRequestTask<HomeProductsBean>() {
             @Override
             public HomeProductsBean parseResponseToResult(String content) {
