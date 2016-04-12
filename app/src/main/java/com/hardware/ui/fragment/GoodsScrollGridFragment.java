@@ -1,6 +1,7 @@
-package com.hardware.ui.activity;
+package com.hardware.ui.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,30 +16,58 @@ import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.common.Model;
-import com.hardware.ui.fragment.ProTypeFragment;
+import com.zhan.framework.component.container.FragmentArgs;
+import com.zhan.framework.component.container.FragmentContainerActivity;
+import com.zhan.framework.support.inject.ViewInject;
+import com.zhan.framework.ui.fragment.ABaseFragment;
 
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class GoodsScrollGridActivity extends MBaseActivity {
+public class GoodsScrollGridFragment extends ABaseFragment {
 
     private String[] list;
     private TextView[] tvList;
     private View[] views;
     private LayoutInflater inflater;
-    private ScrollView scrollView;
     private ViewPager viewpager;
     private int currentItem = 0;
     private ShopAdapter shopAdapter;
+    private final static String ARG_KEY = "TITLE";
+    private String mTitle;
+    @ViewInject(id = R.id.tools_scrlllview)
+    ScrollView scrollView;
+
+
+    public static void launch(Activity from, String mTitle) {
+        FragmentArgs args = new FragmentArgs();
+        args.add(ARG_KEY, mTitle);
+        FragmentContainerActivity.launch(from, GoodsScrollGridFragment.class, args, false);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scrollgrid);
-        ButterKnife.bind(this);
-        scrollView = (ScrollView) findViewById(R.id.tools_scrlllview);
-        shopAdapter = new ShopAdapter(getSupportFragmentManager());
-        inflater = LayoutInflater.from(this);
+        mTitle = savedInstanceState == null ? (String) getArguments().getSerializable(ARG_KEY)
+                : (String) savedInstanceState.getSerializable(ARG_KEY);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(ARG_KEY, mTitle);
+    }
+
+    @Override
+    protected int inflateContentView() {
+        return R.layout.activity_scrollgrid;
+    }
+
+    @Override
+    protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
+        super.layoutInit(inflater, savedInstanceSate);
+        getActivity().setTitle(mTitle);
+        shopAdapter = new ShopAdapter(getChildFragmentManager());
+        this.inflater = inflater;
         showToolsView();
         initPager();
     }
@@ -163,7 +192,7 @@ public class GoodsScrollGridActivity extends MBaseActivity {
         int id = v.getId();
         switch (id) {
             case R.id.img_back:
-                finish();
+//                finish();
                 break;
         }
     }
