@@ -3,6 +3,8 @@ package com.hardware.ui.shop;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
@@ -13,6 +15,7 @@ import com.zhan.framework.component.container.FragmentArgs;
 import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestHandler;
 import com.zhan.framework.network.HttpRequestUtils;
+import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 import com.zhan.framework.utils.ToastUtils;
 
@@ -21,6 +24,9 @@ import com.zhan.framework.utils.ToastUtils;
  */
 public class ProductsTypeFragment extends ABaseFragment{
     private final static String ARG_KEY_SHOP_ID = "shopId";
+
+    @ViewInject(id = R.id.iv_back,click = "OnClick")
+    ImageView mBack ;
 
     private int mShopId ;
 
@@ -51,7 +57,7 @@ public class ProductsTypeFragment extends ABaseFragment{
     @Override
     public void requestData() {
         RequestParams requestParams = new RequestParams();
-        requestParams.put("id", mShopId);
+        requestParams.put("shopId", mShopId);
         startRequest(ApiConstants.SHOP_CATEGORIES, requestParams, new HttpRequestHandler() {
             @Override
             public void onRequestFinished(ResultCode resultCode, String result) {
@@ -70,6 +76,12 @@ public class ProductsTypeFragment extends ABaseFragment{
 
     }
 
-
+    void OnClick(View v){
+        switch (v.getId()){
+            case R.id.iv_back:
+                getActivity().finish();
+                break;
+        }
+    }
 
 }
