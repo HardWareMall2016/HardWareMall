@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/default_backgroud"
+    android:minHeight="30dp">
+
+    <View
+        android:id="@+id/left_color"
+        android:layout_width="4dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="@color/blue"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/left_color"
+        android:layout_marginLeft="16dp"
+        android:layout_centerVertical="true"
+        android:text="商品推荐"
+        android:textColor="@color/black"
+        android:textSize="@dimen/title" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:drawablePadding="16dp"
+        android:drawableRight="@drawable/arrow_right"
+        android:text="更多"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/body_text" />
+
+</RelativeLayout>
