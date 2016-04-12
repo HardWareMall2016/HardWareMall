@@ -51,7 +51,7 @@ public class ProductsTypeFragment extends ABaseFragment{
     @Override
     public void requestData() {
         RequestParams requestParams = new RequestParams();
-        requestParams.put("shopId", mShopId);
+        requestParams.put("id", mShopId);
         startRequest(ApiConstants.SHOP_CATEGORIES, requestParams, new HttpRequestHandler() {
             @Override
             public void onRequestFinished(ResultCode resultCode, String result) {

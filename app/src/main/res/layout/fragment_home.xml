@@ -35,8 +35,8 @@
 
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -59,15 +59,6 @@
                     android:background="#20000000"
                     android:gravity="center"
                     android:orientation="vertical">
-
-                    <!-- <TextView
-                         android:id="@+id/title"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_gravity="center_horizontal"
-                         android:layout_marginTop="3dip"
-                         android:text="这是标题"
-                         android:textColor="@android:color/white" />-->
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -101,6 +92,7 @@
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
+
 
             <com.hardware.view.MyGridView
                 android:id="@+id/home_gridView"
@@ -225,8 +217,9 @@
             <com.hardware.view.HorizontalListView
                 android:id="@+id/home_horizon_listview"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
-                android:background="@drawable/bg_white"/>
+                android:layout_height="@dimen/horizontallistview_height"
+                android:background="@drawable/bg_white"
+                android:paddingTop="8dp"/>
 
         </LinearLayout>
     </ScrollView>

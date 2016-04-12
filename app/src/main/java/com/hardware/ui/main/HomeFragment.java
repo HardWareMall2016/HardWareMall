@@ -387,8 +387,6 @@ public class HomeFragment extends ABaseFragment{
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.home_shop_item,null);
                 viewHolder.shopName = (TextView)convertView.findViewById(R.id.home_shop_shopname);
                 viewHolder.imageView = (ImageView)convertView.findViewById(R.id.iv_home_shop_shop);
-                viewHolder.imageView.setMinimumWidth(parent.getHeight());
-                viewHolder.imageView.setMinimumHeight(parent.getWidth());
                 /*viewHolder.shopBusiness = (TextView)convertView.findViewById(R.id.home_shop_business);*/
                 convertView.setTag(viewHolder);
             }else{

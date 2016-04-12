@@ -42,6 +42,6 @@
         android:listSelector="?attr/selectableItemBackground"
         android:stretchMode="columnWidth"
         android:verticalSpacing="20dp"
-        android:visibility="gone"/>
+        />
 
 </LinearLayout>
