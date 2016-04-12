@@ -1,6 +1,7 @@
 package com.hardware.ui.shop;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +11,15 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.GridViewWithHeaderAndFooter;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
+import com.handmark.pulltorefresh.library.PullToRefreshGridViewWithHeaderAndFooter;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.bean.ShopProductsListResponse;
 import com.hardware.tools.ToolsHelper;
+import com.hardware.ui.activity.GoodsListActivity;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -103,9 +107,9 @@ public class ShopHomePageFragment extends ABaseFragment {
 
 
     @ViewInject(id = R.id.productsGridview)
-    private PullToRefreshGridView mPullRefreshGridView;
+    private PullToRefreshGridViewWithHeaderAndFooter mPullRefreshGridView;
 
-    private GridView mGridView;
+    private GridViewWithHeaderAndFooter mGridView;
 
     private List<Product> mProducts=new LinkedList<>();
 
@@ -193,22 +197,33 @@ public class ShopHomePageFragment extends ABaseFragment {
         options= buldDisplayImageOptions();
 
         String imgUrl=ApiConstants.IMG_BASE_URL+mShopImgUrl;
-        ImageLoader.getInstance().displayImage(imgUrl, mShopImg,options);
+        ImageLoader.getInstance().displayImage(imgUrl, mShopImg, options);
 
         mGridView=mPullRefreshGridView.getRefreshableView();
+        View header=inflater.inflate(R.layout.shop_gridview_header,null);
+        header.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), GoodsListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mGridView.addHeaderView(header);
+
         refreshViews();
         mPullRefreshGridView.setAdapter(mAdpater);
 
-        mPullRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
+        mPullRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridViewWithHeaderAndFooter>() {
 
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+            public void onPullDownToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> refreshView) {
                 QueryMore=false;
                 requestData();
             }
 
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
+            public void onPullUpToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> refreshView) {
                 if(!HasMoreData){
                     mPullRefreshGridView.onRefreshComplete();
                     return;
