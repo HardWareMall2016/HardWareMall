@@ -150,7 +150,7 @@ public class FragmentContainerActivity extends BaseActivity {
     @Override
     public void onPrepareActionbarMenu(TextView menu) {
         if(fragment!=null&&(fragment instanceof ABaseFragment)){
-            ((ABaseFragment) fragment).onPrepareActionbarMenu(menu);
+            ((ABaseFragment) fragment).onPrepareActionbarMenu(menu,this);
         }
     }
 
@@ -158,15 +158,15 @@ public class FragmentContainerActivity extends BaseActivity {
     public void onCreateCustomActionMenu(LinearLayout menuContent) {
         super.onCreateCustomActionMenu(menuContent);
         if(fragment!=null&&(fragment instanceof ABaseFragment)){
-            ((ABaseFragment) fragment).onCreateCustomActionMenu(menuContent);
+            ((ABaseFragment) fragment).onCreateCustomActionMenu(menuContent,this);
         }
     }
 
     @Override
     public void onCreateCustomActionbarBar(FrameLayout customerContent) {
-        super.onCreateCustomActionbarBar(customerContent);
         if(fragment!=null&&(fragment instanceof ABaseFragment)){
-            ((ABaseFragment) fragment).onCreateCustomActionbarBar(customerContent);
+            ((ABaseFragment) fragment).onCreateCustomActionbarBar(customerContent,this);
         }
+        super.onCreateCustomActionbarBar(customerContent);
     }
 }

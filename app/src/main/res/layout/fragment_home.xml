@@ -7,36 +7,45 @@
     tools:context="com.hardware.ui.main.HomeFragment">
 
     <RelativeLayout
-        android:id="@+id/student_frag_rl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/action_bar_bg_color">
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="?attr/actionBarSize"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:text="五金商城"
-            android:textColor="@color/blue"
+            android:gravity="center"
+            android:textColor="@color/black"
             android:textSize="20sp" />
 
         <ImageView
-            android:id="@+id/search"
+            android:id="@+id/right_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:gravity="center_vertical"
-            android:minHeight="?attr/actionBarSize"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/default_bg"
             android:src="@drawable/icon_message" />
+
+        <View
+            android:id="@+id/underline"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/divider_color" />
     </RelativeLayout>
 
-
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -59,15 +68,6 @@
                     android:background="#20000000"
                     android:gravity="center"
                     android:orientation="vertical">
-
-                    <!-- <TextView
-                         android:id="@+id/title"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_gravity="center_horizontal"
-                         android:layout_marginTop="3dip"
-                         android:text="这是标题"
-                         android:textColor="@android:color/white" />-->
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -101,6 +101,7 @@
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
+
 
             <com.hardware.view.MyGridView
                 android:id="@+id/home_gridView"
@@ -225,8 +226,9 @@
             <com.hardware.view.HorizontalListView
                 android:id="@+id/home_horizon_listview"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
-                android:background="@drawable/bg_white"/>
+                android:layout_height="@dimen/horizontallistview_height"
+                android:background="@drawable/bg_white"
+                android:paddingTop="8dp"/>
 
         </LinearLayout>
     </ScrollView>

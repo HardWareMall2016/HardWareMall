@@ -1,47 +1,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/student_frag_rl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/action_bar_bg_color">
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="?attr/actionBarSize"
-            android:text="全部"
-            android:textColor="@color/blue"
-            android:textSize="20sp" />
-
-        <!--<ImageView
-            android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:gravity="center_vertical"
-            android:minHeight="?attr/actionBarSize"
-            android:src="@drawable/icon_message" />-->
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="五金商城"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/underline"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/divider_color" />
     </RelativeLayout>
 
     <GridView
         android:id="@+id/grid_view"
         android:layout_width="fill_parent"
+        android:layout_marginTop="20dp"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
         android:horizontalSpacing="10dp"
-        android:numColumns="3"
         android:listSelector="?attr/selectableItemBackground"
+        android:numColumns="3"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="20dp"
-        android:visibility="gone"/>
+        android:verticalSpacing="20dp" />
 
 </LinearLayout>

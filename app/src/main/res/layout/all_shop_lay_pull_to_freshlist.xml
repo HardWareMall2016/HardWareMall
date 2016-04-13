@@ -5,14 +5,43 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+        <TextView
+            android:id="@+id/tv_tab_all"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/default_backgroud"
+            android:gravity="center"
+            android:minHeight="32dp"
+            android:text="综合" />
+
+        <TextView
+            android:id="@+id/tv_tab_distance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/default_backgroud"
+            android:gravity="center"
+            android:minHeight="32dp"
+            android:text="距离" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layoutContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/tab"
         android:orientation="vertical">
 
         <com.handmark.pulltorefresh.library.PullToRefreshListView
             android:id="@+id/pull_refresh_list"
             android:layout_width="fill_parent"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
             android:layout_height="fill_parent"
             android:cacheColorHint="#00000000"
             android:divider="@null"
@@ -44,5 +73,5 @@
         layout="@layout/comm_lay_emptyview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        />
 </RelativeLayout>

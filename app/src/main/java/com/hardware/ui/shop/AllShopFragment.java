@@ -1,12 +1,15 @@
 package com.hardware.ui.shop;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +27,7 @@ import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.adapter.ABaseAdapter;
 import com.zhan.framework.support.inject.ViewInject;
+import com.zhan.framework.utils.ToastUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +41,16 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
     private DisplayImageOptions options;
 
     private int mShopTypeId;
+
+    private int mSelectedTabres=R.id.tv_tab_all;
+
+    @ViewInject(id = R.id.tv_tab_all,click = "OnClick")
+    private TextView mTabAll;
+
+    @ViewInject(id = R.id.tv_tab_distance,click = "OnClick")
+    private TextView mTabDistance;
+
+    List<ShopInfo> tempProducts ;
 
     public static void launch(Activity from ,int typeId) {
         FragmentArgs args = new FragmentArgs();
@@ -58,6 +72,12 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
 
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //super.onItemClick(parent, view, position, id);
+        ShopHomePageFragment.launch(getActivity(), tempProducts.get((int) id).getId(), tempProducts.get((int) id).getLogo());
+    }
+
+    @Override
     protected int inflateContentView() {
         return R.layout.all_shop_lay_pull_to_freshlist;
     }
@@ -67,6 +87,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
         super.layoutInit(inflater, savedInstanceSate);
         getActivity().setTitle("全部店铺");
         options= ToolsHelper.buldDefDisplayImageOptions();
+        refreshTab();
     }
 
     @Override
@@ -100,7 +121,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
 
             @Override
             protected List<ShopInfo> parseResult(ShopListResponseBean MoreDiscountShopResponse) {
-                List<ShopInfo> tempProducts = new LinkedList<>();
+                tempProducts = new LinkedList<>();
                 if (MoreDiscountShopResponse != null && MoreDiscountShopResponse.getFlag() == 1) {
                     for (ShopListResponseBean.MessageEntity.RowsEntity responseItem : MoreDiscountShopResponse.getMessage().getRows()) {
                         ShopInfo product = new ShopInfo();
@@ -161,6 +182,27 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
 
             String imgUrl= ApiConstants.IMG_BASE_URL+data.getLogo();
             ImageLoader.getInstance().displayImage(imgUrl, imageView, options);
+        }
+    }
+
+    void OnClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_tab_all:
+                mSelectedTabres=R.id.tv_tab_all;
+                break;
+            case R.id.tv_tab_distance:
+                mSelectedTabres=R.id.tv_tab_distance;
+                break;
+        }
+        refreshTab();
+    }
+    private void refreshTab(){
+        if(mSelectedTabres==R.id.tv_tab_all){
+            mTabAll.setBackgroundResource(R.drawable.bg_tab_selected);
+            mTabDistance.setBackgroundResource(R.drawable.default_backgroud);
+        }else{
+            mTabDistance.setBackgroundResource(R.drawable.bg_tab_selected);
+            mTabAll.setBackgroundResource(R.drawable.default_backgroud);
         }
     }
 

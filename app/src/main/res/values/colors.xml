@@ -18,6 +18,10 @@
     <color name="text_color">#4c4c4c</color>
     <!-- 辅助字体颜色 -->
     <color name="text_color_sub">#999999</color>
+    <!--蓝色点击-->
+    <color name="blue_pressed">#1b8dd6</color>
+
+    <color name="disable_color">#ff959595</color>
 
     <color name="goods_recommend_backcolor">#F5F5F5</color>
     <color name="goods_categroy_list_textcolor">#41A7E0</color>

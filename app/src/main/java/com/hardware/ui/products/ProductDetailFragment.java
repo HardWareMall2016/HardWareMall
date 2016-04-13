@@ -7,19 +7,23 @@ package com.hardware.ui.products;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
+import com.hardware.base.Constants;
 import com.hardware.bean.ProductContent;
 import com.hardware.bean.ProductsDetailResponse;
 import com.hardware.bean.ShopRecommendListRespon;
@@ -68,6 +72,8 @@ public class ProductDetailFragment extends ABaseFragment {
     TextView mProductsPlace ;
     @ViewInject(id = R.id.products_detail_comment_num)
     TextView mProductsCommentNum ;
+    @ViewInject(id = R.id.products_detail_appraise, click = "OnClick")
+    RelativeLayout mAppraise ;
     @ViewInject(id = R.id.tv_products_detail_appraise_numbers)
     TextView mProductsAppriceNum;
     @ViewInject(id = R.id.products_detail_ratingbar)
@@ -102,6 +108,7 @@ public class ProductDetailFragment extends ABaseFragment {
 
     private ProductContent content;
     private int id;
+    private int shopid ;
     private String district;
     private int RecommendFrameLayoutfalg = 0 ;
     private List<ShopRecommendListRespon.MessageEntity> mRecommendList = new ArrayList<>();
@@ -181,7 +188,8 @@ public class ProductDetailFragment extends ABaseFragment {
                                     }
                                 });
 
-                                mProductDetailPrictue.setText(response.getMessage().getDescription());
+                                mProductDetailPrictue.setText(Html.fromHtml(response.getMessage().getDescription()));
+                                shopid = response.getMessage().getShopid();
 
                             }
                             break;
@@ -195,17 +203,16 @@ public class ProductDetailFragment extends ABaseFragment {
             }, HttpRequestUtils.RequestType.GET);
         }else{
             RequestParams requestParams = new RequestParams();
-            requestParams.put("shopid", id);
+            requestParams.put("shopid", shopid);
             requestParams.put("page", 1);
             startRequest(ApiConstants.PRODUCTS_SHOPSPRODUCTS, requestParams, new HttpRequestHandler() {
                 @Override
                 public void onRequestFinished(ResultCode resultCode, String result) {
                     switch (resultCode) {
                         case success:
-                            //tempProducts.clear();
                             ShopRecommendListRespon response = ToolsHelper.parseJson(result, ShopRecommendListRespon.class);
                             if (response != null && response.getFlag() == 1 && response.getMessage() != null) {
-                                List<Recommend> tempProducts = new LinkedList<>();
+                                final List<Recommend> tempProducts = new LinkedList<>();
                                 for (ShopRecommendListRespon.MessageEntity messageEntity : response.getMessage()) {
                                     Recommend recommend = new Recommend();
                                     recommend.setId(messageEntity.getId());
@@ -216,6 +223,15 @@ public class ProductDetailFragment extends ABaseFragment {
                                     tempProducts.add(recommend);
                                 }
                                 mRecommengGridView.setAdapter(new RecommendAdpater(tempProducts));
+                                mRecommengGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        ProductContent content = new ProductContent();
+                                        content.setId(tempProducts.get(position).getId());
+                                        content.setDistrict(Constants.REGION_NAME);
+                                        ProductDetailFragment.launch(getActivity(), content);
+                                    }
+                                });
                             }
                             break;
                         case canceled:
@@ -380,6 +396,9 @@ public class ProductDetailFragment extends ABaseFragment {
                 break;
             case R.id.iv_back:
                 getActivity().finish();
+                break;
+            case R.id.products_detail_appraise:
+                AppraiseFragment.launch(getActivity(), id);
                 break;
         }
     }

@@ -25,7 +25,7 @@
             android:layout_toRightOf="@id/shopImg"
             android:maxEms="10"
             android:textColor="@color/white"
-            android:textSize="@dimen/title" />
+            android:textSize="@dimen/sub_title" />
 
         <TextView
             android:id="@+id/shop_age"
@@ -35,7 +35,7 @@
             android:layout_marginTop="8dp"
             android:layout_toRightOf="@id/shopImg"
             android:textColor="@color/white"
-            android:textSize="@dimen/title" />
+            android:textSize="@dimen/sub_title" />
 
         <TextView
             android:id="@+id/shop_grade"
@@ -49,7 +49,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:textColor="@color/colorSub"
-            android:textSize="@dimen/sub_title" />
+            android:textSize="@dimen/body_text" />
 
         <TextView
             android:id="@+id/collect_shop"
@@ -62,7 +62,7 @@
             android:gravity="center"
             android:text="收藏"
             android:textColor="@color/white"
-            android:textSize="@dimen/body_text" />
+            android:textSize="@dimen/body_text_small" />
 
         <View
             android:id="@+id/divider"
@@ -82,7 +82,7 @@
             android:layout_toLeftOf="@id/divider"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="@dimen/body_text" />
+            android:textSize="@dimen/body_text_small" />
     </RelativeLayout>
 
     <LinearLayout
@@ -190,12 +190,14 @@
             android:textSize="@dimen/body_text" />
     </LinearLayout>
 
-    <com.handmark.pulltorefresh.library.PullToRefreshGridView xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    <com.handmark.pulltorefresh.library.PullToRefreshGridViewWithHeaderAndFooter xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/productsGridview"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:paddingTop="10dp"
+        android:clipToPadding="false"
         android:horizontalSpacing="10dp"
         android:numColumns="2"
         android:stretchMode="columnWidth"

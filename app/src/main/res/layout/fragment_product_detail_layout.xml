@@ -8,35 +8,36 @@
         android:id="@+id/products_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
-        >
+        android:minHeight="?attr/actionBarSize">
 
         <ImageView
             android:id="@+id/iv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_back"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_back" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:minHeight="?attr/actionBarSize"
-                android:src="@drawable/collect"/>
+                android:src="@drawable/collect" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
                 android:gravity="center_vertical"
                 android:minHeight="?attr/actionBarSize"
-                android:src="@drawable/back_first"
-                android:layout_marginLeft="4dp"/>
+                android:src="@drawable/back_first" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -255,6 +256,7 @@
                 </LinearLayout>
 
                 <RelativeLayout
+                    android:id="@+id/products_detail_appraise"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -460,9 +462,9 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="50dp"
                     android:background="#f5f5f5"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="50dp">
+                    android:orientation="vertical">
 
                     <ImageView
                         android:layout_width="fill_parent"
@@ -577,43 +579,43 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:background="@drawable/bg_white"
-            android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/min_item_height"
-            android:layout_weight="1">
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_white"
+            android:minHeight="@dimen/min_item_height">
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
                 android:text="加入购物车"
                 android:textColor="@color/blue"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:layout_centerVertical="true"
-                />
+                android:textSize="18sp" />
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:background="@color/blue"
-            android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/min_item_height"
-            android:layout_weight="1">
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@color/blue"
+            android:minHeight="@dimen/min_item_height">
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
                 android:text="立即订购"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:gravity="center"
-                android:layout_centerVertical="true"
-                />
+                android:textSize="18sp" />
         </RelativeLayout>
     </LinearLayout>
 

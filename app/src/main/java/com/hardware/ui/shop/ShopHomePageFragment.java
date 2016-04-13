@@ -1,21 +1,32 @@
 package com.hardware.ui.shop;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.GridViewWithHeaderAndFooter;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
+import com.handmark.pulltorefresh.library.PullToRefreshGridViewWithHeaderAndFooter;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
+import com.hardware.base.App;
+import com.hardware.base.Constants;
+import com.hardware.bean.ProductContent;
 import com.hardware.bean.ShopProductsListResponse;
 import com.hardware.tools.ToolsHelper;
+import com.hardware.ui.activity.GoodsListActivity;
+import com.hardware.ui.products.ProductDetailFragment;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -37,7 +48,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/4/8.
  */
-public class ShopHomePageFragment extends ABaseFragment {
+public class ShopHomePageFragment extends ABaseFragment implements AdapterView.OnItemClickListener {
     private final static String ARG_KEY_SHOP_ID = "shopId";
     private final static String ARG_KEY_SHOP_IMG = "shopImg";
 
@@ -103,9 +114,9 @@ public class ShopHomePageFragment extends ABaseFragment {
 
 
     @ViewInject(id = R.id.productsGridview)
-    private PullToRefreshGridView mPullRefreshGridView;
+    private PullToRefreshGridViewWithHeaderAndFooter mPullRefreshGridView;
 
-    private GridView mGridView;
+    private GridViewWithHeaderAndFooter mGridView;
 
     private List<Product> mProducts=new LinkedList<>();
 
@@ -120,6 +131,7 @@ public class ShopHomePageFragment extends ABaseFragment {
         args.add(ARG_KEY_SHOP_IMG, shopImg);
         FragmentContainerActivity.launch(from, ShopHomePageFragment.class, args);
     }
+
 
     private class Product{
         private int Id;
@@ -180,6 +192,19 @@ public class ShopHomePageFragment extends ABaseFragment {
     }
 
     @Override
+    public void onCreateCustomActionbarBar(FrameLayout customerContent,Activity activity) {
+        LayoutInflater inflater=LayoutInflater.from(activity);
+        View header=inflater.inflate(R.layout.comm_search_header_layout,null);
+        customerContent.addView(header);
+        header.findViewById(R.id.go_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+    }
+
+    @Override
     protected int inflateContentView() {
         return R.layout.fragment_shop_home_page;
     }
@@ -193,22 +218,33 @@ public class ShopHomePageFragment extends ABaseFragment {
         options= buldDisplayImageOptions();
 
         String imgUrl=ApiConstants.IMG_BASE_URL+mShopImgUrl;
-        ImageLoader.getInstance().displayImage(imgUrl, mShopImg,options);
+        ImageLoader.getInstance().displayImage(imgUrl, mShopImg, options);
 
         mGridView=mPullRefreshGridView.getRefreshableView();
+        View header=inflater.inflate(R.layout.shop_gridview_header,null);
+        header.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), GoodsListActivity.class);
+                startActivity(intent);
+            }
+        });
+        mGridView.addHeaderView(header);
+        mGridView.setOnItemClickListener(this);
+
         refreshViews();
         mPullRefreshGridView.setAdapter(mAdpater);
 
-        mPullRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
+        mPullRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridViewWithHeaderAndFooter>() {
 
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+            public void onPullDownToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> refreshView) {
                 QueryMore=false;
                 requestData();
             }
 
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
+            public void onPullUpToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> refreshView) {
                 if(!HasMoreData){
                     mPullRefreshGridView.onRefreshComplete();
                     return;
@@ -337,8 +373,10 @@ public class ShopHomePageFragment extends ABaseFragment {
             case R.id.collect_shop:
                 break;
             case R.id.products_type:
+                ProductsTypeFragment.launch(getActivity(), mShopId);
                 break;
             case R.id.company_info:
+                CompangyInfoFragment.launch(getActivity(), mShopId);
                 break;
         }
     }
@@ -419,6 +457,13 @@ public class ShopHomePageFragment extends ABaseFragment {
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ProductContent content = new ProductContent();
+        content.setId(mProducts.get((int) id).getId());
+        content.setDistrict(Constants.REGION_NAME);
+        ProductDetailFragment.launch(getActivity(), content);
+    }
 
     private void setTabSelected(TextView tab,boolean isSelelcted,int selDrawableRes,int unSelDrawableRes){
         int selColor=getResources().getColor(R.color.blue);
@@ -486,7 +531,6 @@ public class ShopHomePageFragment extends ABaseFragment {
         TextView price;
         TextView salseNum;
     }
-
 
     private String getTimeSpanStr(String startTime) {
         String diff = "";
