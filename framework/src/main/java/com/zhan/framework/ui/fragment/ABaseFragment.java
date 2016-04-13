@@ -74,15 +74,15 @@ public abstract class ABaseFragment extends Fragment {
 
     }
 
-    public void onPrepareActionbarMenu(TextView menu) {
+    public void onPrepareActionbarMenu(TextView menu,Activity activity) {
 
     }
 
-    public void onCreateCustomActionMenu(LinearLayout menuContent) {
+    public void onCreateCustomActionMenu(LinearLayout menuContent,Activity activity) {
 
     }
 
-    public void onCreateCustomActionbarBar(FrameLayout customerContent) {
+    public void onCreateCustomActionbarBar(FrameLayout customerContent,Activity activity) {
 
     }
 
