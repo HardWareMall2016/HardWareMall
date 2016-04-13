@@ -29,7 +29,6 @@ public abstract class APullToRefreshListFragment<T> extends ARefreshFragment<T, 
     @Override
     final protected void setInitRefreshView(AbsListView refreshView, Bundle savedInstanceSate) {
         super.setInitRefreshView(refreshView, savedInstanceSate);
-        mListView = mPullToRefreshListView.getRefreshableView();
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         initPullDownLable();
         initPullUpLable(true);
@@ -59,6 +58,9 @@ public abstract class APullToRefreshListFragment<T> extends ARefreshFragment<T, 
 
     @Override
     public AbsListView getRefreshView() {
+        if(mListView==null){
+            mListView = mPullToRefreshListView.getRefreshableView();
+        }
         return mListView;
     }
 

@@ -73,8 +73,8 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        super.onItemClick(parent, view, position, id);
-        ShopHomePageFragment.launch(getActivity(), tempProducts.get(position).getId(), tempProducts.get(position).getLogo());
+        //super.onItemClick(parent, view, position, id);
+        ShopHomePageFragment.launch(getActivity(), tempProducts.get((int) id).getId(), tempProducts.get((int) id).getLogo());
     }
 
     @Override
