@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,7 @@ public abstract class ABaseFragment extends Fragment {
 
     // 标志是否ContentView是否为空
     private boolean contentEmpty = true;
+    private boolean mFirstCreateView=true;
 
     //private List<RequestHandle> mRequestHandleList = new LinkedList<>();
     private HashMap<String,RequestHandle> mRequestHandleList=new HashMap<>();
@@ -116,8 +118,10 @@ public abstract class ABaseFragment extends Fragment {
         if (inflateContentView() > 0) {
 
             if(rootView!=null&&isCacheRootView()){
+                mFirstCreateView=false;
                 onInitCachedRootView(rootView);
             }else{
+                mFirstCreateView=true;
                 rootView = (ViewGroup) inflater.inflate(inflateContentView(), null);
                 rootView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -194,8 +198,7 @@ public abstract class ABaseFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState == null)
+        if (savedInstanceState == null&&mFirstCreateView)
             requestData();
     }
 
