@@ -71,7 +71,7 @@ public class HomeFragment extends ABaseFragment{
            };
     private String[] mIconName = { "人气品牌", "用户求购", "商家推广", "行业资讯", "便民维修", "便民施工", "专业招聘", "更多"};
 
-    private ArrayList<View> mAdList;
+    private ArrayList<View> mAdList = new ArrayList<>();
     private List<Map<String, Object>> mDataList = new ArrayList<Map<String, Object>>();
     private List<HomeProductsBean.MessageEntity.RowsEntity> mSaleList = new ArrayList<>();//折扣特卖
     private List<HomeProductsBean.ProTypeEntity.RowsEntity> mProTypeList = new ArrayList<>();//热销单品
@@ -90,11 +90,25 @@ public class HomeFragment extends ABaseFragment{
         return R.layout.fragment_home;
     }
 
+
+    @Override
+    public boolean isCacheRootView() {
+        return true;
+    }
+
     @Override
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
+
+        mAdList.clear();
+        mDataList.clear();
+        mSaleList.clear();
+        mProTypeList.clear();
+        mShopList.clear();
+
         initViewPager();
         getData();
+
 
         String [] from ={"image","text"};
         int [] to = {R.id.image,R.id.text};
@@ -186,7 +200,6 @@ public class HomeFragment extends ABaseFragment{
             mImageSource.add(image);
         }
 
-        mAdList = new ArrayList<View>();
         mAdList.add(findViewById(R.id.dot1));
         mAdList.add(findViewById(R.id.dot2));
         mAdList.add(findViewById(R.id.dot3));
