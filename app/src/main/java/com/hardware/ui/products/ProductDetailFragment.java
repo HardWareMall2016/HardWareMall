@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hardware.R;
@@ -71,6 +72,8 @@ public class ProductDetailFragment extends ABaseFragment {
     TextView mProductsPlace ;
     @ViewInject(id = R.id.products_detail_comment_num)
     TextView mProductsCommentNum ;
+    @ViewInject(id = R.id.products_detail_appraise, click = "OnClick")
+    RelativeLayout mAppraise ;
     @ViewInject(id = R.id.tv_products_detail_appraise_numbers)
     TextView mProductsAppriceNum;
     @ViewInject(id = R.id.products_detail_ratingbar)
@@ -393,6 +396,9 @@ public class ProductDetailFragment extends ABaseFragment {
                 break;
             case R.id.iv_back:
                 getActivity().finish();
+                break;
+            case R.id.products_detail_appraise:
+                AppraiseFragment.launch(getActivity(), id);
                 break;
         }
     }

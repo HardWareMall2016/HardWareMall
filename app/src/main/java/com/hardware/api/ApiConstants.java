@@ -35,4 +35,7 @@ public class ApiConstants {
     //店铺产品分类
     public static final String SHOP_CATEGORIES = "common/aplHome/shopCategories";
 
+    //产品评价
+    public static final String  PRODUCTS_EVALUATE = "common/aplHome/productsEvaluate";
+
 }

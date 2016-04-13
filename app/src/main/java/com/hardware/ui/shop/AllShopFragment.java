@@ -9,6 +9,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.adapter.ABaseAdapter;
 import com.zhan.framework.support.inject.ViewInject;
+import com.zhan.framework.utils.ToastUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,6 +50,8 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
     @ViewInject(id = R.id.tv_tab_distance,click = "OnClick")
     private TextView mTabDistance;
 
+    List<ShopInfo> tempProducts ;
+
     public static void launch(Activity from ,int typeId) {
         FragmentArgs args = new FragmentArgs();
         args.add(ARG_KEY, typeId);
@@ -66,6 +70,12 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
         super.onSaveInstanceState(outState);
     }
 
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        super.onItemClick(parent, view, position, id);
+        ShopHomePageFragment.launch(getActivity(), tempProducts.get(position).getId(), tempProducts.get(position).getLogo());
+    }
 
     @Override
     protected int inflateContentView() {
@@ -111,7 +121,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
 
             @Override
             protected List<ShopInfo> parseResult(ShopListResponseBean MoreDiscountShopResponse) {
-                List<ShopInfo> tempProducts = new LinkedList<>();
+                tempProducts = new LinkedList<>();
                 if (MoreDiscountShopResponse != null && MoreDiscountShopResponse.getFlag() == 1) {
                     for (ShopListResponseBean.MessageEntity.RowsEntity responseItem : MoreDiscountShopResponse.getMessage().getRows()) {
                         ShopInfo product = new ShopInfo();
