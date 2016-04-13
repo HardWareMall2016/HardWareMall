@@ -1,64 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:background="@color/action_bar_bg_color">
+    android:layout_height="?attr/actionBarSize">
+    <ImageView
+        android:id="@+id/go_back"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/default_bg"
+        android:scaleType="center"
+        android:src="@drawable/action_bar_icon_back_selector" />
 
-    <RelativeLayout
-        android:id="@+id/def_content"
+    <EditText
+        android:id="@+id/search_content"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@id/right_menu"
+        android:layout_toRightOf="@id/go_back"
+        android:background="@drawable/bg_gray_rounded"
+        android:drawableLeft="@drawable/icon_search"
+        android:drawablePadding="16dp"
+        android:hint="请输入关键字"
+        android:paddingLeft="16dp"
+        android:textSize="16sp" />
 
-        <ImageView
-            android:id="@+id/go_back"
-            android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dp"
-            android:background="@drawable/default_bg"
-            android:scaleType="center"
-            android:src="@drawable/action_bar_icon_back_selector" />
-
-        <EditText
-            android:id="@+id/search_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_toLeftOf="@id/right_menu"
-            android:layout_toRightOf="@id/go_back"
-            android:background="@drawable/bg_gray_rounded"
-            android:drawableLeft="@drawable/icon_search"
-            android:drawablePadding="16dp"
-            android:hint="请输入关键字"
-            android:paddingLeft="16dp"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/right_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/default_bg"
-            android:src="@drawable/back_first" />
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/underline"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="bottom"
-        android:background="@color/divider_color" />
-</FrameLayout>
+    <ImageView
+        android:id="@+id/right_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/default_bg"
+        android:src="@drawable/back_first" />
+</RelativeLayout>

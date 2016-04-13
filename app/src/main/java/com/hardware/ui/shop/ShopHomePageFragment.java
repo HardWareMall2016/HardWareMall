@@ -3,11 +3,13 @@ package com.hardware.ui.shop;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshGridViewWithHeaderAndFooter;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
+import com.hardware.base.App;
 import com.hardware.base.Constants;
 import com.hardware.bean.ProductContent;
 import com.hardware.bean.ShopProductsListResponse;
@@ -186,6 +189,19 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
 
         mShopImgUrl= savedInstanceState == null ? (String) getArguments().getSerializable(ARG_KEY_SHOP_IMG)
                 : (String) savedInstanceState.getSerializable(ARG_KEY_SHOP_IMG);
+    }
+
+    @Override
+    public void onCreateCustomActionbarBar(FrameLayout customerContent,Activity activity) {
+        LayoutInflater inflater=LayoutInflater.from(activity);
+        View header=inflater.inflate(R.layout.comm_search_header_layout,null);
+        customerContent.addView(header);
+        header.findViewById(R.id.go_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     @Override

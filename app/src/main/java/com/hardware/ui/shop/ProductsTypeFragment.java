@@ -1,9 +1,12 @@
 package com.hardware.ui.shop;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.hardware.R;
@@ -31,6 +34,19 @@ public class ProductsTypeFragment extends ABaseFragment{
     private int mShopId ;
 
     @Override
+    public void onCreateCustomActionbarBar(FrameLayout customerContent,Activity activity) {
+        LayoutInflater inflater=LayoutInflater.from(activity);
+        View header=inflater.inflate(R.layout.comm_search_header_layout,null);
+        customerContent.addView(header);
+        header.findViewById(R.id.go_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+    }
+
+    @Override
     protected int inflateContentView() {
         return R.layout.frag_layout_producy_type;
     }
@@ -38,7 +54,7 @@ public class ProductsTypeFragment extends ABaseFragment{
     public static void launch(FragmentActivity activity, int mShopId) {
         FragmentArgs args = new FragmentArgs();
         args.add(ARG_KEY_SHOP_ID, mShopId);
-        FragmentContainerActivity.launch(activity, ProductsTypeFragment.class, args, false);
+        FragmentContainerActivity.launch(activity, ProductsTypeFragment.class, args);
     }
 
     @Override
