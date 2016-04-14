@@ -23,6 +23,7 @@ import com.hardware.bean.ProductContent;
 import com.hardware.ui.home.HomeListFragment;
 import com.hardware.ui.home.MoreDiscountShopFragment;
 import com.hardware.ui.home.MoreFragment;
+import com.hardware.ui.products.DiscountProductsFragment;
 import com.hardware.ui.products.MoreDiscountSaleFragment;
 import com.hardware.ui.products.ProductDetailFragment;
 import com.hardware.ui.shop.ShopHomePageFragment;
@@ -436,7 +437,7 @@ public class HomeFragment extends ABaseFragment{
                 MoreDiscountSaleFragment.launch(getActivity(), getString(R.string.sale_more));
                 break;
             case R.id.home_protype_more:
-                MoreDiscountSaleFragment.launch(getActivity(), getString(R.string.home_protype_more));
+                DiscountProductsFragment.launch(getActivity());
                 break;
             case R.id.home_shop_more:
                 MoreDiscountShopFragment.launch(getActivity());
