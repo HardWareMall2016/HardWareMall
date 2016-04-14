@@ -20,6 +20,8 @@
     <color name="text_color_sub">#999999</color>
     <!--蓝色点击-->
     <color name="blue_pressed">#1b8dd6</color>
+    <!--绿色-->
+    <color name="green">#64a392</color>
 
     <color name="disable_color">#ff959595</color>
 

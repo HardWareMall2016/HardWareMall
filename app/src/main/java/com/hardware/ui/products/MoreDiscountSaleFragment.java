@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
+import com.hardware.base.Constants;
 import com.hardware.bean.MoreDiscountSaleResponse;
+import com.hardware.bean.ProductContent;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.ui.base.APullToRefreshListFragment;
 import com.loopj.android.http.RequestParams;
@@ -22,6 +25,7 @@ import com.zhan.framework.support.adapter.ABaseAdapter;
 import com.zhan.framework.support.inject.ViewInject;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +35,7 @@ public class MoreDiscountSaleFragment extends APullToRefreshListFragment<MoreDis
 
     private DisplayImageOptions options;
     private String mTitle ;
+    private List<Product> tempProducts = new LinkedList<>();
 
     public static void launch(Activity from,String mTitle) {
         FragmentArgs args = new FragmentArgs();
@@ -68,6 +73,14 @@ public class MoreDiscountSaleFragment extends APullToRefreshListFragment<MoreDis
     }
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ProductContent content = new ProductContent();
+        content.setId(tempProducts.get((int)id).getId());
+        content.setDistrict(Constants.REGION_NAME);
+        ProductDetailFragment.launch(getActivity(), content);
+    }
+
+    @Override
     protected void requestData(RefreshMode mode) {
         RequestParams requestParams = new RequestParams();
         requestParams.put("Page", getNextPage(mode));
@@ -80,7 +93,6 @@ public class MoreDiscountSaleFragment extends APullToRefreshListFragment<MoreDis
 
             @Override
             protected List<Product> parseResult(MoreDiscountSaleResponse moreDiscountSaleResponse) {
-                List<Product> tempProducts = new LinkedList<>();
                 if (moreDiscountSaleResponse != null && moreDiscountSaleResponse.getFlag() == 1) {
                     for (MoreDiscountSaleResponse.MessageBean.RowsBean responseItem : moreDiscountSaleResponse.getMessage().getRows()) {
                         Product product = new Product();

@@ -83,6 +83,8 @@ public class HomeFragment extends ABaseFragment{
     private HorizontalListViewAdapter mShopAdapter ;
     private int currPage = 0;
     private int oldPage = 0;
+    private String [] from ={"image","text"};
+    private int [] to = {R.id.image,R.id.text};
 
 
     @Override
@@ -109,9 +111,6 @@ public class HomeFragment extends ABaseFragment{
         initViewPager();
         getData();
 
-
-        String [] from ={"image","text"};
-        int [] to = {R.id.image,R.id.text};
         mSimpleAdapter = new SimpleAdapter(getActivity(), mDataList, R.layout.home_gridview_item, from, to);
         mGridView.setAdapter(mSimpleAdapter);
 

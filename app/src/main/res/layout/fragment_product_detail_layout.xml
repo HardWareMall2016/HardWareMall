@@ -24,12 +24,12 @@
             android:layout_marginRight="10dp"
             android:orientation="horizontal">
 
-            <ImageView
+            <!--<ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:minHeight="?attr/actionBarSize"
-                android:src="@drawable/collect" />
+                android:src="@drawable/collect" />-->
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -177,7 +177,7 @@
                     android:background="@color/white"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <!--<LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
@@ -217,7 +217,7 @@
                                 android:textColor="@color/text_color"
                                 android:textSize="10sp" />
                         </RelativeLayout>
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
@@ -326,6 +326,7 @@
                     android:paddingTop="16dp">
 
                     <LinearLayout
+                        android:id="@+id/products_detail_shop"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -335,7 +336,7 @@
                             android:layout_width="0dp"
                             android:layout_height="80dp"
                             android:layout_weight="2"
-                            android:src="@drawable/products_detail_shop" />
+                             />
 
                         <RelativeLayout
                             android:id="@+id/rl_products_detail_shopname"
@@ -378,49 +379,127 @@
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp">
 
-                        <TextView
-                            android:id="@+id/products_detail_describe"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="8dp"
-                            android:layout_weight="1"
-                            android:drawableRight="@drawable/products_detail_describe_low"
-                            android:gravity="center"
-                            android:text="描述相符 0"
-                            android:textSize="12sp" />
+                            android:layout_weight="1">
+                            <TextView
+                                android:id="@+id/tv_products_detail_describe"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:gravity="right"
+                                android:text="描述相符 "
+                                android:textSize="12sp"
+                                android:layout_weight="6"/>
+                            <TextView
+                                android:id="@+id/products_detail_describe"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textSize="10sp"
+                                android:layout_weight="1"
+                                android:textColor="@color/white"
+                                android:layout_marginLeft="2dp"
+                                />
+                             <TextView
+                                 android:id="@+id/products_detail_describe_mark"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:layout_centerVertical="true"
+                                 android:layout_weight="1"
+                                 android:layout_gravity="center_vertical"
+                                 android:gravity="center"
+                                 android:textSize="10sp"
+                                 android:textColor="@color/white"
+                                 android:layout_marginLeft="4dp"
+                                 />
+                        </LinearLayout>
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="8dp"
-                            android:layout_weight="1"
-                            android:drawableRight="@drawable/products_detail_describe_low"
-                            android:gravity="center"
-                            android:text="服务态度 0"
-                            android:textSize="12sp" />
+                            android:layout_weight="1">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:gravity="right"
+                                android:text="服务态度 "
+                                android:textSize="12sp"
+                                android:layout_weight="3"/>
+                            <TextView
+                                android:id="@+id/products_detail_service"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textSize="10sp"
+                                android:layout_weight="1"
+                                android:textColor="@color/white"
+                                android:layout_marginLeft="2dp"
+                                />
+                            <TextView
+                                android:id="@+id/products_detail_service_mark"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_weight="1"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center"
+                                android:textSize="10sp"
+                                android:textColor="@color/white"
+                                android:layout_marginLeft="4dp"
+                                />
+                        </LinearLayout>
 
-                        <TextView
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="8dp"
                             android:layout_weight="1"
-                            android:drawableRight="@drawable/products_detail_describe_low"
-                            android:gravity="center"
-                            android:text="到货速度 0"
-                            android:textSize="12sp" />
+                            android:layout_marginRight="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:gravity="right"
+                                android:text="到货速度 "
+                                android:textSize="12sp"
+                                android:layout_weight="3"/>
+                            <TextView
+                                android:id="@+id/products_detail_delivery"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textSize="10sp"
+                                android:layout_weight="1"
+                                android:textColor="@color/white"
+                                android:layout_marginLeft="2dp"
+                                />
+                            <TextView
+                                android:id="@+id/products_detail_delivery_mark"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_weight="1"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center"
+                                android:textSize="10sp"
+                                android:textColor="@color/white"
+                                android:layout_marginLeft="4dp"
+                                />
+                        </LinearLayout>
+
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
+                <!--<LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
@@ -457,7 +536,7 @@
                         android:padding="10dp"
                         android:text="进入店铺"
                         android:textSize="@dimen/body_text" />
-                </LinearLayout>
+                </LinearLayout>-->
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -469,17 +548,17 @@
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="4dp"
                         android:src="@drawable/arrow_up" />
 
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginTop="4dp"
                         android:gravity="center"
                         android:text="上拉查看图文详情"
-                        android:textColor="@color/text_color" />
+                        android:textColor="@color/text_color_sub" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

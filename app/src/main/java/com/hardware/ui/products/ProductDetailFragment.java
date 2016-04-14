@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.Constants;
+import com.hardware.bean.AppraiseContent;
 import com.hardware.bean.ProductContent;
 import com.hardware.bean.ProductsDetailResponse;
 import com.hardware.bean.ShopRecommendListRespon;
@@ -72,7 +74,7 @@ public class ProductDetailFragment extends ABaseFragment {
     TextView mProductsPlace ;
     @ViewInject(id = R.id.products_detail_comment_num)
     TextView mProductsCommentNum ;
-    @ViewInject(id = R.id.products_detail_appraise, click = "OnClick")
+    @ViewInject(id = R.id.products_detail_appraise)
     RelativeLayout mAppraise ;
     @ViewInject(id = R.id.tv_products_detail_appraise_numbers)
     TextView mProductsAppriceNum;
@@ -84,8 +86,20 @@ public class ProductDetailFragment extends ABaseFragment {
     TextView mProductShopName;
     @ViewInject(id = R.id.tv_products_detail_year)
     TextView mProductDetailYear ;
-    @ViewInject(id = R.id.products_detail_enter_shop)
-    TextView mProductDetailEnterShop ;
+    @ViewInject(id = R.id.products_detail_shop)
+    LinearLayout mDetailShop ;
+    @ViewInject(id = R.id.products_detail_describe)
+    TextView mDetailDescribe ;
+    @ViewInject(id = R.id.products_detail_describe_mark)
+    TextView mDetailMark ;
+    @ViewInject(id = R.id.products_detail_service)
+    TextView mDetailService ;
+    @ViewInject(id = R.id.products_detail_service_mark)
+    TextView mDetailServiceMark ;
+    @ViewInject(id = R.id.products_detail_delivery)
+    TextView mDetailDelivery ;
+    @ViewInject(id = R.id.products_detail_delivery_mark)
+    TextView mDetailDeliveryMark ;
 
     //第二页
     @ViewInject(id = R.id.detail_picture, click = "OnClick")
@@ -114,6 +128,10 @@ public class ProductDetailFragment extends ABaseFragment {
     private List<ShopRecommendListRespon.MessageEntity> mRecommendList = new ArrayList<>();
     private RecommendAdpater mRecommendAdpater ;
     private DisplayImageOptions options;
+    private int CommentSum ;
+    private int PackMark ;
+    private int ServiceMark ;
+    private int DeliveryMark ;
 
 
 
@@ -173,15 +191,16 @@ public class ProductDetailFragment extends ABaseFragment {
                                 mProductsWholesalePrice.setText("￥"+response.getMessage().getMarketPrice()+"");
                                 mProductsExpress.setText("快递 ￥"+response.getMessage().getDeliveryMark());
                                 mPrductsSalesVolume.setText("成交 "+response.getMessage().getSaleCount()+"个");
-                                mProductsPlace.setText("发货: "+response.getMessage().getCompanyRegionName());
+//                                mProductsPlace.setText("发货地址: "+response.getMessage().getCompanyRegionName());
+                                mProductsPlace.setText("发货地址: ");
                                 mProductsCommentNum.setText(response.getMessage().getCommentNumber()+"人已评价");
-                                mProductsAppriceNum.setText(response.getMessage().getCommentSum()+"");
+                                mProductsAppriceNum.setText(response.getMessage().getCommentSum() + "");
                                 mProductsRatingbar.setRating((float) response.getMessage().getServiceMark());
                                 String shopimgUrl= ApiConstants.IMG_BASE_URL+ response.getMessage().getLogo();
                                 ImageLoader.getInstance().displayImage(shopimgUrl, mProductsDetailLogo);
                                 mProductShopName.setText(response.getMessage().getShopName());
 
-                                mProductDetailEnterShop.setOnClickListener(new View.OnClickListener() {
+                                mDetailShop.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         ShopHomePageFragment.launch(getActivity(), response.getMessage().getShopid(), response.getMessage().getLogo());
@@ -191,6 +210,26 @@ public class ProductDetailFragment extends ABaseFragment {
                                 mProductDetailPrictue.setText(Html.fromHtml(response.getMessage().getDescription()));
                                 shopid = response.getMessage().getShopid();
 
+                                CommentSum = response.getMessage().getCommentSum();
+                                PackMark = response.getMessage().getPackMark() ;
+                                ServiceMark =response.getMessage().getServiceMark() ;
+                                DeliveryMark = response.getMessage().getDeliveryMark() ;
+                                refreshDescribe(PackMark);
+                                refreshService(ServiceMark);
+                                refreshDelivery(DeliveryMark);
+
+                                mAppraise.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        AppraiseContent content = new AppraiseContent();
+                                        content.setId(id);
+                                        content.setCommentSum(CommentSum);
+                                        content.setPackMark(PackMark);
+                                        content.setServiceMark(ServiceMark);
+                                        content.setDeliveryMark(DeliveryMark);
+                                        AppraiseFragment.launch(getActivity(), content);
+                                    }
+                                });
                             }
                             break;
                         case canceled:
@@ -242,6 +281,78 @@ public class ProductDetailFragment extends ABaseFragment {
                     }
                 }
             }, HttpRequestUtils.RequestType.GET);
+        }
+    }
+
+    private void refreshDescribe(int i) {
+        if(i>0 && i<3){
+            mDetailDescribe.setText(i+"");
+            mDetailDescribe.setBackgroundResource(R.drawable.bg_green_square);
+            mDetailMark.setText("低");
+            mDetailMark.setBackgroundResource(R.drawable.bg_green_square);
+        }else if(i>3 && i< 5){
+            mDetailDescribe.setText(i+"");
+            mDetailDescribe.setBackgroundResource(R.drawable.bg_blue_square);
+            mDetailMark.setText("中");
+            mDetailMark.setBackgroundResource(R.drawable.bg_blue_square);
+        }else if(i == 5){
+            mDetailDescribe.setText(i+"");
+            mDetailDescribe.setBackgroundResource(R.drawable.bg_yellow_square);
+            mDetailMark.setText("高");
+            mDetailMark.setBackgroundResource(R.drawable.bg_yellow_square);
+        }else{
+            mDetailDescribe.setText(i+"");
+            mDetailDescribe.setBackgroundResource(R.drawable.bg_green_square);
+            mDetailMark.setText("低");
+            mDetailMark.setBackgroundResource(R.drawable.bg_green_square);
+        }
+    }
+
+    private void refreshService(int i) {
+        if(i>0 && i<3){
+            mDetailService.setText(i+"");
+            mDetailService.setBackgroundResource(R.drawable.bg_green_square);
+            mDetailServiceMark.setText("低");
+            mDetailServiceMark.setBackgroundResource(R.drawable.bg_green_square);
+        }else if(i>3 && i< 5){
+            mDetailService.setText(i+"");
+            mDetailService.setBackgroundResource(R.drawable.bg_blue_square);
+            mDetailServiceMark.setText("中");
+            mDetailServiceMark.setBackgroundResource(R.drawable.bg_blue_square);
+        }else if(i == 5){
+            mDetailService.setText(i+"");
+            mDetailService.setBackgroundResource(R.drawable.bg_yellow_square);
+            mDetailServiceMark.setText("高");
+            mDetailServiceMark.setBackgroundResource(R.drawable.bg_yellow_square);
+        }else{
+            mDetailService.setText(i+"");
+            mDetailService.setBackgroundResource(R.drawable.bg_green_square);
+            mDetailServiceMark.setText("低");
+            mDetailServiceMark.setBackgroundResource(R.drawable.bg_green_square);
+        }
+    }
+
+    private void refreshDelivery(int i) {
+        if(i>0 && i<3){
+            mDetailDelivery.setText(i+"");
+            mDetailDelivery.setBackgroundResource(R.drawable.bg_green_square);
+            mDetailDeliveryMark.setText("低");
+            mDetailDeliveryMark.setBackgroundResource(R.drawable.bg_green_square);
+        }else if(i>3 && i< 5){
+            mDetailDelivery.setText(i+"");
+            mDetailDelivery.setBackgroundResource(R.drawable.bg_blue_square);
+            mDetailDeliveryMark.setText("中");
+            mDetailDeliveryMark.setBackgroundResource(R.drawable.bg_blue_square);
+        }else if(i == 5){
+            mDetailDelivery.setText(i+"");
+            mDetailDelivery.setBackgroundResource(R.drawable.bg_yellow_square);
+            mDetailDeliveryMark.setText("高");
+            mDetailDeliveryMark.setBackgroundResource(R.drawable.bg_yellow_square);
+        }else{
+            mDetailDelivery.setText(i+"");
+            mDetailDelivery.setBackgroundResource(R.drawable.bg_green_square);
+            mDetailDeliveryMark.setText("低");
+            mDetailDeliveryMark.setBackgroundResource(R.drawable.bg_green_square);
         }
     }
 
@@ -396,9 +507,6 @@ public class ProductDetailFragment extends ABaseFragment {
                 break;
             case R.id.iv_back:
                 getActivity().finish();
-                break;
-            case R.id.products_detail_appraise:
-                AppraiseFragment.launch(getActivity(), id);
                 break;
         }
     }

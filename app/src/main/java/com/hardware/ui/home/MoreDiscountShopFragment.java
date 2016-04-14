@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.bean.MoreDiscountShopResponse;
 import com.hardware.tools.ToolsHelper;
+import com.hardware.ui.shop.ShopHomePageFragment;
 import com.loopj.android.http.RequestParams;
 import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestUtils;
@@ -208,6 +210,13 @@ public class MoreDiscountShopFragment extends ABaseFragment {
                 }
             }
         });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ShopHomePageFragment.launch(getActivity(), mProducts.get((int)id).getId(), mProducts.get((int)id).getLogo());
+            }
+        });
     }
 
     @Override
@@ -357,5 +366,7 @@ public class MoreDiscountShopFragment extends ABaseFragment {
             mPullToRefreshListView.getLoadingLayoutProxy(false,true).setReleaseLabel("没有更多数据了");
         }
     }
+
+
 
 }
