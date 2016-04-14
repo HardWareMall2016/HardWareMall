@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         if (mUpgradeHandle != null && !mUpgradeHandle.isFinished()) {
             mUpgradeHandle.cancel(true);
-            return;
         }
         super.onDestroy();
     }
