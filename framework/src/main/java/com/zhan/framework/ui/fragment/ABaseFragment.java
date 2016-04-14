@@ -2,6 +2,7 @@ package com.zhan.framework.ui.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -89,7 +90,7 @@ public abstract class ABaseFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         if (activity instanceof BaseActivity)
             ((BaseActivity) activity).addFragment(toString(), this);

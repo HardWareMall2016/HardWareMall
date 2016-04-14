@@ -1,20 +1,36 @@
 package com.hardware.ui.main;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.hardware.R;
+import com.hardware.base.Constants;
+import com.hardware.bean.VersionUpdateResponseBean;
+import com.hardware.tools.ToolsHelper;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestHandle;
+import com.zhan.framework.common.setting.SettingUtility;
+import com.zhan.framework.network.Connectivity;
+import com.zhan.framework.network.HttpClientUtils;
+import com.zhan.framework.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Administrator on 2016/4/13.
@@ -41,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Page> mPageList = new ArrayList<Page>();
     private Page mCurPage;
+    private RequestHandle mUpgradeHandle;
 
     class Page {
         String TAG;
@@ -56,6 +73,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initPages();
+        checkUpgrade();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mUpgradeHandle != null && !mUpgradeHandle.isFinished()) {
+            mUpgradeHandle.cancel(true);
+        }
+        super.onDestroy();
     }
 
     private void initPages() {
@@ -163,7 +189,55 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void checkUpgrade() {
+        //只在WIFI下更新
+        if (!Connectivity.isConnectedWifi(this)) {
+            return;
+        }
+        if (mUpgradeHandle != null && !mUpgradeHandle.isFinished()) {
+            return;
+        }
+        String requestUrl = SettingUtility.getSetting(Constants.CHECK_UPDATE_URL).getValue();
+        mUpgradeHandle = HttpClientUtils.get(requestUrl, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                String content = new String(bytes);
+                Log.i("MainActivity", "Upgrade info : " + content);
+                try {
+                    final VersionUpdateResponseBean bean = JSON.parseObject(content, VersionUpdateResponseBean.class);
+                    if (bean != null && bean.getVersionCode()>ToolsHelper.getCurVersionCode()&&!TextUtils.isEmpty(bean.getUrl())) {
+                        AlertDialog.Builder dlgBuilder = new AlertDialog.Builder(MainActivity.this);
+                        dlgBuilder.setTitle("发现新版本").
+                                setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ToolsHelper.installApp(bean.getUrl());
+                                        dialog.dismiss();
+                                    }
+                                });
+                        dlgBuilder.setMessage(bean.getIntroduce());
+                        //判断是否强制升级
+                        if (bean.isForcedUpdate()) {
+                            dlgBuilder.setCancelable(false);
+                        } else {
+                            dlgBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                        dlgBuilder.show();
+                    }
+                } catch (JSONException exp) {
+                    Log.e("MainActivity", "fromJson error : " + exp.getMessage());
+                }
+            }
 
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
 
-
+            }
+        });
+    }
 }
