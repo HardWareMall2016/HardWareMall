@@ -1,6 +1,7 @@
 package com.zhan.framework.ui.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
@@ -19,7 +20,7 @@ public class BaseFragmentHelper {
         return mFragment;
     }
 
-    public void onAttach(Activity activity){
+    public void onAttach(Context activity){
 
     }
 

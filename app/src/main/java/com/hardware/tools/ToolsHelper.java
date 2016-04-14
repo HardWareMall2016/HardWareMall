@@ -1,12 +1,23 @@
 package com.hardware.tools;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.hardware.R;
+import com.hardware.base.App;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
@@ -70,5 +81,63 @@ public class ToolsHelper {
                 .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
                 .considerExifParams(true)
                 .build();
+    }
+
+    /**
+     * 下载并安装app
+     *
+     * @param url
+     */
+    public static void installApp(String url) {
+        final DownloadManager systemService = (DownloadManager) App.ctx.getSystemService(Context.DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "upgrade.apk");
+        systemService.enqueue(request);
+        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        final BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long reference = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+
+                DownloadManager.Query myDownloadQuery = new DownloadManager.Query();
+                myDownloadQuery.setFilterById(reference);
+
+                Cursor myDownload = systemService.query(myDownloadQuery);
+                if (myDownload.moveToFirst()) {
+                    int fileUriIdx = myDownload.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+
+                    String fileUri = myDownload.getString(fileUriIdx);
+
+                    Intent ViewInstallIntent = new Intent(Intent.ACTION_VIEW);
+                    ViewInstallIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ViewInstallIntent.setDataAndType(Uri.parse(fileUri), "application/vnd.android.package-archive");
+                    context.startActivity(ViewInstallIntent);
+                }
+                myDownload.close();
+
+                App.ctx.unregisterReceiver(this);
+            }
+        };
+        App.ctx.registerReceiver(receiver, filter);
+    }
+
+    public static String getCurVersionName() {
+        try {
+            PackageManager manager = App.ctx.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(App.ctx.getPackageName(), 0);
+            return info.versionName;
+        } catch (Exception e) {
+            return "1.0.0";
+        }
+    }
+
+    public static int getCurVersionCode() {
+        try {
+            PackageManager manager = App.ctx.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(App.ctx.getPackageName(), 0);
+            return info.versionCode;
+        } catch (Exception e) {
+            return 100;
+        }
     }
 }
