@@ -242,6 +242,7 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
         requestParams.put("shopId", mShopId);
         requestParams.put("shopSort", shopSort);
         requestParams.put("page", getNextPage());
+        requestParams.put("Categoryid","");
         startRequest(ApiConstants.SHOP_PRODUCTS_LIST, requestParams, new HttpRequestHandler() {
             @Override
             public void onRequestFinished(ResultCode resultCode, String result) {

@@ -24,12 +24,12 @@
             android:layout_marginRight="10dp"
             android:orientation="horizontal">
 
-            <!--<ImageView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:minHeight="?attr/actionBarSize"
-                android:src="@drawable/collect" />-->
+                android:src="@drawable/collect" />
 
             <ImageView
                 android:layout_width="wrap_content"

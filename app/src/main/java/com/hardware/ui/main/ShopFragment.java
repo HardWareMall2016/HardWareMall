@@ -14,6 +14,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.hardware.R;
+import com.hardware.bean.ShopContent;
 import com.hardware.ui.shop.AllShopFragment;
 import com.zhan.framework.utils.PixelUtils;
 
@@ -83,7 +84,10 @@ public class ShopFragment extends Fragment implements AdapterView.OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        AllShopFragment.launch(getActivity(),mShopID[position]);
+        ShopContent content = new ShopContent();
+        content.setTypeId(mShopID[position]);
+        content.setTitle(mTitles[position]);
+        AllShopFragment.launch(getActivity(),content);
     }
 
     private class ShopAdapter extends BaseAdapter{

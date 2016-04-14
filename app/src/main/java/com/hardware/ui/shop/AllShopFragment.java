@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.Constants;
+import com.hardware.bean.ShopContent;
 import com.hardware.bean.ShopListResponseBean;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.ui.base.APullToRefreshListFragment;
@@ -41,6 +42,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
     private DisplayImageOptions options;
 
     private int mShopTypeId;
+    private ShopContent shopContent ;
 
     private int mSelectedTabres=R.id.tv_tab_all;
 
@@ -52,28 +54,27 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
 
     List<ShopInfo> tempProducts ;
 
-    public static void launch(Activity from ,int typeId) {
+    public static void launch(Activity from ,ShopContent shopContent) {
         FragmentArgs args = new FragmentArgs();
-        args.add(ARG_KEY, typeId);
+        args.add(ARG_KEY, shopContent);
         FragmentContainerActivity.launch(from, AllShopFragment.class, args);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mShopTypeId = savedInstanceState == null ? (int) getArguments().getSerializable(ARG_KEY)
-                : (int) savedInstanceState.getSerializable(ARG_KEY);
+        shopContent = savedInstanceState == null ? (ShopContent) getArguments().getSerializable(ARG_KEY)
+                : (ShopContent) savedInstanceState.getSerializable(ARG_KEY);
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(ARG_KEY, mShopTypeId);
+        outState.putSerializable(ARG_KEY, shopContent);
         super.onSaveInstanceState(outState);
     }
 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //super.onItemClick(parent, view, position, id);
         ShopHomePageFragment.launch(getActivity(), tempProducts.get((int) id).getId(), tempProducts.get((int) id).getLogo());
     }
 
@@ -85,7 +86,8 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
     @Override
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
-        getActivity().setTitle("全部店铺");
+        getActivity().setTitle(shopContent.getTitle());
+        mShopTypeId = shopContent.getTypeId() ;
         options= ToolsHelper.buldDefDisplayImageOptions();
         refreshTab();
     }

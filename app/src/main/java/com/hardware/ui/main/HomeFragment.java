@@ -1,5 +1,6 @@
 package com.hardware.ui.main;
 
+import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -172,9 +174,14 @@ public class HomeFragment extends ABaseFragment{
                     mSaleList = responseBean.getMessage().getRows();
                     mProTypeList = responseBean.getProType().getRows();
                     mShopList = responseBean.getShops().getRows();
+                    if(mShopList != null){
+                        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+                        int width = wm.getDefaultDisplay().getWidth();
+                        mShopListView.setMinimumHeight(width/3+30);
+                    }
+                    mShopListView.setAdapter(new HorizontalListViewAdapter(mShopList));
                     mSaleGridView.setAdapter(new HomeSaleAdapter(mSaleList));
                     mProTypeGridView.setAdapter(new HomeProTypeAdapter(mProTypeList));
-                    mShopListView.setAdapter(new HorizontalListViewAdapter(mShopList));
                 }
             }
 

@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import com.hardware.api.ApiConstants;
 import com.hardware.base.Constants;
 import com.hardware.bean.DiscountProductsResponse;
 import com.hardware.bean.MoreDiscountSaleResponse;
+import com.hardware.bean.ProductContent;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.ui.base.APullToRefreshListFragment;
 import com.loopj.android.http.RequestParams;
@@ -34,6 +36,8 @@ public class DiscountProductsFragment extends APullToRefreshListFragment<Discoun
 
     private DisplayImageOptions options;
     private String mTitle ;
+
+    private List<Product> tempProducts = new LinkedList<>();
 
     public static void launch(Activity from) {
         FragmentArgs args = new FragmentArgs();
@@ -71,6 +75,13 @@ public class DiscountProductsFragment extends APullToRefreshListFragment<Discoun
     }
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ProductContent content = new ProductContent();
+        content.setId(tempProducts.get((int)id).getId());
+        content.setDistrict(Constants.REGION_NAME);
+        ProductDetailFragment.launch(getActivity(), content);
+    }
+    @Override
     protected void requestData(RefreshMode mode) {
         RequestParams requestParams = new RequestParams();
         requestParams.put("Page", getNextPage(mode));
@@ -84,7 +95,6 @@ public class DiscountProductsFragment extends APullToRefreshListFragment<Discoun
 
             @Override
             protected List<Product> parseResult(DiscountProductsResponse moreDiscountSaleResponse) {
-                List<Product> tempProducts = new LinkedList<>();
                 if (moreDiscountSaleResponse != null && moreDiscountSaleResponse.getFlag() == 1) {
                     for (DiscountProductsResponse.MessageEntity.RowsEntity responseItem : moreDiscountSaleResponse.getMessage().getRows()) {
                         Product product = new Product();
