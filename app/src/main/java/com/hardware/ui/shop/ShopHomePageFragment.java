@@ -3,6 +3,7 @@ package com.hardware.ui.shop;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -459,18 +460,44 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         try {
             java.util.Date date = df.parse(startTime);
-            Calendar calendarNow = Calendar.getInstance();
             Calendar calendarCreateTime = Calendar.getInstance();
             calendarCreateTime.setTime(date);
-
-            long between = (calendarNow.getTimeInMillis() - calendarCreateTime.getTimeInMillis()) / 1000;//除以1000是为了转换成秒
-            long days = between / (24 * 3600);
-            diff = days + "天";
-
+            int months=getMonthToNow(calendarCreateTime);
+            if(months>0){
+                if(months>=12){
+                    diff = (months/12) + "年";
+                }else{
+                    diff = months + "月";
+                }
+            }else{
+                Calendar calendarNow = Calendar.getInstance();
+                long between = (calendarNow.getTimeInMillis() - calendarCreateTime.getTimeInMillis()) / 1000;//除以1000是为了转换成秒
+                long days = between / (24 * 3600);
+                diff = days + "天";
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return diff;
+    }
+
+    public static int getMonthToNow(Calendar starCal) {
+        int sYear = starCal.get(Calendar.YEAR);
+        int sMonth = starCal.get(Calendar.MONTH);
+        int sDay = starCal.get(Calendar.DATE);
+
+        Calendar endCal = Calendar.getInstance();
+        int eYear = endCal.get(Calendar.YEAR);
+        int eMonth = endCal.get(Calendar.MONTH);
+        int eDay = endCal.get(Calendar.DATE);
+
+        int monthday = ((eYear - sYear) * 12 + (eMonth - sMonth));
+
+        //开始日期大于结束日期，月份再减1
+        if (sDay > eDay) {
+            monthday = monthday - 1;
+        }
+        return monthday;
     }
 
     private int getNextPage(){
