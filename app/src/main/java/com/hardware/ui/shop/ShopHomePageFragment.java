@@ -53,13 +53,6 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
     private final static int SORT_BY_PRICE = 2;//价格排序
     private final static int SORT_BY_NEW = 3;//最新产品
 
-    private final static int TAB_HOME_PAGE = 0;//首页
-    private final static int TAB_COMPREHENSIVE = 1;//综合
-    private final static int TAB_NEW_PRODUCTS = 2;//新品
-    private final static int TAB_SALE_NUM = 3;//销量
-    private final static int TAB_PRICE = 4;//价格
-    private final static int TAB_NEW_ARRIVAL = 5;//新品上架
-
     private final static int PAGE_SIZE=10;
 
     private boolean QueryMore=false;
@@ -67,7 +60,6 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
 
     private int mShopId;
     private String mShopImgUrl;
-    private int mTab = TAB_HOME_PAGE;
     private int shopSort=SORT_ALL;
 
     @ViewInject(id = R.id.shopImg)
@@ -82,16 +74,6 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
     private TextView mCollectShop;
     @ViewInject(id = R.id.shop_fans)
     private TextView mShopFans;
-
-    @ViewInject(id = R.id.shop_home_page, click = "OnClick")
-    private TextView mShopHomePage;
-    @ViewInject(id = R.id.all_products, click = "OnClick")
-    private TextView mAllProducts;
-    @ViewInject(id = R.id.new_products, click = "OnClick")
-    private TextView mNewProducts;
-
-    @ViewInject(id = R.id.content_all_sub)
-    private View mAllSubView;
 
     @ViewInject(id = R.id.comprehensive, click = "OnClick")
     private TextView comprehensive;
@@ -217,7 +199,7 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
         ImageLoader.getInstance().displayImage(imgUrl, mShopImg, options);
 
         mGridView=mPullRefreshGridView.getRefreshableView();
-        View header=inflater.inflate(R.layout.shop_gridview_header,null);
+        /*View header=inflater.inflate(R.layout.shop_gridview_header,null);
         header.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -225,7 +207,7 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
                 startActivity(intent);
             }
         });
-        mGridView.addHeaderView(header);
+        mGridView.addHeaderView(header);*/
         mGridView.setOnItemClickListener(this);
 
         refreshViews();
@@ -324,45 +306,27 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
 
     void OnClick(View v) {
         switch (v.getId()) {
-            case R.id.shop_home_page:
-                if(mTab!=TAB_HOME_PAGE){
-                    mTab=TAB_HOME_PAGE;
-                    autoRefresh();
-                }
-                break;
-            case R.id.all_products:
-                if(mTab!=TAB_COMPREHENSIVE){
-                    mTab=TAB_COMPREHENSIVE;
-                    autoRefresh();
-                }
-                break;
-            case R.id.new_products:
-                if(mTab!=TAB_NEW_ARRIVAL){
-                    mTab=TAB_NEW_ARRIVAL;
-                    autoRefresh();
-                }
-                break;
             case R.id.comprehensive:
-                if(mTab!=TAB_COMPREHENSIVE){
-                    mTab=TAB_COMPREHENSIVE;
+                if(shopSort!=SORT_ALL ){
+                    shopSort=SORT_ALL ;
                     autoRefresh();
                 }
                 break;
             case R.id.new_products_sub:
-                if(mTab!=TAB_NEW_PRODUCTS){
-                    mTab=TAB_NEW_PRODUCTS;
+                if(shopSort!=SORT_BY_NEW ){
+                    shopSort=SORT_BY_NEW;
                     autoRefresh();
                 }
                 break;
             case R.id.sale_num:
-                if(mTab!=TAB_SALE_NUM){
-                    mTab=TAB_SALE_NUM;
+                if(shopSort!=SORT_BY_SALE ){
+                    shopSort=SORT_BY_SALE ;
                     autoRefresh();
                 }
                 break;
             case R.id.price:
-                if(mTab!=TAB_PRICE){
-                    mTab=TAB_PRICE;
+                if(shopSort!=SORT_BY_PRICE ){
+                    shopSort=SORT_BY_PRICE;
                     autoRefresh();
                 }
                 break;
@@ -385,70 +349,34 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
     }
 
     private void refreshViews(){
-        switch (mTab){
-            case TAB_HOME_PAGE :
-                setTabSelected(mShopHomePage,true,R.drawable.shop_home_sellected,R.drawable.shop_home_normal);
-                setTabSelected(mAllProducts,false,R.drawable.all_products_selected,R.drawable.all_products_normal);
-                setTabSelected(mNewProducts,false,R.drawable.new_products_selected,R.drawable.new_products_normal);
-                mAllSubView.setVisibility(View.GONE);
+        switch (shopSort){
+            case SORT_ALL  :
+                setTabSelected(comprehensive,true);
+                setTabSelected(newProductsSub,false);
+                setTabSelected(sortBySaleNum,false);
+                setTabSelected(sortByPrice,false);
                 shopSort=SORT_ALL;
                 break;
-            case TAB_COMPREHENSIVE :
-                mAllSubView.setVisibility(View.VISIBLE);
-                setTabSelected(mShopHomePage, false, R.drawable.shop_home_sellected, R.drawable.shop_home_normal);
-                setTabSelected(mAllProducts,true,R.drawable.all_products_selected,R.drawable.all_products_normal);
-                setTabSelected(mNewProducts,false,R.drawable.new_products_selected,R.drawable.new_products_normal);
-
-                setTabSelected(comprehensive,true,0,0);
-                setTabSelected(newProductsSub,false,0,0);
-                setTabSelected(sortBySaleNum,false,0,0);
-                setTabSelected(sortByPrice,false,0,0);
-                shopSort=SORT_ALL;
-                break;
-            case TAB_NEW_PRODUCTS :
-                mAllSubView.setVisibility(View.VISIBLE);
-                setTabSelected(mShopHomePage, false, R.drawable.shop_home_sellected, R.drawable.shop_home_normal);
-                setTabSelected(mAllProducts,true,R.drawable.all_products_selected,R.drawable.all_products_normal);
-                setTabSelected(mNewProducts,false,R.drawable.new_products_selected,R.drawable.new_products_normal);
-
-                setTabSelected(comprehensive, false, 0, 0);
-                setTabSelected(newProductsSub,true,0,0);
-                setTabSelected(sortBySaleNum,false,0,0);
-                setTabSelected(sortByPrice,false,0,0);
+            case SORT_BY_NEW  :
+                setTabSelected(comprehensive, false);
+                setTabSelected(newProductsSub,true);
+                setTabSelected(sortBySaleNum,false);
+                setTabSelected(sortByPrice,false);
                 shopSort=SORT_BY_NEW;
                 break;
-            case TAB_SALE_NUM :
-                mAllSubView.setVisibility(View.VISIBLE);
-                setTabSelected(mShopHomePage, false, R.drawable.shop_home_sellected, R.drawable.shop_home_normal);
-                setTabSelected(mAllProducts,true,R.drawable.all_products_selected,R.drawable.all_products_normal);
-                setTabSelected(mNewProducts,false,R.drawable.new_products_selected,R.drawable.new_products_normal);
-
-                setTabSelected(comprehensive, false, 0, 0);
-                setTabSelected(newProductsSub,false,0,0);
-                setTabSelected(sortBySaleNum,true,0,0);
-                setTabSelected(sortByPrice,false,0,0);
+            case SORT_BY_SALE  :
+                setTabSelected(comprehensive, false);
+                setTabSelected(newProductsSub,false);
+                setTabSelected(sortBySaleNum,true);
+                setTabSelected(sortByPrice,false);
                 shopSort=SORT_BY_SALE;
                 break;
-            case TAB_PRICE  :
-                mAllSubView.setVisibility(View.VISIBLE);
-                setTabSelected(mShopHomePage, false, R.drawable.shop_home_sellected, R.drawable.shop_home_normal);
-                setTabSelected(mAllProducts,true,R.drawable.all_products_selected,R.drawable.all_products_normal);
-                setTabSelected(mNewProducts,false,R.drawable.new_products_selected,R.drawable.new_products_normal);
-
-                setTabSelected(comprehensive, false, 0, 0);
-                setTabSelected(newProductsSub,false,0,0);
-                setTabSelected(sortBySaleNum,false,0,0);
-                setTabSelected(sortByPrice,true,0,0);
-
+            case SORT_BY_PRICE   :
+                setTabSelected(comprehensive, false);
+                setTabSelected(newProductsSub,false);
+                setTabSelected(sortBySaleNum,false);
+                setTabSelected(sortByPrice, true);
                 shopSort=SORT_BY_PRICE;
-                break;
-            case TAB_NEW_ARRIVAL  :
-                setTabSelected(mShopHomePage,false,R.drawable.shop_home_sellected,R.drawable.shop_home_normal);
-                setTabSelected(mAllProducts,false,R.drawable.all_products_selected,R.drawable.all_products_normal);
-                setTabSelected(mNewProducts,true,R.drawable.new_products_selected,R.drawable.new_products_normal);
-                mAllSubView.setVisibility(View.GONE);
-
-                shopSort=SORT_BY_NEW;
                 break;
         }
     }
@@ -461,17 +389,15 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
         ProductDetailFragment.launch(getActivity(), content);
     }
 
-    private void setTabSelected(TextView tab,boolean isSelelcted,int selDrawableRes,int unSelDrawableRes){
+    private void setTabSelected(TextView tab,boolean isSelelcted){
         int selColor=getResources().getColor(R.color.blue);
         int unSelColor=getResources().getColor(R.color.text_color);
         if(isSelelcted){
             tab.setTextColor(selColor);
             tab.setBackgroundResource(R.drawable.bg_dark_blue_underline);
-            tab.setCompoundDrawablesWithIntrinsicBounds(0,selDrawableRes,0,0);
         }else{
             tab.setTextColor(unSelColor);
             tab.setBackgroundResource(R.drawable.bg_white_small);
-            tab.setCompoundDrawablesWithIntrinsicBounds(0,unSelDrawableRes,0,0);
         }
     }
 
@@ -563,7 +489,6 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
-                /*.displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少*/
                 .build();
     }
 
