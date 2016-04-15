@@ -4,6 +4,8 @@
     <color name="black">#ff000000</color>
     <!-- 蓝色 -->
     <color name="blue">#20a6fb</color>
+    <!--黄色-->
+    <color name="yellow">#FF7300</color>
     <!--<color name="blue_pressed">#1b8dd6</color>-->
     <!-- 状态栏颜色 -->
     <color name="status_bar_bg_color">@color/black</color>

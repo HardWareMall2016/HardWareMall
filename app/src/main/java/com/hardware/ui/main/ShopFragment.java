@@ -11,18 +11,22 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hardware.R;
+import com.hardware.bean.ShopContent;
+import com.hardware.ui.search.SearchFragment;
 import com.hardware.ui.shop.AllShopFragment;
 import com.zhan.framework.utils.PixelUtils;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ShopFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class ShopFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     private GridView mGridView;
+    private ImageView mSearch ;
 
     private int[] mIcons=new int[]{
             R.drawable.dp_qblm_wjjd,
@@ -78,12 +82,26 @@ public class ShopFragment extends Fragment implements AdapterView.OnItemClickLis
         mGridView=(GridView)rootView.findViewById(R.id.grid_view);
         mGridView.setAdapter(new ShopAdapter());
         mGridView.setOnItemClickListener(this);
+        mSearch = (ImageView) rootView.findViewById(R.id.right_menu);
+        mSearch.setOnClickListener(this);
         return rootView;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        AllShopFragment.launch(getActivity(),mShopID[position]);
+        ShopContent content = new ShopContent();
+        content.setTypeId(mShopID[position]);
+        content.setTitle(mTitles[position]);
+        AllShopFragment.launch(getActivity(),content);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.right_menu:
+                SearchFragment.launch(getActivity());
+                break;
+        }
     }
 
     private class ShopAdapter extends BaseAdapter{

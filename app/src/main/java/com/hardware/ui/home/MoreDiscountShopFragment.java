@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.bean.MoreDiscountShopResponse;
 import com.hardware.tools.ToolsHelper;
+import com.hardware.ui.shop.ShopHomePageFragment;
 import com.loopj.android.http.RequestParams;
 import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestUtils;
@@ -30,24 +32,24 @@ import java.util.List;
  */
 public class MoreDiscountShopFragment extends ABaseFragment {
 
-    private final static int PAGE_SIZE=10;
+    private final static int PAGE_SIZE = 10;
 
     @ViewInject(id = R.id.pull_refresh_list)
     private PullToRefreshListView mPullToRefreshListView;
     private ListView mListView;
 
-    private boolean QueryMore=false;
-    private boolean HasMoreData=true;
+    private boolean QueryMore = false;
+    private boolean HasMoreData = true;
 
     private LayoutInflater mInflater;
 
-    private List<Product> mProducts=new LinkedList<>();
-    private ProductAdapter mAdpater=new ProductAdapter();
+    private List<Product> mProducts = new LinkedList<>();
+    private ProductAdapter mAdpater = new ProductAdapter();
 
 
-    private Handler mHandler=new Handler();
+    private Handler mHandler = new Handler();
 
-    private class Product{
+    private class Product {
         private int Id;
         private String ShopGrade;
         private String ShopName;
@@ -181,11 +183,11 @@ public class MoreDiscountShopFragment extends ABaseFragment {
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
         getActivity().setTitle(getString(R.string.home_shop_more_title));
-        mInflater=inflater;
+        mInflater = inflater;
         mListView = mPullToRefreshListView.getRefreshableView();
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
-        mPullToRefreshListView.getLoadingLayoutProxy(true,false).setRefreshingLabel("正在刷新");
-        mPullToRefreshListView.getLoadingLayoutProxy(true,false).setPullLabel("下拉刷新");
+        mPullToRefreshListView.getLoadingLayoutProxy(true, false).setRefreshingLabel("正在刷新");
+        mPullToRefreshListView.getLoadingLayoutProxy(true, false).setPullLabel("下拉刷新");
         mPullToRefreshListView.getLoadingLayoutProxy(true, false).setReleaseLabel("释放开始刷新");
         intPullUpLable(true);
         mPullToRefreshListView.setAdapter(mAdpater);
@@ -206,6 +208,13 @@ public class MoreDiscountShopFragment extends ABaseFragment {
                     QueryMore = true;
                     requestData();
                 }
+            }
+        });
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ShopHomePageFragment.launch(getActivity(), mProducts.get((int) id).getId(), mProducts.get((int) id).getLogo());
             }
         });
     }
@@ -273,20 +282,20 @@ public class MoreDiscountShopFragment extends ABaseFragment {
         }, HttpRequestUtils.RequestType.GET);
     }
 
-    private int getNextPage(){
-        if(!QueryMore){
+    private int getNextPage() {
+        if (!QueryMore) {
             return 1;
         }
-        int pageIndex=1+mProducts.size()/PAGE_SIZE;
+        int pageIndex = 1 + mProducts.size() / PAGE_SIZE;
         return pageIndex;
     }
 
-    private void onRefreshComplete(){
+    private void onRefreshComplete() {
         mHandler.removeCallbacks(mRefreshCompleteRunnable);
-        mHandler.postDelayed(mRefreshCompleteRunnable,50);
+        mHandler.postDelayed(mRefreshCompleteRunnable, 50);
     }
 
-    private Runnable mRefreshCompleteRunnable=new Runnable(){
+    private Runnable mRefreshCompleteRunnable = new Runnable() {
         @Override
         public void run() {
             mPullToRefreshListView.onRefreshComplete();
@@ -313,8 +322,8 @@ public class MoreDiscountShopFragment extends ABaseFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
-            if(convertView == null){
-                convertView= mInflater.inflate(R.layout.more_discount_shop_list_item,null);
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.more_discount_shop_list_item, null);
                 viewHolder = new ViewHolder();
                 viewHolder.shopName = (TextView) convertView.findViewById(R.id.name);
                 viewHolder.businesssphere = (TextView) convertView.findViewById(R.id.businesssphere);
@@ -323,39 +332,40 @@ public class MoreDiscountShopFragment extends ABaseFragment {
                 viewHolder.orderproduct = (TextView) convertView.findViewById(R.id.orderproduct);
                 viewHolder.companyaddress = (TextView) convertView.findViewById(R.id.companyaddress);
                 convertView.setTag(viewHolder);
-            }else{
-                viewHolder=(ViewHolder)convertView.getTag();
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
             }
             viewHolder.shopName.setText(mProducts.get(position).getShopName());
-            viewHolder.businesssphere.setText("经营模式："+mProducts.get(position).getBusinessSphere());
-            viewHolder.createDate.setText(mProducts.get(position).getCreateDate()+"年");
-            viewHolder.productnumber.setText(mProducts.get(position).getProductNumbere()+"件产品 |");
-            viewHolder.orderproduct.setText(mProducts.get(position).getOrderProduct()+"位买家");
+            viewHolder.businesssphere.setText("经营模式：" + mProducts.get(position).getBusinessSphere());
+            viewHolder.createDate.setText(mProducts.get(position).getCreateDate() + "年");
+            viewHolder.productnumber.setText(mProducts.get(position).getProductNumbere() + "件产品 |");
+            viewHolder.orderproduct.setText(mProducts.get(position).getOrderProduct() + "位买家");
             viewHolder.companyaddress.setText(mProducts.get(position).getCompanyAddress());
             return convertView;
         }
     }
 
-    class ViewHolder{
+    class ViewHolder {
         TextView shopName;
-        TextView businesssphere ;
-        TextView createDate ;
+        TextView businesssphere;
+        TextView createDate;
         TextView productnumber;
-        TextView orderproduct ;
-        TextView companyaddress ;
+        TextView orderproduct;
+        TextView companyaddress;
     }
 
 
-    private void intPullUpLable(boolean canLoadMore){
-        if(canLoadMore){
-            mPullToRefreshListView.getLoadingLayoutProxy(false,true).setRefreshingLabel("正在加载");
-            mPullToRefreshListView.getLoadingLayoutProxy(false,true).setPullLabel("上拉加载更多");
-            mPullToRefreshListView.getLoadingLayoutProxy(false,true).setReleaseLabel("释放开始加载");
-        }else{
-            mPullToRefreshListView.getLoadingLayoutProxy(false,true).setRefreshingLabel("没有更多数据了");
-            mPullToRefreshListView.getLoadingLayoutProxy(false,true).setPullLabel("没有更多数据了");
-            mPullToRefreshListView.getLoadingLayoutProxy(false,true).setReleaseLabel("没有更多数据了");
+    private void intPullUpLable(boolean canLoadMore) {
+        if (canLoadMore) {
+            mPullToRefreshListView.getLoadingLayoutProxy(false, true).setRefreshingLabel("正在加载");
+            mPullToRefreshListView.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载更多");
+            mPullToRefreshListView.getLoadingLayoutProxy(false, true).setReleaseLabel("释放开始加载");
+        } else {
+            mPullToRefreshListView.getLoadingLayoutProxy(false, true).setRefreshingLabel("没有更多数据了");
+            mPullToRefreshListView.getLoadingLayoutProxy(false, true).setPullLabel("没有更多数据了");
+            mPullToRefreshListView.getLoadingLayoutProxy(false, true).setReleaseLabel("没有更多数据了");
         }
     }
+
 
 }

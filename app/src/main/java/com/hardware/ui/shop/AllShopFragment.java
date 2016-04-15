@@ -11,14 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.Constants;
+import com.hardware.bean.ShopContent;
 import com.hardware.bean.ShopListResponseBean;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.ui.base.APullToRefreshListFragment;
+import com.hardware.ui.search.SearchFragment;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -27,6 +30,7 @@ import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.adapter.ABaseAdapter;
 import com.zhan.framework.support.inject.ViewInject;
+import com.zhan.framework.ui.activity.ActionBarActivity;
 import com.zhan.framework.utils.ToastUtils;
 
 import java.util.LinkedList;
@@ -41,6 +45,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
     private DisplayImageOptions options;
 
     private int mShopTypeId;
+    private ShopContent shopContent ;
 
     private int mSelectedTabres=R.id.tv_tab_all;
 
@@ -50,31 +55,28 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
     @ViewInject(id = R.id.tv_tab_distance,click = "OnClick")
     private TextView mTabDistance;
 
-    List<ShopInfo> tempProducts ;
-
-    public static void launch(Activity from ,int typeId) {
+    public static void launch(Activity from ,ShopContent shopContent) {
         FragmentArgs args = new FragmentArgs();
-        args.add(ARG_KEY, typeId);
+        args.add(ARG_KEY, shopContent);
         FragmentContainerActivity.launch(from, AllShopFragment.class, args);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mShopTypeId = savedInstanceState == null ? (int) getArguments().getSerializable(ARG_KEY)
-                : (int) savedInstanceState.getSerializable(ARG_KEY);
+        shopContent = savedInstanceState == null ? (ShopContent) getArguments().getSerializable(ARG_KEY)
+                : (ShopContent) savedInstanceState.getSerializable(ARG_KEY);
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(ARG_KEY, mShopTypeId);
+        outState.putSerializable(ARG_KEY, shopContent);
         super.onSaveInstanceState(outState);
     }
 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //super.onItemClick(parent, view, position, id);
-        ShopHomePageFragment.launch(getActivity(), tempProducts.get((int) id).getId(), tempProducts.get((int) id).getLogo());
+        ShopHomePageFragment.launch(getActivity(), getAdapterItems().get((int) id).getId(), getAdapterItems().get((int) id).getLogo());
     }
 
     @Override
@@ -85,9 +87,25 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
     @Override
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
-        getActivity().setTitle("全部店铺");
+        getActivity().setTitle(shopContent.getTitle());
+        mShopTypeId = shopContent.getTypeId() ;
         options= ToolsHelper.buldDefDisplayImageOptions();
         refreshTab();
+    }
+
+    @Override
+    public void onCreateCustomActionMenu(LinearLayout menuContent, Activity activity) {
+        ImageView searchBtn=new ImageView(activity);
+        searchBtn.setImageResource(R.drawable.icon_search);
+        searchBtn.setBackgroundResource(R.drawable.default_backgroud);
+        searchBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                SearchFragment.launch(getActivity());
+            }
+        });
+        menuContent.removeAllViews();
+        menuContent.addView(searchBtn);
     }
 
     @Override
@@ -112,6 +130,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
         requestParams.put("id", mShopTypeId);
         requestParams.put("page", getNextPage(mode));
         requestParams.put("regionName", Constants.REGION_NAME);
+        requestParams.put("Categoryid","");
 
         startRequest(ApiConstants.MORE_ALL_SHOP_LIST, requestParams, new PagingTask<ShopListResponseBean>(mode) {
             @Override
@@ -121,7 +140,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
 
             @Override
             protected List<ShopInfo> parseResult(ShopListResponseBean MoreDiscountShopResponse) {
-                tempProducts = new LinkedList<>();
+                List<ShopInfo> tempProducts = new LinkedList<>();
                 if (MoreDiscountShopResponse != null && MoreDiscountShopResponse.getFlag() == 1) {
                     for (ShopListResponseBean.MessageEntity.RowsEntity responseItem : MoreDiscountShopResponse.getMessage().getRows()) {
                         ShopInfo product = new ShopInfo();
@@ -219,7 +238,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
         private int ProductNumbere;
         private int orderProduct;
         private int buyerNumber;
-        private int distance;
+        private String distance;
 
         public int getId() {
             return Id;
@@ -309,11 +328,11 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
             this.buyerNumber = buyerNumber;
         }
 
-        public int getDistance() {
+        public String getDistance() {
             return distance;
         }
 
-        public void setDistance(int distance) {
+        public void setDistance(String distance) {
             this.distance = distance;
         }
     }

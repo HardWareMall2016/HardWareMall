@@ -6,7 +6,6 @@
     <dimen name="bbuton_rounded_corner_radius">3dp</dimen>
 
     <dimen name="min_item_height">48dp</dimen>
-    <dimen name="horizontallistview_height">140dp</dimen>
 
     <!--标题字体 -->
     <dimen name="title">20dp</dimen>

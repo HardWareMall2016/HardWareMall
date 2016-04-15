@@ -1,5 +1,6 @@
 package com.hardware.ui.main;
 
+import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -23,8 +25,10 @@ import com.hardware.bean.ProductContent;
 import com.hardware.ui.home.HomeListFragment;
 import com.hardware.ui.home.MoreDiscountShopFragment;
 import com.hardware.ui.home.MoreFragment;
+import com.hardware.ui.products.DiscountProductsFragment;
 import com.hardware.ui.products.MoreDiscountSaleFragment;
 import com.hardware.ui.products.ProductDetailFragment;
+import com.hardware.ui.search.SearchFragment;
 import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.view.HorizontalListView;
@@ -56,6 +60,8 @@ public class HomeFragment extends ABaseFragment{
     MyGridView mProTypeGridView ;
     @ViewInject(id = R.id.home_horizon_listview)
     HorizontalListView mShopListView ;
+    @ViewInject(id = R.id.right_menu,click = "OnClick")
+    ImageView mSearchView ;
     @ViewInject(idStr = "sale_more", click = "OnClick")
     View viewSaleMore;//更多折扣
     @ViewInject(idStr = "home_protype_more", click = "OnClick")
@@ -71,7 +77,7 @@ public class HomeFragment extends ABaseFragment{
            };
     private String[] mIconName = { "人气品牌", "用户求购", "商家推广", "行业资讯", "便民维修", "便民施工", "专业招聘", "更多"};
 
-    private ArrayList<View> mAdList;
+    private ArrayList<View> mAdList = new ArrayList<>();
     private List<Map<String, Object>> mDataList = new ArrayList<Map<String, Object>>();
     private List<HomeProductsBean.MessageEntity.RowsEntity> mSaleList = new ArrayList<>();//折扣特卖
     private List<HomeProductsBean.ProTypeEntity.RowsEntity> mProTypeList = new ArrayList<>();//热销单品
@@ -83,21 +89,35 @@ public class HomeFragment extends ABaseFragment{
     private HorizontalListViewAdapter mShopAdapter ;
     private int currPage = 0;
     private int oldPage = 0;
+    private String [] from ={"image","text"};
+    private int [] to = {R.id.image,R.id.text};
 
+    private Handler mHandler = new Handler();
 
     @Override
     protected int inflateContentView() {
         return R.layout.fragment_home;
     }
 
+
+    @Override
+    public boolean isCacheRootView() {
+        return true;
+    }
+
     @Override
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
+
+        mAdList.clear();
+        mDataList.clear();
+        mSaleList.clear();
+        mProTypeList.clear();
+        mShopList.clear();
+
         initViewPager();
         getData();
 
-        String [] from ={"image","text"};
-        int [] to = {R.id.image,R.id.text};
         mSimpleAdapter = new SimpleAdapter(getActivity(), mDataList, R.layout.home_gridview_item, from, to);
         mGridView.setAdapter(mSimpleAdapter);
 
@@ -141,6 +161,7 @@ public class HomeFragment extends ABaseFragment{
         });
     }
 
+
     @Override
     public void requestData() {
         RequestParams requestParams=new RequestParams();
@@ -158,9 +179,14 @@ public class HomeFragment extends ABaseFragment{
                     mSaleList = responseBean.getMessage().getRows();
                     mProTypeList = responseBean.getProType().getRows();
                     mShopList = responseBean.getShops().getRows();
+                    if(mShopList != null){
+                        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+                        int width = wm.getDefaultDisplay().getWidth();
+                        mShopListView.setMinimumHeight(width/3+30);
+                    }
+                    mShopListView.setAdapter(new HorizontalListViewAdapter(mShopList));
                     mSaleGridView.setAdapter(new HomeSaleAdapter(mSaleList));
                     mProTypeGridView.setAdapter(new HomeProTypeAdapter(mProTypeList));
-                    mShopListView.setAdapter(new HorizontalListViewAdapter(mShopList));
                 }
             }
 
@@ -186,7 +212,6 @@ public class HomeFragment extends ABaseFragment{
             mImageSource.add(image);
         }
 
-        mAdList = new ArrayList<View>();
         mAdList.add(findViewById(R.id.dot1));
         mAdList.add(findViewById(R.id.dot2));
         mAdList.add(findViewById(R.id.dot3));
@@ -196,9 +221,7 @@ public class HomeFragment extends ABaseFragment{
         MyPageChangeListener listener = new MyPageChangeListener();
         mViewPager.setOnPageChangeListener(listener);
 
-        ScheduledExecutorService scheduled = Executors.newSingleThreadScheduledExecutor();
-        ViewPagerTask pagerTask = new ViewPagerTask();
-        scheduled.scheduleAtFixedRate(pagerTask, 2, 2, TimeUnit.SECONDS);
+        mHandler.postDelayed(mViewPagerTask, 5000);
     }
 
 
@@ -243,19 +266,21 @@ public class HomeFragment extends ABaseFragment{
         }
     }
 
-    private class ViewPagerTask implements Runnable {
+    private Runnable mViewPagerTask=new Runnable(){
         @Override
         public void run() {
             currPage = (currPage + 1) % mImages.length;
-            handler.sendEmptyMessage(0);
-        }
-    }
-
-    private Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
             mViewPager.setCurrentItem(currPage);
+            mHandler.postDelayed(mViewPagerTask,5000);
         }
     };
+
+    @Override
+    public void onDestroyView() {
+        mHandler.removeCallbacks(mViewPagerTask);
+        super.onDestroyView();
+    }
+
 
     private class HomeSaleAdapter extends BaseAdapter{
 
@@ -424,10 +449,13 @@ public class HomeFragment extends ABaseFragment{
                 MoreDiscountSaleFragment.launch(getActivity(), getString(R.string.sale_more));
                 break;
             case R.id.home_protype_more:
-                MoreDiscountSaleFragment.launch(getActivity(), getString(R.string.home_protype_more));
+                DiscountProductsFragment.launch(getActivity());
                 break;
             case R.id.home_shop_more:
                 MoreDiscountShopFragment.launch(getActivity());
+                break;
+            case R.id.right_menu:
+                SearchFragment.launch(getActivity());
                 break;
         }
     }

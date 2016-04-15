@@ -1,6 +1,7 @@
 package com.hardware.ui.products;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.Constants;
-import com.hardware.bean.MoreDiscountSaleResponse;
+import com.hardware.bean.DiscountProductsResponse;
 import com.hardware.bean.ProductContent;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.ui.base.APullToRefreshListFragment;
@@ -25,22 +26,22 @@ import com.zhan.framework.support.adapter.ABaseAdapter;
 import com.zhan.framework.support.inject.ViewInject;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MoreDiscountSaleFragment extends APullToRefreshListFragment<MoreDiscountSaleFragment.Product>{
+public class DiscountProductsFragment extends APullToRefreshListFragment<DiscountProductsFragment.Product>{
 
     private final static String ARG_KEY = "TITLE";
 
     private DisplayImageOptions options;
     private String mTitle ;
+
     private List<Product> tempProducts = new LinkedList<>();
 
-    public static void launch(Activity from,String mTitle) {
+    public static void launch(Activity from) {
         FragmentArgs args = new FragmentArgs();
-        args.add(ARG_KEY, mTitle);
-        FragmentContainerActivity.launch(from, MoreDiscountSaleFragment.class, args);
+        args.add(ARG_KEY, "热销单品");
+        FragmentContainerActivity.launch(from, DiscountProductsFragment.class, args);
     }
 
     @Override
@@ -79,22 +80,22 @@ public class MoreDiscountSaleFragment extends APullToRefreshListFragment<MoreDis
         content.setDistrict(Constants.REGION_NAME);
         ProductDetailFragment.launch(getActivity(), content);
     }
-
     @Override
     protected void requestData(RefreshMode mode) {
         RequestParams requestParams = new RequestParams();
         requestParams.put("Page", getNextPage(mode));
+        requestParams.put("regionName", Constants.REGION_NAME);
 
-        startRequest(ApiConstants.MORE_DISCOUNT_SALE_LIST, requestParams, new PagingTask<MoreDiscountSaleResponse>(mode) {
+        startRequest(ApiConstants.DISCOUNT_PRODUCTSLIST, requestParams, new PagingTask<DiscountProductsResponse>(mode) {
             @Override
-            public MoreDiscountSaleResponse parseResponseToResult(String content) {
-                return ToolsHelper.parseJson(content, MoreDiscountSaleResponse.class);
+            public DiscountProductsResponse parseResponseToResult(String content) {
+                return ToolsHelper.parseJson(content, DiscountProductsResponse.class);
             }
 
             @Override
-            protected List<Product> parseResult(MoreDiscountSaleResponse moreDiscountSaleResponse) {
+            protected List<Product> parseResult(DiscountProductsResponse moreDiscountSaleResponse) {
                 if (moreDiscountSaleResponse != null && moreDiscountSaleResponse.getFlag() == 1) {
-                    for (MoreDiscountSaleResponse.MessageBean.RowsBean responseItem : moreDiscountSaleResponse.getMessage().getRows()) {
+                    for (DiscountProductsResponse.MessageEntity.RowsEntity responseItem : moreDiscountSaleResponse.getMessage().getRows()) {
                         Product product = new Product();
                         product.setId(responseItem.getId());
                         product.setImgUrl(responseItem.getImgUrl());
@@ -133,7 +134,13 @@ public class MoreDiscountSaleFragment extends APullToRefreshListFragment<MoreDis
 
         @Override
         public int inflateViewId() {
-            return R.layout.more_discount_sale_list_item;
+            return R.layout.discount_products_list_item;
+        }
+
+        @Override
+        public void bindingView(View convertView) {
+            super.bindingView(convertView);
+            oldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
         @Override

@@ -38,4 +38,7 @@ public class ApiConstants {
     //产品评价
     public static final String  PRODUCTS_EVALUATE = "common/aplHome/productsEvaluate";
 
+    //热销单品
+    public static final String  DISCOUNT_PRODUCTSLIST = "common/aplHome/discountProductsList";
+
 }

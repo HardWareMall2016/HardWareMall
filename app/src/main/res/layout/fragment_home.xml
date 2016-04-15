@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="五金商城"
+            android:text="@string/app_name"
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="20sp" />
@@ -33,7 +33,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:background="@drawable/default_bg"
-            android:src="@drawable/icon_message" />
+            android:src="@drawable/icon_search" />
 
         <View
             android:id="@+id/underline"
@@ -43,7 +43,7 @@
             android:background="@color/divider_color" />
     </RelativeLayout>
 
-    <ScrollView
+    <com.hardware.view.MyScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
@@ -110,6 +110,46 @@
                 android:columnWidth="80dp"
                 android:numColumns="auto_fit"
                 android:stretchMode="columnWidth" />
+
+            <LinearLayout
+                android:id="@+id/home_shop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_white"
+                android:minHeight="@dimen/min_item_height"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="6"
+                    android:text="人气店铺"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/home_shop_more"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="更多"
+                    android:textColor="@color/text_color" />
+            </LinearLayout>
+
+            <com.hardware.view.HorizontalListView
+                android:id="@+id/home_horizon_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_white"
+                android:paddingTop="8dp"
+                android:layout_gravity="center"/>
 
             <LinearLayout
                 android:id="@+id/setting_feedback"
@@ -191,7 +231,7 @@
                 android:numColumns="3"
                 android:stretchMode="columnWidth" />
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:id="@+id/home_shop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -228,9 +268,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/horizontallistview_height"
                 android:background="@drawable/bg_white"
-                android:paddingTop="8dp"/>
+                android:paddingTop="8dp"/>-->
 
         </LinearLayout>
-    </ScrollView>
+    </com.hardware.view.MyScrollView>
 
 </LinearLayout>
