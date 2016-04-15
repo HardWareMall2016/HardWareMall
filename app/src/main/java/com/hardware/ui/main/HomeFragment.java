@@ -92,6 +92,7 @@ public class HomeFragment extends ABaseFragment{
     private String [] from ={"image","text"};
     private int [] to = {R.id.image,R.id.text};
 
+    private Handler mHandler = new Handler();
 
     @Override
     protected int inflateContentView() {
@@ -219,9 +220,7 @@ public class HomeFragment extends ABaseFragment{
         MyPageChangeListener listener = new MyPageChangeListener();
         mViewPager.setOnPageChangeListener(listener);
 
-        ScheduledExecutorService scheduled = Executors.newSingleThreadScheduledExecutor();
-        ViewPagerTask pagerTask = new ViewPagerTask();
-        scheduled.scheduleAtFixedRate(pagerTask, 2, 2, TimeUnit.SECONDS);
+        mHandler.postDelayed(mViewPagerTask, 1000);
     }
 
 
@@ -266,19 +265,21 @@ public class HomeFragment extends ABaseFragment{
         }
     }
 
-    private class ViewPagerTask implements Runnable {
+    private Runnable mViewPagerTask=new Runnable(){
         @Override
         public void run() {
             currPage = (currPage + 1) % mImages.length;
-            handler.sendEmptyMessage(0);
-        }
-    }
-
-    private Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
             mViewPager.setCurrentItem(currPage);
+            mHandler.postDelayed(mViewPagerTask,1000);
         }
     };
+
+    @Override
+    public void onDestroyView() {
+        mHandler.removeCallbacks(mViewPagerTask);
+        super.onDestroyView();
+    }
+
 
     private class HomeSaleAdapter extends BaseAdapter{
 
