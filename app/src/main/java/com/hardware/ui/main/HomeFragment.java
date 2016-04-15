@@ -28,6 +28,7 @@ import com.hardware.ui.home.MoreFragment;
 import com.hardware.ui.products.DiscountProductsFragment;
 import com.hardware.ui.products.MoreDiscountSaleFragment;
 import com.hardware.ui.products.ProductDetailFragment;
+import com.hardware.ui.search.SearchFragment;
 import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.view.HorizontalListView;
@@ -59,6 +60,8 @@ public class HomeFragment extends ABaseFragment{
     MyGridView mProTypeGridView ;
     @ViewInject(id = R.id.home_horizon_listview)
     HorizontalListView mShopListView ;
+    @ViewInject(id = R.id.right_menu,click = "OnClick")
+    ImageView mSearchView ;
     @ViewInject(idStr = "sale_more", click = "OnClick")
     View viewSaleMore;//更多折扣
     @ViewInject(idStr = "home_protype_more", click = "OnClick")
@@ -448,6 +451,9 @@ public class HomeFragment extends ABaseFragment{
                 break;
             case R.id.home_shop_more:
                 MoreDiscountShopFragment.launch(getActivity());
+                break;
+            case R.id.right_menu:
+                SearchFragment.launch(getActivity());
                 break;
         }
     }

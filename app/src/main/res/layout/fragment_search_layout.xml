@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/search_product_shop"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="商品"
+            android:textColor="@color/text_color"
+            android:background="@drawable/bg_gray_rounded"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            />
+        <ImageView
+            android:id="@+id/search_down"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/arrow_down"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:layout_toRightOf="@+id/search_product_shop"
+            android:background="@drawable/bg_gray_rounded"
+            android:paddingRight="4dp"
+            android:paddingLeft="4dp"/>
+        <EditText
+            android:id="@+id/search_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/right_menu"
+            android:layout_toRightOf="@id/search_down"
+            android:background="@drawable/bg_gray_rounded"
+            android:drawablePadding="16dp"
+            android:hint="请输入商品"
+            android:textColorHint="@color/text_color_sub"
+            android:paddingLeft="10dp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/right_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:background="@drawable/default_bg"
+            android:text="取消"
+            android:layout_marginLeft="4dp"
+            android:textColor="@color/blue"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#c3c3c3"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="暂无搜索记录"
+        android:gravity="center"
+        android:textColor="@color/text_color"/>
+
+</LinearLayout>

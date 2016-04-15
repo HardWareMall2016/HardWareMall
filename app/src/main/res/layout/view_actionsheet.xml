@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:id="@+id/view_rl1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/view_cancel"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:src="@drawable/icon_cancel" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/view_ll1"
+        android:layout_below="@+id/view_rl1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp">
+
+
+        <ImageView
+            android:id="@+id/products_detail_shopurl"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="2" />
+
+        <RelativeLayout
+            android:id="@+id/rl_products_detail_shopname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_weight="5">
+
+            <TextView
+                android:id="@+id/dialog_products_detail_shopname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:text="1233"/>
+
+            <TextView
+                android:id="@+id/dialog_products_detail_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dialog_products_detail_shopname"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/yellow"
+                android:textSize="10sp"
+                android:text="1233"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/view_ll2"
+        android:layout_below="@+id/view_ll1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:textColor="@color/text_color"
+            android:text="购买数量："
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:textColor="@color/text_color_sub"
+            android:text="剩余10000件"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@+id/view_ll2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+
+        <ImageView
+            android:id="@+id/view_imageview_subduction"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/icon_subduction"/>
+        <TextView
+            android:id="@+id/view_textview_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:layout_marginLeft="30dp"/>
+        <ImageView
+            android:id="@+id/view_imageview_plus"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/icon_plus"
+            android:layout_marginLeft="30dp"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue"
+        android:minHeight="@dimen/min_item_height"
+        android:layout_alignParentBottom="true"
+        >
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+</RelativeLayout>
