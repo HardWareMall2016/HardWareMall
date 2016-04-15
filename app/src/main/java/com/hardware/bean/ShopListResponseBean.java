@@ -85,7 +85,7 @@ public class ShopListResponseBean {
             private int ProductNumbere;
             private int orderProduct;
             private int buyerNumber;
-            private float distance;
+            private String distance;
 
             public int getId() {
                 return Id;
@@ -183,11 +183,11 @@ public class ShopListResponseBean {
                 this.buyerNumber = buyerNumber;
             }
 
-            public float getDistance() {
+            public String getDistance() {
                 return distance;
             }
 
-            public void setDistance(float distance) {
+            public void setDistance(String distance) {
                 this.distance = distance;
             }
         }
