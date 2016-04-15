@@ -76,7 +76,7 @@ public class DiscountProductsFragment extends APullToRefreshListFragment<Discoun
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ProductContent content = new ProductContent();
-        content.setId(tempProducts.get((int)id).getId());
+        content.setId(getAdapterItems().get((int)id).getId());
         content.setDistrict(Constants.REGION_NAME);
         ProductDetailFragment.launch(getActivity(), content);
     }
