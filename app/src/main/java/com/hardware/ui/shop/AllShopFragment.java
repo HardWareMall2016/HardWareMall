@@ -55,8 +55,6 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
     @ViewInject(id = R.id.tv_tab_distance,click = "OnClick")
     private TextView mTabDistance;
 
-    List<ShopInfo> tempProducts ;
-
     public static void launch(Activity from ,ShopContent shopContent) {
         FragmentArgs args = new FragmentArgs();
         args.add(ARG_KEY, shopContent);
@@ -78,7 +76,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ShopHomePageFragment.launch(getActivity(), tempProducts.get((int) id).getId(), tempProducts.get((int) id).getLogo());
+        ShopHomePageFragment.launch(getActivity(), getAdapterItems().get((int) id).getId(), getAdapterItems().get((int) id).getLogo());
     }
 
     @Override
@@ -142,7 +140,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
 
             @Override
             protected List<ShopInfo> parseResult(ShopListResponseBean MoreDiscountShopResponse) {
-                tempProducts = new LinkedList<>();
+                List<ShopInfo> tempProducts = new LinkedList<>();
                 if (MoreDiscountShopResponse != null && MoreDiscountShopResponse.getFlag() == 1) {
                     for (ShopListResponseBean.MessageEntity.RowsEntity responseItem : MoreDiscountShopResponse.getMessage().getRows()) {
                         ShopInfo product = new ShopInfo();
