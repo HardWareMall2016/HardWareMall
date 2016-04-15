@@ -221,7 +221,7 @@ public class HomeFragment extends ABaseFragment{
         MyPageChangeListener listener = new MyPageChangeListener();
         mViewPager.setOnPageChangeListener(listener);
 
-        mHandler.postDelayed(mViewPagerTask, 1000);
+        mHandler.postDelayed(mViewPagerTask, 5000);
     }
 
 
@@ -271,7 +271,7 @@ public class HomeFragment extends ABaseFragment{
         public void run() {
             currPage = (currPage + 1) % mImages.length;
             mViewPager.setCurrentItem(currPage);
-            mHandler.postDelayed(mViewPagerTask,1000);
+            mHandler.postDelayed(mViewPagerTask,5000);
         }
     };
 
