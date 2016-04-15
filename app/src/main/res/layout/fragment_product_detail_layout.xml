@@ -663,6 +663,7 @@
         android:orientation="horizontal">
 
         <RelativeLayout
+            android:id="@+id/products_detail_cart"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -681,6 +682,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/products_detail_order"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

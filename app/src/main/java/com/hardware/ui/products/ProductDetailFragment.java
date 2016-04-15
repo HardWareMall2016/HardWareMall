@@ -103,7 +103,10 @@ public class ProductDetailFragment extends ABaseFragment {
     TextView mDetailDeliveryMark;
     @ViewInject(id = R.id.products_detail_type, click = "OnClick")
     RelativeLayout mProductsDetailType;
-
+    @ViewInject(id = R.id.products_detail_cart,click = "OnClick")
+    RelativeLayout mProductCart ;
+    @ViewInject(id = R.id.products_detail_order,click = "OnClick")
+    RelativeLayout mProductOrder ;
 
     //第二页
     @ViewInject(id = R.id.detail_picture, click = "OnClick")
@@ -518,6 +521,20 @@ public class ProductDetailFragment extends ABaseFragment {
                 getActivity().finish();
                 break;
             case R.id.products_detail_type:
+                new ActionSheetDialog(getActivity(),imgUrl,productName,productPrice)
+                        .builder()
+                        .setCancelable(false)
+                        .setCanceledOnTouchOutside(false)
+                        .show();
+                break;
+            case R.id.products_detail_cart:
+                new ActionSheetDialog(getActivity(),imgUrl,productName,productPrice)
+                        .builder()
+                        .setCancelable(false)
+                        .setCanceledOnTouchOutside(false)
+                        .show();
+                break;
+            case R.id.products_detail_order:
                 new ActionSheetDialog(getActivity(),imgUrl,productName,productPrice)
                         .builder()
                         .setCancelable(false)

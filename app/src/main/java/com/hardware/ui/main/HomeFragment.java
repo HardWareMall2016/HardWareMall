@@ -160,6 +160,7 @@ public class HomeFragment extends ABaseFragment{
         });
     }
 
+
     @Override
     public void requestData() {
         RequestParams requestParams=new RequestParams();
