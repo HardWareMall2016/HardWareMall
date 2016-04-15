@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hardware.R;
@@ -20,6 +21,7 @@ import com.hardware.bean.ShopContent;
 import com.hardware.bean.ShopListResponseBean;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.ui.base.APullToRefreshListFragment;
+import com.hardware.ui.search.SearchFragment;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -28,6 +30,7 @@ import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.adapter.ABaseAdapter;
 import com.zhan.framework.support.inject.ViewInject;
+import com.zhan.framework.ui.activity.ActionBarActivity;
 import com.zhan.framework.utils.ToastUtils;
 
 import java.util.LinkedList;
@@ -93,6 +96,21 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
     }
 
     @Override
+    public void onCreateCustomActionMenu(LinearLayout menuContent, Activity activity) {
+        ImageView searchBtn=new ImageView(activity);
+        searchBtn.setImageResource(R.drawable.icon_search);
+        searchBtn.setBackgroundResource(R.drawable.default_backgroud);
+        searchBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                SearchFragment.launch(getActivity());
+            }
+        });
+        menuContent.removeAllViews();
+        menuContent.addView(searchBtn);
+    }
+
+    @Override
     protected void configRefresh(RefreshConfig config) {
         config.minResultSize=10;
     }
@@ -114,6 +132,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
         requestParams.put("id", mShopTypeId);
         requestParams.put("page", getNextPage(mode));
         requestParams.put("regionName", Constants.REGION_NAME);
+        requestParams.put("Categoryid","");
 
         startRequest(ApiConstants.MORE_ALL_SHOP_LIST, requestParams, new PagingTask<ShopListResponseBean>(mode) {
             @Override
@@ -221,7 +240,7 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
         private int ProductNumbere;
         private int orderProduct;
         private int buyerNumber;
-        private int distance;
+        private float distance;
 
         public int getId() {
             return Id;
@@ -311,11 +330,11 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
             this.buyerNumber = buyerNumber;
         }
 
-        public int getDistance() {
+        public float getDistance() {
             return distance;
         }
 
-        public void setDistance(int distance) {
+        public void setDistance(float distance) {
             this.distance = distance;
         }
     }

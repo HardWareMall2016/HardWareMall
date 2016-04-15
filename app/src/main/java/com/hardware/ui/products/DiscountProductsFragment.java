@@ -13,7 +13,6 @@ import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.Constants;
 import com.hardware.bean.DiscountProductsResponse;
-import com.hardware.bean.MoreDiscountSaleResponse;
 import com.hardware.bean.ProductContent;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.ui.base.APullToRefreshListFragment;
