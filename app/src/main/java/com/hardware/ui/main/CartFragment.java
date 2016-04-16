@@ -1,11 +1,14 @@
 package com.hardware.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
@@ -18,6 +21,7 @@ import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.App;
 import com.hardware.base.Constants;
+import com.hardware.bean.DefResponseBean;
 import com.hardware.bean.MyCartOrderCarResponse;
 import com.hardware.bean.ProductContent;
 import com.hardware.tools.ToolsHelper;
@@ -25,9 +29,11 @@ import com.hardware.ui.products.ProductDetailFragment;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zhan.framework.network.HttpRequestHandler;
 import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
+import com.zhan.framework.utils.ToastUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -55,11 +61,17 @@ public class CartFragment extends ABaseFragment {
     @ViewInject(id = R.id.right_menu, click = "OnClick")
     private TextView mTvRightMenu;
 
+    @ViewInject(id = R.id.to_pay, click = "OnClick")
+    private TextView mTvToPay;
+
     @ViewInject(id = R.id.delete, click = "OnClick")
     private TextView mTvDelete;
 
     @ViewInject(id = R.id.move_to_fav, click = "OnClick")
     private TextView mTvMoveToFac;
+
+    @ViewInject(id = R.id.go_home_page, click = "OnClick")
+    private Button mBtnGoHomePage;
 
     private ExpandableAdapter mAdapter;
 
@@ -122,6 +134,66 @@ public class CartFragment extends ABaseFragment {
                 mIsEditMode=!mIsEditMode;
                 refreshViewsByEditMode();
                 break;
+            case R.id.go_home_page:
+                Intent homePageIntent = new Intent(getActivity(), MainActivity.class);
+                homePageIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(homePageIntent);
+                break;
+            case R.id.delete:
+                String skuId=null;
+                for (ShopOrderInfo shopOrderInfo:mOrderList){
+                    for(ProductOrderInfo orderInfo:shopOrderInfo.productOrderList){
+                        if(orderInfo.isSelelcted){
+                            if(TextUtils.isEmpty(skuId)){
+                                skuId=orderInfo.skuId;
+                            }else{
+                                skuId+=","+orderInfo.skuId;
+                            }
+                        }
+                    }
+                }
+                if(TextUtils.isEmpty(skuId)){
+                    ToastUtils.toast("请选择产品!");
+                }else {
+                    RequestParams requestParams=new RequestParams();
+                    requestParams.put("Token",App.sToken);
+                    requestParams.put("skuId",skuId);//,分割
+                    startRequest(ApiConstants.DELETE_ORDER_CAR, requestParams, new HttpRequestHandler() {
+                        @Override
+                        public void onRequestFinished(ResultCode resultCode, String result) {
+                            switch (resultCode) {
+                                case success:
+                                    DefResponseBean responseBean = ToolsHelper.parseJson(result, DefResponseBean.class);
+                                    if (responseBean != null && responseBean.getFlag() == 1) {
+                                        requestData();
+                                        mIsEditMode=false;
+                                        refreshViewsByEditMode();
+                                    }else{
+                                        ToastUtils.toast("删除失败!");
+                                    }
+                                    break;
+                                case canceled:
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }, HttpRequestUtils.RequestType.POST);
+                }
+                break;
+            case R.id.to_pay:
+                boolean hasSelect=false;
+                for (ShopOrderInfo shopOrderInfo:mOrderList){
+                    for(ProductOrderInfo orderInfo:shopOrderInfo.productOrderList){
+                        if(orderInfo.isSelelcted){
+                            hasSelect=true;
+                        }
+                    }
+                }
+                if(!hasSelect){
+                    ToastUtils.toast("请选择产品!");
+                }
+                break;
         }
     }
 
@@ -137,24 +209,34 @@ public class CartFragment extends ABaseFragment {
     public void requestData() {
         RequestParams requestParams = new RequestParams();
         requestParams.put("Token", App.sToken);
-        startRequest(ApiConstants.MY_CART_ORDER_CAR, requestParams,new BaseHttpRequestTask<MyCartOrderCarResponse>(){
+        startRequest(ApiConstants.MY_CART_ORDER_CAR, requestParams, new BaseHttpRequestTask<MyCartOrderCarResponse>() {
             @Override
             public MyCartOrderCarResponse parseResponseToResult(String content) {
+                DefResponseBean defResponseBean=ToolsHelper.parseJson(content, DefResponseBean.class);
+                if(defResponseBean!=null&&defResponseBean.getFlag()==0){
+                    //无数据
+                    MyCartOrderCarResponse bean=new MyCartOrderCarResponse();
+                    bean.setMessage(new ArrayList<MyCartOrderCarResponse.MessageBean>());
+                    return bean;
+                }else if(defResponseBean!=null&&defResponseBean.getFlag()==-1){
+                    //Token无效!
+                    LoginFragment.launch(getActivity());
+                    return null;
+                }
                 return ToolsHelper.parseJson(content, MyCartOrderCarResponse.class);
             }
 
             @Override
             public String verifyResponseResult(MyCartOrderCarResponse result) {
-                if(result==null){
-                    LoginFragment.launch(getActivity());
-                    return "请登录";
+                if (result == null) {
+                    return "无法获取数据";
                 }
                 return null;
             }
 
             @Override
             protected boolean resultIsEmpty(MyCartOrderCarResponse result) {
-                return result.getMessage()==null||result.getMessage().size()==0;
+                return result.getMessage() == null || result.getMessage().size() == 0;
             }
 
             @Override
@@ -170,12 +252,13 @@ public class CartFragment extends ABaseFragment {
                     for (MyCartOrderCarResponse.MessageBean.CartItemModelsBean cart : shopInfo.getCartItemModels()) {
                         ProductOrderInfo orderInfo = new ProductOrderInfo();
                         orderInfo.id = cart.getId();
+                        orderInfo.skuId=cart.getSkuId();
                         orderInfo.ProductName = cart.getProductName();
                         orderInfo.imgUrl = cart.getImgUrl();
                         orderInfo.isSelelcted = false;
                         orderInfo.count = cart.getCount();
                         orderInfo.price = cart.getPrice();
-                        orderInfo.size=cart.getSize();
+                        orderInfo.size = cart.getSize();
                         orderInfo.amount = orderInfo.price * orderInfo.count;
                         totalPrice += orderInfo.amount;
                         totalNumber += orderInfo.count;
@@ -352,16 +435,34 @@ public class CartFragment extends ABaseFragment {
                 holder.minus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
+                        final ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
                         if(productOrderInfo.count>1){
-                            productOrderInfo.count--;
-
-                            //小计
-                            productOrderInfo.amount = productOrderInfo.price * productOrderInfo.count;
-                            mOrderList.get(groupPosition).productsNum--;
-                            mOrderList.get(groupPosition).totalPrice-=productOrderInfo.price;
-
-                            refeshAllView();
+                            RequestParams requestParams=new RequestParams();
+                            requestParams.put("Quantity", productOrderInfo.count-1);
+                            requestParams.put("Token",App.sToken);
+                            requestParams.put("skuId", productOrderInfo.skuId);
+                            startRequest(ApiConstants.UPDATE_CART_ORDER_CAR, requestParams, new HttpRequestHandler() {
+                                @Override
+                                public void onRequestFinished(ResultCode resultCode, String result) {
+                                    switch (resultCode) {
+                                        case success:
+                                            DefResponseBean responseBean = ToolsHelper.parseJson(result, DefResponseBean.class);
+                                            if (responseBean != null && responseBean.getFlag() == 1) {
+                                                productOrderInfo.count--;
+                                                //小计
+                                                productOrderInfo.amount = productOrderInfo.price * productOrderInfo.count;
+                                                mOrderList.get(groupPosition).productsNum--;
+                                                mOrderList.get(groupPosition).totalPrice -= productOrderInfo.price;
+                                                refeshAllView();
+                                            }
+                                            break;
+                                        case canceled:
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }, HttpRequestUtils.RequestType.POST);
                         }
                     }
                 });
@@ -369,19 +470,41 @@ public class CartFragment extends ABaseFragment {
                 holder.plus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ProductOrderInfo productOrderInfo = mOrderList.get(groupPosition).productOrderList.get(childPosition);
-                        productOrderInfo.count++;
+                        final ProductOrderInfo productOrderInfo = mOrderList.get(groupPosition).productOrderList.get(childPosition);
 
-                        //小计
-                        productOrderInfo.amount = productOrderInfo.price * productOrderInfo.count;
-                        mOrderList.get(groupPosition).productsNum++;
-                        mOrderList.get(groupPosition).totalPrice+=productOrderInfo.price;
+                        RequestParams requestParams=new RequestParams();
+                        requestParams.put("Quantity", productOrderInfo.count+1);
+                        requestParams.put("Token",App.sToken);
+                        requestParams.put("skuId", productOrderInfo.skuId);
+                        startRequest(ApiConstants.UPDATE_CART_ORDER_CAR, requestParams, new HttpRequestHandler() {
+                            @Override
+                            public void onRequestFinished(ResultCode resultCode, String result) {
+                                switch (resultCode) {
+                                    case success:
+                                        DefResponseBean responseBean = ToolsHelper.parseJson(result, DefResponseBean.class);
+                                        if (responseBean != null && responseBean.getFlag() == 1) {
+                                            productOrderInfo.count++;
 
-                        refeshAllView();
+                                            //小计
+                                            productOrderInfo.amount = productOrderInfo.price * productOrderInfo.count;
+                                            mOrderList.get(groupPosition).productsNum++;
+                                            mOrderList.get(groupPosition).totalPrice += productOrderInfo.price;
+
+                                            refeshAllView();
+                                        }
+                                        break;
+                                    case canceled:
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }, HttpRequestUtils.RequestType.POST);
+
                     }
                 });
 
-            }else{
+            } else {
                 holder=(ChildHolder)convertView.getTag();
             }
 

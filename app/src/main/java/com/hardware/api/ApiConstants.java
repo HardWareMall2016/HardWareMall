@@ -43,6 +43,10 @@ public class ApiConstants {
 
     //购物车列表
     public static final String MY_CART_ORDER_CAR = "common/aplHome/myCartOrderCar";
+    //更新购物车产品数量
+    public static final String UPDATE_CART_ORDER_CAR = "common/aplHome/UpdateCartOrderCar";
+    //删除购物车
+    public static final String DELETE_ORDER_CAR = "common/aplHome/DeleteOrderCar";
 
     //一级分类
     public static final String GOODS_FIRST_CATEGORY = BASE_URL + "common/aplHome/oneCategories";
