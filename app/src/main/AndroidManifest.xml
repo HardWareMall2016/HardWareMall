@@ -32,9 +32,6 @@
             android:windowSoftInputMode="adjustPan"
             />
         <activity
-            android:name=".ui.activity.GoodsScrollGridActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.GoodsRecommendActivity"
             android:screenOrientation="portrait" />
         <activity

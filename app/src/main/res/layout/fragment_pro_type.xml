@@ -9,7 +9,8 @@
         android:id="@+id/goods_recommend_rl"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/goods_recommend_backcolor">
+        android:background="@color/goods_recommend_backcolor"
+        android:visibility="gone">
 
 
         <TextView
