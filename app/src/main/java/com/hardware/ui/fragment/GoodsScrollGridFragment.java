@@ -3,25 +3,35 @@ package com.hardware.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.hardware.R;
+import com.hardware.bean.GoodsSecondCategoryBean;
+import com.hardware.bean.GoodsSecondCategoryBean.MessageBean;
+import com.hardware.common.HardWareApi;
 import com.hardware.common.Model;
+import com.hardware.network.callback.StringCallback;
+import com.hardware.utils.JsonHelper;
+import com.squareup.okhttp.Request;
 import com.zhan.framework.component.container.FragmentArgs;
 import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 
-import butterknife.OnClick;
+import java.util.List;
 
 public class GoodsScrollGridFragment extends ABaseFragment {
 
@@ -33,28 +43,72 @@ public class GoodsScrollGridFragment extends ABaseFragment {
     private int currentItem = 0;
     private ShopAdapter shopAdapter;
     private final static String ARG_KEY = "TITLE";
-    private String mTitle;
+    private String id, name;
+    private List<MessageBean> datas;
     @ViewInject(id = R.id.tools_scrlllview)
-    ScrollView scrollView;
+    private ScrollView scrollView;
+    @ViewInject(id = R.id.title)
+    private TextView title;
+    @ViewInject(idStr = "img_back", click = "OnClick")
+    ImageView backImg;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0x001:
+                    title.setText(name);
+                    shopAdapter = new ShopAdapter(getChildFragmentManager());
+                    showToolsView();
+                    initPager();
+                    break;
+                case 0x002:
+                    break;
+            }
+        }
+    };
 
-
-    public static void launch(Activity from, String mTitle) {
+    public static void launch(Activity from, String name, String id) {
         FragmentArgs args = new FragmentArgs();
-        args.add(ARG_KEY, mTitle);
+        args.add("name", name);
+        args.add("id", id);
         FragmentContainerActivity.launch(from, GoodsScrollGridFragment.class, args, false);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTitle = savedInstanceState == null ? (String) getArguments().getSerializable(ARG_KEY)
-                : (String) savedInstanceState.getSerializable(ARG_KEY);
+        name = savedInstanceState == null ? (String) getArguments().getSerializable("name")
+                : (String) savedInstanceState.getSerializable("name");
+        id = savedInstanceState == null ? (String) getArguments().getSerializable("id")
+                : (String) savedInstanceState.getSerializable("id");
+        Log.i("tag", "name = " + name + " ,id = " + id);
+        loadGoodsListData(id);
+    }
+
+
+    private void loadGoodsListData(String id) {
+        HardWareApi.getInstance().getGoodsSecondCategory(new StringCallback() {
+            @Override
+            public void onError(Request request, Exception e) {
+                Log.i("tag", "onError = " + e.toString());
+            }
+
+            @Override
+            public void onResponse(String response) {
+                Log.i("tag", "onResponse = " + response.toString());
+                GoodsSecondCategoryBean goodsSecondCategoryBean = JsonHelper.getInstance().getObject(response, GoodsSecondCategoryBean.class);
+                datas = goodsSecondCategoryBean.getMessage();
+                mHandler.sendEmptyMessage(0x001);
+            }
+        }, id);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(ARG_KEY, mTitle);
+        outState.putSerializable("id", id);
+        outState.putSerializable("name", name);
     }
 
     @Override
@@ -65,11 +119,8 @@ public class GoodsScrollGridFragment extends ABaseFragment {
     @Override
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
-        getActivity().setTitle(mTitle);
-        shopAdapter = new ShopAdapter(getChildFragmentManager());
+//        getActivity().setTitle(name);
         this.inflater = inflater;
-        showToolsView();
-        initPager();
     }
 
     /**
@@ -78,15 +129,16 @@ public class GoodsScrollGridFragment extends ABaseFragment {
     private void showToolsView() {
         list = Model.wjjdList;
         LinearLayout toolsLayout = (LinearLayout) findViewById(R.id.tools);
-        tvList = new TextView[list.length];
-        views = new View[list.length];
+        int size = datas.size();
+        tvList = new TextView[size];
+        views = new View[size];
 
-        for (int i = 0; i < list.length; i++) {
+        for (int i = 0; i < size; i++) {
             View view = inflater.inflate(R.layout.item_list_layout, null);
             view.setId(i);
             view.setOnClickListener(toolsItemListener);
             TextView textView = (TextView) view.findViewById(R.id.text);
-            textView.setText(list[i]);
+            textView.setText(datas.get(i).getName());
             toolsLayout.addView(view);
             tvList[i] = textView;
             views[i] = view;
@@ -150,14 +202,14 @@ public class GoodsScrollGridFragment extends ABaseFragment {
         public Fragment getItem(int index) {
             Fragment fragment = new ProTypeFragment();
             Bundle bundle = new Bundle();
-            bundle.putInt("index", index);
+            bundle.putInt("id", datas.get(index).getId());
             fragment.setArguments(bundle);
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return list.length;
+            return datas.size();
         }
     }
 
@@ -187,12 +239,10 @@ public class GoodsScrollGridFragment extends ABaseFragment {
         scrollView.smoothScrollTo(0, x);
     }
 
-    @OnClick({R.id.img_back})
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
+    void OnClick(View v) {
+        switch (v.getId()) {
             case R.id.img_back:
-//                finish();
+                getActivity().finish();
                 break;
         }
     }

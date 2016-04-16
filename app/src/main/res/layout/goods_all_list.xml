@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingRight="8dp"
-        android:paddingLeft="8dp">
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
 
         <ImageView
             android:id="@+id/img_back"
@@ -37,13 +37,13 @@
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:src="@drawable/icon_search" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.8dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/comm_gray" />
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/comm_gray" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,11 +61,11 @@
                 android:id="@+id/tabLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                tl:tl_textUnselectColor="@color/black"
                 tl:tl_indicator_color="@color/tab_bgcolor"
                 tl:tl_tab_padding="0dp"
                 tl:tl_tab_width="83dp"
                 tl:tl_textSelectColor="@color/tab_bgcolor"
+                tl:tl_textUnselectColor="@color/black"
                 tl:tl_textsize="19sp" />
         </LinearLayout>
 
