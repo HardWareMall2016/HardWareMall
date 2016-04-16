@@ -539,6 +539,26 @@ public abstract class ABaseFragment extends Fragment {
 
     /***
      * 网络请求
+     *
+     * @param apiUrl
+     * @param requestParams
+     * @param requestCallback
+     * @param requestType
+     * @return
+     */
+    public RequestHandle startRequest(String urlSettingKey,String apiUrl, RequestParams requestParams, HttpRequestCallback requestCallback, HttpRequestUtils.RequestType requestType) {
+        //先释放上次的请求
+        releaseRequest(apiUrl);
+        RequestHandle handle = HttpRequestUtils.startRequest(urlSettingKey,apiUrl, requestParams, requestCallback, requestType);
+        if (handle != null) {
+            //mRequestHandleList.add(handle);
+            mRequestHandleList.put(apiUrl,handle);
+        }
+        return handle;
+    }
+
+    /***
+     * 网络请求
      * @param apiUrl
      * @param requestJsonBean
      * @param requestCallback

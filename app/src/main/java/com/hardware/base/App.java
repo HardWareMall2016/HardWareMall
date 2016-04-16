@@ -21,6 +21,8 @@ public class App extends GlobalContext {
 
     public static App ctx;
 
+    public static String sToken;
+
     public void setIsChangeTab(boolean isChangeTab) {
         this.isChangeTab = isChangeTab;
     }

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:minHeight="48dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/product_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/image"
+        android:textColor="@color/black"
+        android:textSize="@dimen/body_text" />
+
+    <TextView
+        android:id="@+id/total_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/image"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/body_text" />
+
+    <CheckBox
+        android:id="@+id/select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/image"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image"
+        android:layout_toRightOf="@id/select"
+        android:text="规格:"
+        android:textColor="@color/text_color_sub"
+        android:textSize="@dimen/body_text_small" />
+
+    <TextView
+        android:id="@+id/unit_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/size"
+        android:layout_toRightOf="@id/select"
+        android:text="单价:"
+        android:textColor="@color/text_color_sub"
+        android:textSize="@dimen/body_text_small" />
+
+
+    <TextView
+        android:id="@+id/minus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/image"
+        android:background="@drawable/bg_gray_rounded_border"
+        android:gravity="center"
+        android:minHeight="26dp"
+        android:minWidth="26dp"
+        android:text="-"
+        android:textColor="@color/black"
+        android:textSize="@dimen/body_text_small" />
+
+    <TextView
+        android:id="@+id/number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image"
+        android:layout_toLeftOf="@id/minus"
+        android:background="@drawable/bg_gray_rounded_border"
+        android:gravity="center"
+        android:minHeight="26dp"
+        android:minWidth="50dp"
+        android:text="1"
+        android:textColor="@color/black"
+        android:textSize="@dimen/body_text_small" />
+
+    <TextView
+        android:id="@+id/plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image"
+        android:layout_toLeftOf="@id/number"
+        android:background="@drawable/bg_gray_rounded_border"
+        android:gravity="center"
+        android:minHeight="26dp"
+        android:minWidth="26dp"
+        android:text="+"
+        android:textColor="@color/black"
+        android:textSize="@dimen/body_text_small" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/minus"
+        android:layout_marginTop="16dp"
+        android:background="@color/divider_color" />
+
+    <TextView
+        android:id="@+id/shop_total_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/divider"
+        android:layout_marginTop="16dp"
+        android:text="小计￥0.00"
+        android:textColor="@color/black"
+        android:textSize="@dimen/body_text" />
+
+    <TextView
+        android:id="@+id/shop_total_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_toLeftOf="@id/shop_total_price"
+        android:text="0件"
+        android:textColor="@color/black"
+        android:textSize="@dimen/body_text" />
+
+</RelativeLayout>
