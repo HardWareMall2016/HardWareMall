@@ -3,12 +3,21 @@ package com.hardware.ui.cart;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.hardware.R;
+import com.hardware.api.ApiConstants;
+import com.hardware.base.App;
+import com.hardware.base.Constants;
+import com.hardware.bean.CartOrderAddressResponse;
+import com.hardware.bean.CartOrderResponse;
+import com.hardware.tools.ToolsHelper;
+import com.loopj.android.http.RequestParams;
 import com.zhan.framework.component.container.FragmentContainerActivity;
+import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 
@@ -37,12 +46,11 @@ public class CartOrderAddressFragment extends ABaseFragment {
 
     private Handler mHandler = new Handler();
 
-    private class Order{
+    private class Order {
         private String Address;
-        private int AddressId ;
+        private int AddressId;
 
     }
-
 
 
     @Override
@@ -54,10 +62,37 @@ public class CartOrderAddressFragment extends ABaseFragment {
         FragmentContainerActivity.launch(activity, CartOrderAddressFragment.class, null);
 
     }
+
     @Override
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
         getActivity().setTitle("收货地址");
+
+    }
+
+
+    @Override
+    public void requestData() {
+        RequestParams requestParams = new RequestParams();
+        requestParams.put("Token", App.sToken);
+        Log.e("---token----",App.sToken);
+        requestParams.put("Page", 1);
+        startRequest(Constants.BASE_URL_2, ApiConstants.GET_MYADDRESS, requestParams, new BaseHttpRequestTask<CartOrderAddressResponse>() {
+            @Override
+            public CartOrderAddressResponse parseResponseToResult(String content) {
+                return ToolsHelper.parseJson(content, CartOrderAddressResponse.class);
+            }
+
+
+            @Override
+            protected void onSuccess(CartOrderAddressResponse response) {
+                super.onSuccess(response);
+                if (response != null && response.getStatus() == 0) {
+
+                }
+            }
+        }, HttpRequestUtils.RequestType.GET);
+
 
     }
 }

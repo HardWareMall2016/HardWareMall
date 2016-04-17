@@ -26,6 +26,7 @@ import com.hardware.bean.DefResponseBean2;
 import com.hardware.bean.MyCartOrderCarResponse;
 import com.hardware.bean.ProductContent;
 import com.hardware.tools.ToolsHelper;
+import com.hardware.ui.cart.CartOrderFragment;
 import com.hardware.ui.products.ProductDetailFragment;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -170,6 +171,8 @@ public class CartFragment extends ABaseFragment {
                 }
                 if(!hasSelect){
                     ToastUtils.toast("请选择产品!");
+                }else {
+                    CartOrderFragment.launch(getActivity());
                 }
                 break;
             case R.id.move_to_fav:

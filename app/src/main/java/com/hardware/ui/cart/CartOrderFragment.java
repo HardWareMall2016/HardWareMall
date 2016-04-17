@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
+import com.hardware.base.App;
 import com.hardware.base.Constants;
 import com.hardware.bean.CartOrderResponse;
 import com.hardware.bean.ProductContent;
@@ -97,7 +98,7 @@ public class CartOrderFragment extends ABaseFragment {
     @Override
     public void requestData() {
         RequestParams requestParams = new RequestParams();
-        requestParams.put("Token", "51017c3d-cb0d-4156-9511-ffa7daa3149f");
+        requestParams.put("Token", App.sToken);
         requestParams.put("skuId", "");
         startRequest(ApiConstants.CAR_BYORDER, requestParams, new BaseHttpRequestTask<CartOrderResponse>() {
             @Override
