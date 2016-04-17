@@ -62,5 +62,8 @@ public class ApiConstants {
     //以下属于47777端口接口
     //登录
     public static final String LOGIN = "common/MBUser/Login";
+    //移至收藏夹
+    public static final String SHOPPING_REMOVE_COLLECTION = "common/MBUser/ShoppingRemoveCollection ";
+    //
 
 }

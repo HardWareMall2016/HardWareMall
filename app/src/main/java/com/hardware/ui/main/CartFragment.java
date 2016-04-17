@@ -22,6 +22,7 @@ import com.hardware.api.ApiConstants;
 import com.hardware.base.App;
 import com.hardware.base.Constants;
 import com.hardware.bean.DefResponseBean;
+import com.hardware.bean.DefResponseBean2;
 import com.hardware.bean.MyCartOrderCarResponse;
 import com.hardware.bean.ProductContent;
 import com.hardware.tools.ToolsHelper;
@@ -155,30 +156,7 @@ public class CartFragment extends ABaseFragment {
                 if(TextUtils.isEmpty(skuId)){
                     ToastUtils.toast("请选择产品!");
                 }else {
-                    RequestParams requestParams=new RequestParams();
-                    requestParams.put("Token",App.sToken);
-                    requestParams.put("skuId",skuId);//,分割
-                    startRequest(ApiConstants.DELETE_ORDER_CAR, requestParams, new HttpRequestHandler() {
-                        @Override
-                        public void onRequestFinished(ResultCode resultCode, String result) {
-                            switch (resultCode) {
-                                case success:
-                                    DefResponseBean responseBean = ToolsHelper.parseJson(result, DefResponseBean.class);
-                                    if (responseBean != null && responseBean.getFlag() == 1) {
-                                        requestData();
-                                        mIsEditMode=false;
-                                        refreshViewsByEditMode();
-                                    }else{
-                                        ToastUtils.toast("删除失败!");
-                                    }
-                                    break;
-                                case canceled:
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }, HttpRequestUtils.RequestType.POST);
+                    deleteOrderCar(skuId);
                 }
                 break;
             case R.id.to_pay:
@@ -194,7 +172,82 @@ public class CartFragment extends ABaseFragment {
                     ToastUtils.toast("请选择产品!");
                 }
                 break;
+            case R.id.move_to_fav:
+                String goodsId=null;
+                String skuIds=null;
+                for (ShopOrderInfo shopOrderInfo:mOrderList){
+                    for(ProductOrderInfo orderInfo:shopOrderInfo.productOrderList){
+                        if(orderInfo.isSelelcted){
+                            if(TextUtils.isEmpty(goodsId)){
+                                goodsId=String.valueOf(orderInfo.id);
+                                skuIds=orderInfo.skuId;
+                            }else{
+                                goodsId+=","+orderInfo.id;
+                                skuIds+=","+orderInfo.skuId;
+                            }
+                        }
+                    }
+                }
+
+                if(TextUtils.isEmpty(goodsId)){
+                    ToastUtils.toast("请选择产品!");
+                }else {
+                    RequestParams requestParams=new RequestParams();
+                    requestParams.put("Token",App.sToken);
+                    requestParams.put("goodsids",goodsId);//,分割
+                    /*Log.i("wuyue", "goodsids = " + goodsId);
+                    Log.i("wuyue","Token = "+App.sToken);*/
+
+                    final String finalSkuIds = skuIds;
+                    startRequest(Constants.BASE_URL_2,ApiConstants.SHOPPING_REMOVE_COLLECTION, requestParams, new HttpRequestHandler() {
+                        @Override
+                        public void onRequestFinished(ResultCode resultCode, String result) {
+                            switch (resultCode) {
+                                case success:
+                                    DefResponseBean2 responseBean = ToolsHelper.parseJson(result, DefResponseBean2.class);
+                                    if (responseBean != null && responseBean.getStatus() == 0) {
+                                        deleteOrderCar(finalSkuIds);
+                                    } else {
+                                        ToastUtils.toast("移至收藏夹失败!");
+                                    }
+                                    break;
+                                case canceled:
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }, HttpRequestUtils.RequestType.POST);
+                }
+                break;
         }
+    }
+
+    private void deleteOrderCar(String skuIds) {
+        RequestParams requestParams=new RequestParams();
+        requestParams.put("Token", App.sToken);
+        requestParams.put("skuId",skuIds);//,分割
+        startRequest(ApiConstants.DELETE_ORDER_CAR, requestParams, new HttpRequestHandler() {
+            @Override
+            public void onRequestFinished(ResultCode resultCode, String result) {
+                switch (resultCode) {
+                    case success:
+                        DefResponseBean responseBean = ToolsHelper.parseJson(result, DefResponseBean.class);
+                        if (responseBean != null && responseBean.getFlag() == 1) {
+                            requestData();
+                            mIsEditMode=false;
+                            refreshViewsByEditMode();
+                        }else{
+                            ToastUtils.toast("删除失败!");
+                        }
+                        break;
+                    case canceled:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }, HttpRequestUtils.RequestType.POST);
     }
 
     @Override
@@ -361,20 +414,21 @@ public class CartFragment extends ABaseFragment {
                 convertView= mInflater.inflate(R.layout.my_card_order_group_header_layout,null);
                 holder=new GroupHolder();
                 holder.ckShopName =(CheckBox)convertView.findViewById(R.id.shop_name);
-                holder.ckShopName.setOnCheckedChangeListener((new CompoundButton.OnCheckedChangeListener(){
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        mOrderList.get(groupPosition).isSelectedAll=isChecked;
-                        for(ProductOrderInfo item:mOrderList.get(groupPosition).productOrderList){
-                            item.isSelelcted=isChecked;
-                        }
-                        refeshAllView();
-                    }
-                }));
                 convertView.setTag(holder);
             }else{
                 holder=(GroupHolder)convertView.getTag();
             }
+
+            holder.ckShopName.setOnCheckedChangeListener((new CompoundButton.OnCheckedChangeListener(){
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mOrderList.get(groupPosition).isSelectedAll=isChecked;
+                    for(ProductOrderInfo item:mOrderList.get(groupPosition).productOrderList){
+                        item.isSelelcted=isChecked;
+                    }
+                    refeshAllView();
+                }
+            }));
 
             holder.ckShopName.setChecked(mOrderList.get(groupPosition).isSelectedAll);
 
@@ -400,80 +454,48 @@ public class CartFragment extends ABaseFragment {
                 holder.shopTotalCount=(TextView)convertView.findViewById(R.id.shop_total_count);
                 holder.size=(TextView)convertView.findViewById(R.id.size);
                 holder.unitPrice=(TextView)convertView.findViewById(R.id.unit_price);
+            } else {
+                holder=(ChildHolder)convertView.getTag();
+            }
 
-                holder.imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
-                        ProductContent content = new ProductContent();
-                        content.setId(productOrderInfo.id);
-                        content.setDistrict(Constants.REGION_NAME);
-                        ProductDetailFragment.launch(getActivity(), content);
-                    }
-                });
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
+                    ProductContent content = new ProductContent();
+                    content.setId(productOrderInfo.id);
+                    content.setDistrict(Constants.REGION_NAME);
+                    ProductDetailFragment.launch(getActivity(), content);
+                }
+            });
 
-                holder.productName.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
-                        ProductContent content = new ProductContent();
-                        content.setId(productOrderInfo.id);
-                        content.setDistrict(Constants.REGION_NAME);
-                        ProductDetailFragment.launch(getActivity(), content);
-                    }
-                });
+            holder.productName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
+                    ProductContent content = new ProductContent();
+                    content.setId(productOrderInfo.id);
+                    content.setDistrict(Constants.REGION_NAME);
+                    ProductDetailFragment.launch(getActivity(), content);
+                }
+            });
 
-                holder.checkBox.setOnCheckedChangeListener((new CompoundButton.OnCheckedChangeListener(){
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
-                        productOrderInfo.isSelelcted=isChecked;
-                        refeshAllView();
-                    }
-                }));
+            holder.checkBox.setOnCheckedChangeListener((new CompoundButton.OnCheckedChangeListener(){
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
+                    productOrderInfo.isSelelcted=isChecked;
+                    refeshAllView();
+                }
+            }));
 
-                holder.minus.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
-                        if(productOrderInfo.count>1){
-                            RequestParams requestParams=new RequestParams();
-                            requestParams.put("Quantity", productOrderInfo.count-1);
-                            requestParams.put("Token",App.sToken);
-                            requestParams.put("skuId", productOrderInfo.skuId);
-                            startRequest(ApiConstants.UPDATE_CART_ORDER_CAR, requestParams, new HttpRequestHandler() {
-                                @Override
-                                public void onRequestFinished(ResultCode resultCode, String result) {
-                                    switch (resultCode) {
-                                        case success:
-                                            DefResponseBean responseBean = ToolsHelper.parseJson(result, DefResponseBean.class);
-                                            if (responseBean != null && responseBean.getFlag() == 1) {
-                                                productOrderInfo.count--;
-                                                //小计
-                                                productOrderInfo.amount = productOrderInfo.price * productOrderInfo.count;
-                                                mOrderList.get(groupPosition).productsNum--;
-                                                mOrderList.get(groupPosition).totalPrice -= productOrderInfo.price;
-                                                refeshAllView();
-                                            }
-                                            break;
-                                        case canceled:
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                            }, HttpRequestUtils.RequestType.POST);
-                        }
-                    }
-                });
-
-                holder.plus.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final ProductOrderInfo productOrderInfo = mOrderList.get(groupPosition).productOrderList.get(childPosition);
-
+            holder.minus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
+                    if(productOrderInfo.count>1){
                         RequestParams requestParams=new RequestParams();
-                        requestParams.put("Quantity", productOrderInfo.count+1);
+                        requestParams.put("Quantity", productOrderInfo.count-1);
                         requestParams.put("Token",App.sToken);
                         requestParams.put("skuId", productOrderInfo.skuId);
                         startRequest(ApiConstants.UPDATE_CART_ORDER_CAR, requestParams, new HttpRequestHandler() {
@@ -483,13 +505,11 @@ public class CartFragment extends ABaseFragment {
                                     case success:
                                         DefResponseBean responseBean = ToolsHelper.parseJson(result, DefResponseBean.class);
                                         if (responseBean != null && responseBean.getFlag() == 1) {
-                                            productOrderInfo.count++;
-
+                                            productOrderInfo.count--;
                                             //小计
                                             productOrderInfo.amount = productOrderInfo.price * productOrderInfo.count;
-                                            mOrderList.get(groupPosition).productsNum++;
-                                            mOrderList.get(groupPosition).totalPrice += productOrderInfo.price;
-
+                                            mOrderList.get(groupPosition).productsNum--;
+                                            mOrderList.get(groupPosition).totalPrice -= productOrderInfo.price;
                                             refeshAllView();
                                         }
                                         break;
@@ -500,13 +520,46 @@ public class CartFragment extends ABaseFragment {
                                 }
                             }
                         }, HttpRequestUtils.RequestType.POST);
-
                     }
-                });
+                }
+            });
 
-            } else {
-                holder=(ChildHolder)convertView.getTag();
-            }
+            holder.plus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final ProductOrderInfo productOrderInfo = mOrderList.get(groupPosition).productOrderList.get(childPosition);
+
+                    RequestParams requestParams=new RequestParams();
+                    requestParams.put("Quantity", productOrderInfo.count+1);
+                    requestParams.put("Token",App.sToken);
+                    requestParams.put("skuId", productOrderInfo.skuId);
+                    startRequest(ApiConstants.UPDATE_CART_ORDER_CAR, requestParams, new HttpRequestHandler() {
+                        @Override
+                        public void onRequestFinished(ResultCode resultCode, String result) {
+                            switch (resultCode) {
+                                case success:
+                                    DefResponseBean responseBean = ToolsHelper.parseJson(result, DefResponseBean.class);
+                                    if (responseBean != null && responseBean.getFlag() == 1) {
+                                        productOrderInfo.count++;
+
+                                        //小计
+                                        productOrderInfo.amount = productOrderInfo.price * productOrderInfo.count;
+                                        mOrderList.get(groupPosition).productsNum++;
+                                        mOrderList.get(groupPosition).totalPrice += productOrderInfo.price;
+
+                                        refeshAllView();
+                                    }
+                                    break;
+                                case canceled:
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }, HttpRequestUtils.RequestType.POST);
+
+                }
+            });
 
             ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
 
