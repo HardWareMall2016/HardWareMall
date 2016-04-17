@@ -4,9 +4,6 @@ package com.hardware.api;
 public class ApiConstants {
     public static final String BASE_URL = "http://121.43.111.133:50013/";
 
-    //生产环境
-    public static final String BASE_URLS = "http://121.43.111.133:47777/";
-
     public static final String IMG_BASE_URL = "http://121.43.111.133:51022/";
 
     public static final String MOBILE_HOME_PRODUCTS_LIST = "common/aplHome/mobilehomeproductsList";
@@ -59,7 +56,7 @@ public class ApiConstants {
     //确认订单(购物提交订单显示)
     public static final String CAR_BYORDER ="common/aplHome/CarByOrder";
 
-    //收货地址
+    //收货地址(属于47777端口接口)
     public static final String GET_MYADDRESS = "common/MBUser/GetMyAddress" ;
 
     //以下属于47777端口接口

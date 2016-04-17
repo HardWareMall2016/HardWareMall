@@ -3,12 +3,15 @@ package com.hardware.ui.cart;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
+import com.hardware.base.App;
+import com.hardware.base.Constants;
 import com.hardware.bean.CartOrderAddressResponse;
 import com.hardware.bean.CartOrderResponse;
 import com.hardware.tools.ToolsHelper;
@@ -71,9 +74,10 @@ public class CartOrderAddressFragment extends ABaseFragment {
     @Override
     public void requestData() {
         RequestParams requestParams = new RequestParams();
-        requestParams.put("Token", "51017c3d-cb0d-4156-9511-ffa7daa3149f");
-        requestParams.put("page", 1);
-        startRequest(ApiConstants.BASE_URLS+ApiConstants.GET_MYADDRESS, requestParams, new BaseHttpRequestTask<CartOrderAddressResponse>() {
+        requestParams.put("Token", App.sToken);
+        Log.e("---token----",App.sToken);
+        requestParams.put("Page", 1);
+        startRequest(Constants.BASE_URL_2, ApiConstants.GET_MYADDRESS, requestParams, new BaseHttpRequestTask<CartOrderAddressResponse>() {
             @Override
             public CartOrderAddressResponse parseResponseToResult(String content) {
                 return ToolsHelper.parseJson(content, CartOrderAddressResponse.class);
@@ -83,11 +87,9 @@ public class CartOrderAddressFragment extends ABaseFragment {
             @Override
             protected void onSuccess(CartOrderAddressResponse response) {
                 super.onSuccess(response);
-                //if (response != null && response.getFlag() == 1) {
+                if (response != null && response.getStatus() == 0) {
 
-                    //mCartOrderListView.setAdapter(new MessageListViewAdapter(messageBeanList));
-
-               // }
+                }
             }
         }, HttpRequestUtils.RequestType.GET);
 
