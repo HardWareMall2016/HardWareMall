@@ -139,10 +139,10 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
             }
 
             @Override
-            protected List<ShopInfo> parseResult(ShopListResponseBean MoreDiscountShopResponse) {
+            protected List<ShopInfo> parseResult(ShopListResponseBean shopListResponse) {
                 List<ShopInfo> tempProducts = new LinkedList<>();
-                if (MoreDiscountShopResponse != null && MoreDiscountShopResponse.getFlag() == 1) {
-                    for (ShopListResponseBean.MessageEntity.RowsEntity responseItem : MoreDiscountShopResponse.getMessage().getRows()) {
+                if (shopListResponse != null && shopListResponse.getFlag() == 1) {
+                    for (ShopListResponseBean.MessageBean responseItem : shopListResponse.getMessage()) {
                         ShopInfo product = new ShopInfo();
                         product.setId(responseItem.getId());
                         product.setShopGrade(responseItem.getShopGrade());
