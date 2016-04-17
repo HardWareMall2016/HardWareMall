@@ -8,4 +8,7 @@ public class Constants {
 
     // 服务地址
     public static final String CHECK_UPDATE_URL = "check_update_url";
+
+    // 服务地址
+    public static final String BASE_URL_2 = "base_url2";
 }

@@ -44,6 +44,13 @@ public class ApiConstants {
     //热销单品
     public static final String DISCOUNT_PRODUCTSLIST = "common/aplHome/discountProductsList";
 
+    //购物车列表
+    public static final String MY_CART_ORDER_CAR = "common/aplHome/myCartOrderCar";
+    //更新购物车产品数量
+    public static final String UPDATE_CART_ORDER_CAR = "common/aplHome/UpdateCartOrderCar";
+    //删除购物车
+    public static final String DELETE_ORDER_CAR = "common/aplHome/DeleteOrderCar";
+
     //一级分类
     public static final String GOODS_FIRST_CATEGORY = BASE_URL + "common/aplHome/oneCategories";
     //二，三级分类
@@ -54,4 +61,9 @@ public class ApiConstants {
 
     //收货地址
     public static final String GET_MYADDRESS = "common/MBUser/GetMyAddress" ;
+
+    //以下属于47777端口接口
+    //登录
+    public static final String LOGIN = "common/MBUser/Login";
+
 }

@@ -5,6 +5,11 @@
 		<value>http://121.43.111.133:50013/</value>
 	</setting>
 
+	<setting type="base_url2">
+		<des>服务地址2</des>
+		<value>http://121.43.111.133:47777/</value>
+	</setting>
+
 	<setting type="check_update_url">
 		<des>升级地址</des>
 		<value>https://raw.githubusercontent.com/HardWareMall2016/HardWareMall/master/update.json</value>
