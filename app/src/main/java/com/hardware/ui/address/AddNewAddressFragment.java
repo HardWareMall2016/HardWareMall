@@ -28,6 +28,7 @@ import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestHandler;
 import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
+import com.zhan.framework.ui.activity.BaseActivity;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 import com.zhan.framework.utils.ToastUtils;
 import com.zhan.framework.view.pickerview.LoopListener;
@@ -37,10 +38,10 @@ import java.util.ArrayList;
 
 public class AddNewAddressFragment extends ABaseFragment  {
 
-    public static void launch(Activity from) {
+    public static void launch(Activity from,int requestCode) {
         /*FragmentArgs args = new FragmentArgs();
         args.add(ARG_KEY, shopContent);*/
-        FragmentContainerActivity.launch(from, AddNewAddressFragment.class, null);
+        FragmentContainerActivity.launchForResult((BaseActivity) from, AddNewAddressFragment.class, null, requestCode);
     }
 
     @ViewInject(id = R.id.name)
@@ -291,6 +292,7 @@ public class AddNewAddressFragment extends ABaseFragment  {
                 DefResponseBean2 responseBean = ToolsHelper.parseJson(content, DefResponseBean2.class);
                 if (responseBean != null && responseBean.isSuccess()) {
                     ToastUtils.toast("提交成功!");
+                    getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
                 }else{
                     ToastUtils.toast("提交失败!");

@@ -12,10 +12,18 @@
 
         <com.handmark.pulltorefresh.library.PullToRefreshListView
             android:id="@+id/pull_refresh_list"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
             android:divider="@null"
-            android:showDividers="none" />
+            android:dividerHeight="0dip"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="false"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
+            android:layout_marginBottom="50dp"
+            android:listSelector="?attr/selectableItemBackground"
+            android:smoothScrollbar="true" />
     </LinearLayout>
 
     <include
@@ -38,10 +46,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
-   <Button
-       android:id="@+id/submit"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:text="button"
-       android:layout_alignParentBottom="true"/>
+
+    <Button
+        android:id="@+id/submit"
+        style="@style/text_white_bg_blue_btn_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="新增收货地址" />
 </RelativeLayout>

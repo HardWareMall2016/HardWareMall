@@ -79,4 +79,6 @@ public class ApiConstants {
     public static final String GET_COUNTY = "common/MBUser/GetCounty";
     //新增收货地址
     public static final String ADD_MY_ADDRESS_INFO = "common/MBUser/AddMyAddressInfo";
+    //新增收货地址
+    public static final String DELETE_MY_ADDRESS = "common/MBUser/DeleteMyAddress";
 }

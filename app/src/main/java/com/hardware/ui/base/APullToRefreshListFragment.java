@@ -32,8 +32,24 @@ public abstract class APullToRefreshListFragment<T> extends ARefreshFragment<T, 
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
         initPullDownLable();
         initPullUpLable(true);
-        mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+        mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                //下拉刷新
+                initPullUpLable(true);
+                APullToRefreshListFragment.this.onPullDownToRefresh();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                //上拉加载更多
+                if (!getRefreshConfig().canLoadMore) {
+                    onRefreshViewComplete();
+                    return;
+                }
+                APullToRefreshListFragment.this.onPullUpToRefresh();
+            }
+            /*@Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
                 if (refreshView.isHeaderShown()) {
                     //下拉刷新
@@ -47,7 +63,7 @@ public abstract class APullToRefreshListFragment<T> extends ARefreshFragment<T, 
                     }
                     onPullUpToRefresh();
                 }
-            }
+            }*/
         });
         setInitPullToRefresh(getListView(), mPullToRefreshListView, savedInstanceSate);
     }
