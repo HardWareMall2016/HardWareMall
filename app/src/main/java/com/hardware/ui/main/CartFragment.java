@@ -26,6 +26,7 @@ import com.hardware.bean.DefResponseBean2;
 import com.hardware.bean.MyCartOrderCarResponse;
 import com.hardware.bean.ProductContent;
 import com.hardware.tools.ToolsHelper;
+import com.hardware.ui.address.AddNewAddressFragment;
 import com.hardware.ui.cart.CartOrderFragment;
 import com.hardware.ui.products.ProductDetailFragment;
 import com.loopj.android.http.RequestParams;
@@ -93,6 +94,7 @@ public class CartFragment extends ABaseFragment {
     @Override
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         mInflater=inflater;
+        mIsEditMode=false;
         refreshViewsByEditMode();
         mMyOrderListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         mMyOrderListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ExpandableListView>(){
@@ -140,6 +142,7 @@ public class CartFragment extends ABaseFragment {
                 Intent homePageIntent = new Intent(getActivity(), MainActivity.class);
                 homePageIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(homePageIntent);
+                //AddNewAddressFragment.launch(getActivity());
                 break;
             case R.id.delete:
                 String skuId=null;

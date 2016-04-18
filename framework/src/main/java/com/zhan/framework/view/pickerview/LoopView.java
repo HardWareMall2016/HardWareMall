@@ -112,9 +112,6 @@ public class LoopView extends View {
     }
 
     private void initData() {
-        if (arrayList == null||arrayList.size()==0) {
-            return;
-        }
         paintA.setColor(colorGray);
         paintA.setAntiAlias(true);
         paintA.setTypeface(Typeface.MONOSPACE);
@@ -128,6 +125,9 @@ public class LoopView extends View {
         paintC.setAntiAlias(true);
         paintC.setTypeface(Typeface.MONOSPACE);
         paintC.setTextSize(textSize);
+        if (arrayList == null||arrayList.size()==0) {
+            return;
+        }
         measureTextWidthHeight();
         halfCircumference = (int) (maxTextHeight * lineSpacingMultiplier * (itemCount - 1));
         measuredHeight = (int) ((halfCircumference * 2) / Math.PI);
@@ -151,6 +151,8 @@ public class LoopView extends View {
     }
 
     private void measureTextWidthHeight() {
+        maxTextWidth=0;
+        maxTextHeight=0;
         Rect rect = new Rect();
         for (int i = 0; i < arrayList.size(); i++) {
             String s1 = (String) arrayList.get(i);
@@ -306,6 +308,9 @@ public class LoopView extends View {
 //        int left = paddingLeft;
         //auto calculate the text's left value when draw
         int left = (measuredWidth - maxTextWidth)/2;
+        if(left<0){
+            left=0;
+        }
 //        Log.e("measuredWidth","onDraw:"+measuredWidth);
 //        Log.e("measuredWidth","onDraw / 2:"+ (measuredWidth - maxTextWidth)/2);
 
@@ -366,9 +371,18 @@ public class LoopView extends View {
         measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
         initData();
         //measuredWidth = getMeasuredWidth();
-        if(measuredHeight<=0){
+        /*if(measuredHeight<=0){
             measuredHeight=dipToPixels(180);
+        }*/
+        if(maxTextHeight==0){
+            Rect rect = new Rect();
+            paintB.getTextBounds("\u661F\u671F", 0, 2, rect); // 星期
+            int textHeight = rect.height();
+            maxTextHeight = textHeight;
+            int halfCircumference = (int) (maxTextHeight * lineSpacingMultiplier * (itemCount - 1));
+            measuredHeight = (int) ((halfCircumference * 2) / Math.PI);
         }
+
         setMeasuredDimension(measuredWidth, measuredHeight);
     }
 

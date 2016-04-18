@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -15,6 +17,7 @@ import com.hardware.base.Constants;
 import com.hardware.bean.CartOrderAddressResponse;
 import com.hardware.bean.CartOrderResponse;
 import com.hardware.tools.ToolsHelper;
+import com.hardware.ui.address.AddNewAddressFragment;
 import com.loopj.android.http.RequestParams;
 import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestUtils;
@@ -30,6 +33,9 @@ import java.util.List;
 public class CartOrderAddressFragment extends ABaseFragment {
 
     private final static int PAGE_SIZE = 10;
+
+    @ViewInject(id = R.id.submit,click = "OnClick")
+    private Button mBtnSubmit;
 
     @ViewInject(id = R.id.pull_refresh_list)
     private PullToRefreshListView mPullToRefreshListView;
@@ -94,5 +100,14 @@ public class CartOrderAddressFragment extends ABaseFragment {
         }, HttpRequestUtils.RequestType.GET);
 
 
+    }
+
+
+    void OnClick(View v) {
+        switch (v.getId()) {
+            case R.id.submit:
+                AddNewAddressFragment.launch(getActivity());
+                break;
+        }
     }
 }

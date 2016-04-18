@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="?android:attr/listDivider"
+    android:orientation="vertical"
+    android:showDividers="middle|end">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:minHeight="32dp"
+            android:text="取消"
+            android:textColor="@drawable/text_color_dark_blue_selector"
+            android:textSize="@dimen/sub_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:minHeight="32dp"
+            android:text="请选择"
+            android:textColor="@color/black"
+            android:textSize="@dimen/title" />
+
+        <TextView
+            android:id="@+id/finish"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:minHeight="32dp"
+            android:text="完成"
+            android:textColor="@drawable/text_color_dark_blue_selector"
+            android:textSize="@dimen/sub_title" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:divider="?android:attr/listDivider"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="3dp"
+        android:showDividers="middle">
+
+        <com.zhan.framework.view.pickerview.LoopView
+            android:id="@+id/picker_view_province"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <com.zhan.framework.view.pickerview.LoopView
+            android:id="@+id/picker_view_city"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <com.zhan.framework.view.pickerview.LoopView
+            android:id="@+id/picker_view_county"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+
+</LinearLayout>
