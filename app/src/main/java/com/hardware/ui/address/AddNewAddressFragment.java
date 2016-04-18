@@ -3,6 +3,7 @@ package com.hardware.ui.address;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -38,10 +39,10 @@ import java.util.ArrayList;
 
 public class AddNewAddressFragment extends ABaseFragment  {
 
-    public static void launch(Activity from,int requestCode) {
+    public static void launch(Fragment fragment,int requestCode) {
         /*FragmentArgs args = new FragmentArgs();
         args.add(ARG_KEY, shopContent);*/
-        FragmentContainerActivity.launchForResult((BaseActivity) from, AddNewAddressFragment.class, null, requestCode);
+        FragmentContainerActivity.launchForResult(fragment, AddNewAddressFragment.class, null, requestCode);
     }
 
     @ViewInject(id = R.id.name)

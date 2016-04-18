@@ -173,7 +173,7 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
                         ToastUtils.toast("请选择地址!");
                     }
                 }else{
-                    AddNewAddressFragment.launch(getActivity(),REQUEST_CODE);
+                    AddNewAddressFragment.launch(CartOrderAddressFragment.this,REQUEST_CODE);
                 }
                 break;
         }
