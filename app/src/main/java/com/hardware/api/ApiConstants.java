@@ -59,10 +59,7 @@ public class ApiConstants {
 
     //确认订单(购物提交订单显示)
     public static final String CAR_BYORDER ="common/aplHome/CarByOrder";
-
-    //收货地址(属于47777端口接口)
-    public static final String GET_MYADDRESS = "common/MBUser/GetMyAddress" ;
-
+    
     //加入购物车
     public static final String ADD_ORDERCAR ="common/aplHome/AddOrderCar";
 
@@ -81,4 +78,8 @@ public class ApiConstants {
     public static final String ADD_MY_ADDRESS_INFO = "common/MBUser/AddMyAddressInfo";
     //新增收货地址
     public static final String DELETE_MY_ADDRESS = "common/MBUser/DeleteMyAddress";
+    //点击立即订购跳转到确认订单
+    public static final String PRODUCT_BYORDER = "common/aplHome/ProductByOrder";
+    //收货地址
+    public static final String GET_MYADDRESS = "common/MBUser/GetMyAddress" ;
 }
