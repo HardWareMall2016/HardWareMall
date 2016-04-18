@@ -24,12 +24,16 @@ import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
+import com.hardware.base.App;
 import com.hardware.base.Constants;
+import com.hardware.bean.AddOrderCarRespon;
 import com.hardware.bean.AppraiseContent;
 import com.hardware.bean.ProductContent;
+import com.hardware.bean.ProductSskuRespon;
 import com.hardware.bean.ProductsDetailResponse;
 import com.hardware.bean.ShopRecommendListRespon;
 import com.hardware.tools.ToolsHelper;
+import com.hardware.ui.main.LoginFragment;
 import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.view.ActionSheetDialog;
 import com.hardware.view.MyGridView;
@@ -143,6 +147,19 @@ public class ProductDetailFragment extends ABaseFragment {
     private String productName ;
     private String productPrice ;
 
+    private String mColor ;
+    private String mSize ;
+    private String mVersion ;
+
+    private String mDialog_SKUId ;
+    private String mDialog_Version ;
+    private String mDialog_Color ;
+    private String mDialog_Size ;
+    private double mDialog_SalePrice ;
+    private int mDialog_Stock;
+    private boolean flag = true;
+
+
 
     public static void launch(FragmentActivity activity, ProductContent content) {
         FragmentArgs args = new FragmentArgs();
@@ -190,7 +207,6 @@ public class ProductDetailFragment extends ABaseFragment {
                 public void onRequestFinished(ResultCode resultCode, String result) {
                     switch (resultCode) {
                         case success:
-
                             final ProductsDetailResponse response = ToolsHelper.parseJson(result, ProductsDetailResponse.class);
                             if (response != null && response.getFlag() == 1) {
                                 imgUrl = ApiConstants.IMG_BASE_URL + response.getMessage().getImgUrl();
@@ -241,6 +257,10 @@ public class ProductDetailFragment extends ABaseFragment {
                                         AppraiseFragment.launch(getActivity(), content);
                                     }
                                 });
+
+                                mColor = response.getMessage().getColor();
+                                mSize = response.getMessage().getSize();
+                                mVersion = response.getMessage().getVersion();
                             }
                             break;
                         case canceled:
@@ -521,27 +541,98 @@ public class ProductDetailFragment extends ABaseFragment {
                 getActivity().finish();
                 break;
             case R.id.products_detail_type:
-                new ActionSheetDialog(getActivity(),imgUrl,productName,productPrice)
-                        .builder()
-                        .setCancelable(false)
-                        .setCanceledOnTouchOutside(false)
-                        .show();
+                flag = true;
+                refersh();
                 break;
             case R.id.products_detail_cart:
-                new ActionSheetDialog(getActivity(),imgUrl,productName,productPrice)
-                        .builder()
-                        .setCancelable(false)
-                        .setCanceledOnTouchOutside(false)
-                        .show();
+                flag = true;
+                refersh();
                 break;
             case R.id.products_detail_order:
-                new ActionSheetDialog(getActivity(),imgUrl,productName,productPrice)
-                        .builder()
-                        .setCancelable(false)
-                        .setCanceledOnTouchOutside(false)
-                        .show();
+                flag = false;
+                refersh();
                 break;
         }
+    }
+
+    private View.OnClickListener mOnConformClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(App.sToken != null){
+                if(flag){
+                    RequestParams requestParams = new RequestParams();
+            /*if(mNumber.getText().toString().equals("0")){*/
+                    requestParams.put("Quantity",1);
+           /* }else{
+                requestParams.put("Quantity", Integer.parseInt(mNumber.getText().toString()));
+            }*/
+                    requestParams.put("Token", App.sToken);
+                    requestParams.put("skuId",mDialog_SKUId);
+                    startRequest(ApiConstants.ADD_ORDERCAR, requestParams, new HttpRequestHandler() {
+                        @Override
+                        public void onRequestFinished(ResultCode resultCode, String result) {
+                            switch (resultCode) {
+                                case success:
+                                    AddOrderCarRespon response = ToolsHelper.parseJson(result, AddOrderCarRespon.class);
+                                    if(response != null && response.getFlag() == 1){
+                                        ToastUtils.toast(response.getMessage());
+
+                                    }
+                                    break;
+                                case canceled:
+                                    break;
+                                default:
+                                    ToastUtils.toast(result);
+                                    break;
+                            }
+                        }
+                    }, HttpRequestUtils.RequestType.POST);
+                }else{
+                    ToastUtils.toast("123");
+                }
+            }else{
+                LoginFragment.launch(getActivity());
+            }
+        }
+    };
+
+    private void refersh() {
+        RequestParams requestParams = new RequestParams();
+        requestParams.put("Color",mColor);
+        requestParams.put("Size",mSize);
+        requestParams.put("Version",mVersion);
+        requestParams.put("id", id);
+        startRequest(ApiConstants.PRODUCT_SSKU, requestParams, new HttpRequestHandler() {
+            @Override
+            public void onRequestFinished(ResultCode resultCode, String result) {
+                switch (resultCode) {
+                    case success:
+                        ProductSskuRespon response = ToolsHelper.parseJson(result, ProductSskuRespon.class);
+                        if(response != null && response.getFlag() == 1){
+                            mDialog_SKUId = response.getMessage().getSKUId();
+                            mDialog_Version = response.getMessage().getVersion() ;
+                            mDialog_Color = response.getMessage().getColor() ;
+                            mDialog_Size = response.getMessage().getSize() ;
+                            mDialog_SalePrice = response.getMessage().getSalePrice() ;
+                            mDialog_Stock = response.getMessage().getStock() ;
+
+                            ActionSheetDialog dialog= new ActionSheetDialog(getActivity(),mDialog_SKUId,imgUrl,productName,productPrice,mDialog_Stock);
+                            dialog.setOnConformClickListener(mOnConformClickListener);// 回调（点击确定）
+                            dialog.builder();
+                            dialog.setCancelable(false);
+                            dialog.setCanceledOnTouchOutside(false);
+                            dialog.show();
+                        }
+
+                        break;
+                    case canceled:
+                        break;
+                    default:
+                        ToastUtils.toast(result);
+                        break;
+                }
+            }
+        }, HttpRequestUtils.RequestType.POST);
     }
 
 

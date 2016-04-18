@@ -5,7 +5,8 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,7 +19,6 @@ import com.hardware.bean.CartOrderResponse;
 import com.hardware.bean.ProductContent;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.ui.products.ProductDetailFragment;
-import com.hardware.view.MyListView;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -28,53 +28,33 @@ import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Created by Administrator on 16/4/16.
  */
 public class CartOrderFragment extends ABaseFragment {
 
-    private final static String ARG_KEY="arg_key";
-
-    @ViewInject(id = R.id.tv_cartorder_writes)
-    TextView mTvCartOrderWrites;
-
-    @ViewInject(id = R.id.tv_cartorder_phone)
-    TextView mTvPhone;
-
-    @ViewInject(id = R.id.tv_cartorder_address)
-    TextView mTvAddress;
+    private final static String ARG_KEY = "arg_key";
 
     @ViewInject(id = R.id.cartorder_listview)
-    MyListView mCartOrderListView;
+    ExpandableListView mExpandableListView;
 
-
-    @ViewInject(id = R.id.ll_cartorder, click = "OnClick")
-    LinearLayout mCartOrderAddress;
-
-    @ViewInject(id = R.id.cartorder_express)
-    TextView mExpress ;
-
-    @ViewInject(id = R.id.cartorder_summoney)
-    TextView mSummoney ;
-
-    @ViewInject(id = R.id.cartorder_productallmoney)
-    TextView mProductAllMoney ;
-
-    @ViewInject(id = R.id.cartorder_productcount)
-    TextView mProductCount ;
+    private TextView mTvCartOrderWrites ;
+    private TextView mTvPhone;
+    private TextView mTvAddress;
+    private TextView mSummoney ;
+    private TextView mProductAllMoney;
+    private TextView mProductCount;
+    private TextView mExpress ;
+    private LinearLayout mCartOrderAddress ;
 
     private String mSelectedSkuIds;
-
-
-    private List<CartOrderResponse.MessageBean> messageBeanList = new ArrayList<>();
     private DisplayImageOptions options;
+    private ExpandableAdapter mAdapter;
+    private CartOrderResponse mResponseBean;
 
 
-    public static void launch(FragmentActivity activity,String selectedSkuIds) {
+    public static void launch(FragmentActivity activity, String selectedSkuIds) {
         FragmentArgs args = new FragmentArgs();
         args.add(ARG_KEY, selectedSkuIds);
         FragmentContainerActivity.launch(activity, CartOrderFragment.class, args);
@@ -103,12 +83,139 @@ public class CartOrderFragment extends ABaseFragment {
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
         getActivity().setTitle("确认订单");
-
-        messageBeanList.clear();
-
         options = ToolsHelper.buldDefDisplayImageOptions();
+        View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.expandablelistview_head, null);
+        View bottomView = LayoutInflater.from(getActivity()).inflate(R.layout.expandablelistview_bottom, null);
+        mExpandableListView.addHeaderView(headerView);
+        mExpandableListView.addFooterView(bottomView);
 
+        mExpandableListView.setGroupIndicator(null);
+        mAdapter = new ExpandableAdapter();
+        mExpandableListView.setAdapter(mAdapter);
+        //不能点击收缩
+        mExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return true;
+            }
+        });
 
+        //headview
+        mTvCartOrderWrites = (TextView) headerView.findViewById(R.id.tv_cartorder_writes);
+        mTvPhone = (TextView) headerView.findViewById(R.id.tv_cartorder_phone);
+        mTvAddress = (TextView) headerView.findViewById(R.id.tv_cartorder_address);
+        mCartOrderAddress = (LinearLayout) headerView.findViewById(R.id.ll_cartorder);
+
+        //footview
+        mSummoney = (TextView) bottomView.findViewById(R.id.cartorder_summoney);
+        mProductAllMoney = (TextView) bottomView.findViewById(R.id.cartorder_productallmoney);
+        mProductCount = (TextView) bottomView.findViewById(R.id.cartorder_productcount);
+        mExpress = (TextView) bottomView.findViewById(R.id.cartorder_express);
+
+    }
+
+    private class ExpandableAdapter extends BaseExpandableListAdapter {
+        @Override
+        public int getGroupCount() {
+            return mResponseBean == null ? 0 : mResponseBean.getMessage().size();
+        }
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            return mResponseBean == null ? 0 : mResponseBean.getMessage().get(groupPosition).getCartItemModels().size();
+        }
+        @Override
+        public Object getGroup(int groupPosition) {
+            return mResponseBean.getMessage().get(groupPosition);
+        }
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            return mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition);
+        }
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            MessageViewHodler viewHodler;
+            if (convertView == null) {
+                viewHodler = new MessageViewHodler();
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.cartorder_message_list_item, null);
+                viewHodler.listOrderShopname = (TextView) convertView.findViewById(R.id.message_list_order_shopname);
+                convertView.setTag(viewHodler);
+            } else {
+                viewHodler = (MessageViewHodler) convertView.getTag();
+            }
+            viewHodler.listOrderShopname.setText(mResponseBean.getMessage().get(groupPosition).getShopName());
+            return convertView;
+        }
+
+        @Override
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+            MessageListViewHolder viewHolder;
+            if (convertView == null) {
+                viewHolder = new MessageListViewHolder();
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.cartorder_message_list_item_item, null);
+                viewHolder.productImage = (ImageView) convertView.findViewById(R.id.message_list_item_item_image);
+                viewHolder.productName = (TextView) convertView.findViewById(R.id.message_list_item_item_productname);
+                viewHolder.productStandard = (TextView) convertView.findViewById(R.id.message_list_item_item_standard);
+                viewHolder.productAllPrice = (TextView) convertView.findViewById(R.id.message_list_item_item_allprice);
+                viewHolder.productOnePrice = (TextView) convertView.findViewById(R.id.message_list_item_item_one_price);
+                viewHolder.productCount = (TextView) convertView.findViewById(R.id.message_list_item_item_count);
+                viewHolder.ll_cartorder_item = (LinearLayout) convertView.findViewById(R.id.ll_cartorder_item);
+
+                viewHolder.list_item_liuyan = (LinearLayout) convertView.findViewById(R.id.list_item_liuyan);
+                viewHolder.listOrderNumber = (TextView) convertView.findViewById(R.id.message_list_order_number);
+                viewHolder.listOrderAllMoney = (TextView) convertView.findViewById(R.id.message_list_order_allmoney);
+
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (MessageListViewHolder) convertView.getTag();
+            }
+
+            String imgUrl = ApiConstants.IMG_BASE_URL + mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getImgUrl();
+            ImageLoader.getInstance().displayImage(imgUrl, viewHolder.productImage, options);
+
+            viewHolder.productName.setText(mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getProductName());
+            viewHolder.productStandard.setText("规格：");
+            viewHolder.productAllPrice.setText("¥" + mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getPrice() + "");
+            viewHolder.productOnePrice.setText("单价：¥" + mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getPrice() + "");
+            viewHolder.productCount.setText(mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getCount() + "件");
+
+            final int priductId = mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getId();
+            viewHolder.ll_cartorder_item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProductContent content = new ProductContent();
+                    content.setId(priductId);
+                    content.setDistrict(Constants.REGION_NAME);
+                    ProductDetailFragment.launch(getActivity(), content);
+                }
+            });
+
+            //最后一项显示留言
+            if(isLastChild){
+                viewHolder.list_item_liuyan.setVisibility(View.VISIBLE);
+                viewHolder.listOrderNumber.setText(mResponseBean.getMessage().get(groupPosition).getNumber() + "");
+                viewHolder.listOrderAllMoney.setText("小计：¥ " + mResponseBean.getMessage().get(groupPosition).getCarMoney() + "");
+            }else{
+                viewHolder.list_item_liuyan.setVisibility(View.GONE);
+            }
+            return convertView;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return false;
+        }
     }
 
     @Override
@@ -127,163 +234,55 @@ public class CartOrderFragment extends ABaseFragment {
             protected void onSuccess(CartOrderResponse response) {
                 super.onSuccess(response);
                 if (response != null && response.getFlag() == 1) {
+                    mResponseBean = response;
+
+                    mAdapter.notifyDataSetChanged();
+
                     mTvCartOrderWrites.setText(response.getAddress().getShipTo());
                     mTvPhone.setText(response.getAddress().getPhone());
-                    mTvAddress.setText(response.getAddress().getFullRegionName() + response.getAddress().getAddress());
+                    mTvAddress.setText(response.getAddress().getFullRegionName() + mResponseBean.getAddress().getAddress());
+                    mCartOrderAddress.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            CartOrderAddressFragment.launch(getActivity());
+                        }
+                    });
 
-                    mSummoney.setText("总计：¥"+response.getSumMoney()+"");
-                    mProductAllMoney.setText("货款总计：¥"+response.getSumMoney()+"");
-                    mProductCount.setText(response.getSumnumber()+"件含运费");
+                    mSummoney.setText("总计：¥" + response.getSumMoney() + "");
+                    mProductAllMoney.setText("货款总计：¥" + response.getSumMoney() + "");
+                    mProductCount.setText(response.getSumnumber() + "件含运费");
 
-                    messageBeanList = response.getMessage();
-                    mCartOrderListView.setAdapter(new MessageListViewAdapter(messageBeanList));
+                    int express = 0;
+                    for(CartOrderResponse.MessageBean cartOrderResponse : mResponseBean.getMessage()){
+                        express += cartOrderResponse.getExpress();
+                        mExpress.setText("运费总计：¥" +express+"");
+                    }
 
+                    //默认展开
+                    for (int i=0;i<mResponseBean.getMessage().size();i++){
+                        mExpandableListView.expandGroup(i);
+                    }
                 }
             }
         }, HttpRequestUtils.RequestType.GET);
     }
 
-
-    private class MessageListViewAdapter extends BaseAdapter {
-
-        private List<CartOrderResponse.MessageBean> messageBeanList = new ArrayList<>();
-
-        public MessageListViewAdapter(List<CartOrderResponse.MessageBean> messageBeanList) {
-            this.messageBeanList = messageBeanList;
-        }
-
-        @Override
-        public int getCount() {
-            return messageBeanList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return messageBeanList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            MessageViewHodler viewHodler;
-            if (convertView == null) {
-                viewHodler = new MessageViewHodler();
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.cartorder_message_list_item, null);
-                viewHodler.listOrderShopname = (TextView) convertView.findViewById(R.id.message_list_order_shopname);
-                viewHodler.listOrderNumber = (TextView) convertView.findViewById(R.id.message_list_order_number);
-                viewHodler.listOrderAllMoney = (TextView) convertView.findViewById(R.id.message_list_order_allmoney);
-                viewHodler.listOrderListView = (MyListView) convertView.findViewById(R.id.message_list_listview);
-                convertView.setTag(viewHodler);
-            } else {
-                viewHodler = (MessageViewHodler) convertView.getTag();
-            }
-
-            viewHodler.listOrderShopname.setText(messageBeanList.get(position).getShopName());
-            viewHodler.listOrderNumber.setText(messageBeanList.get(position).getNumber() + "");
-            viewHodler.listOrderAllMoney.setText("小计：¥ " + messageBeanList.get(position).getCarMoney() + "");
-            viewHodler.listOrderListView.setAdapter(new ListOrderAdapter(messageBeanList.get(position).getCartItemModels()));
-
-
-            return convertView;
-        }
-    }
-
-
-    private class ListOrderAdapter extends BaseAdapter {
-
-        private List<CartOrderResponse.MessageBean.CartItemModelsBean> cartItemModels = new ArrayList<>();
-
-        public ListOrderAdapter(List<CartOrderResponse.MessageBean.CartItemModelsBean> cartItemModels) {
-            this.cartItemModels = cartItemModels;
-        }
-
-        @Override
-        public int getCount() {
-            return cartItemModels.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return cartItemModels.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            MessageListViewHolder viewHolder ;
-            if(convertView == null){
-                viewHolder = new MessageListViewHolder();
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.cartorder_message_list_item_item,null);
-                viewHolder.productImage = (ImageView) convertView.findViewById(R.id.message_list_item_item_image);
-                viewHolder.productName = (TextView) convertView.findViewById(R.id.message_list_item_item_productname);
-                viewHolder.productStandard = (TextView) convertView.findViewById(R.id.message_list_item_item_standard);
-                viewHolder.productAllPrice =(TextView)convertView.findViewById(R.id.message_list_item_item_allprice);
-                viewHolder.productOnePrice = (TextView) convertView.findViewById(R.id.message_list_item_item_one_price);
-                viewHolder.productCount = (TextView) convertView.findViewById(R.id.message_list_item_item_count);
-                viewHolder.ll_cartorder_item = (LinearLayout) convertView.findViewById(R.id.ll_cartorder_item);
-
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (MessageListViewHolder) convertView.getTag();
-            }
-
-            String imgUrl = ApiConstants.IMG_BASE_URL + cartItemModels.get(position).getImgUrl();
-            ImageLoader.getInstance().displayImage(imgUrl, viewHolder.productImage, options);
-
-            viewHolder.productName.setText(cartItemModels.get(position).getProductName());
-            viewHolder.productStandard.setText("规格：");
-            viewHolder.productAllPrice.setText("¥"+cartItemModels.get(position).getPrice()+"");
-            viewHolder.productOnePrice.setText("单价：¥" + cartItemModels.get(position).getPrice() + "");
-            viewHolder.productCount.setText(cartItemModels.get(position).getCount() + "件");
-
-            final int priductId = cartItemModels.get(position).getId();
-            viewHolder.ll_cartorder_item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ProductContent content = new ProductContent();
-                    content.setId(priductId);
-                    content.setDistrict(Constants.REGION_NAME);
-                    ProductDetailFragment.launch(getActivity(), content);
-                }
-            });
-
-
-            return convertView;
-        }
-    }
-
-    private class MessageListViewHolder{
+    private class MessageListViewHolder {
         LinearLayout ll_cartorder_item;
-        ImageView productImage ;
-        TextView productName ;
-        TextView productStandard ;
-        TextView productAllPrice ;
-        TextView productOnePrice ;
-        TextView productCount ;
+        ImageView productImage;
+        TextView productName;
+        TextView productStandard;
+        TextView productAllPrice;
+        TextView productOnePrice;
+        TextView productCount;
 
+        LinearLayout list_item_liuyan;
+        TextView listOrderNumber;
+        TextView listOrderAllMoney;
     }
 
     private class MessageViewHodler {
         TextView listOrderShopname;
-        TextView listOrderNumber;
-        TextView listOrderAllMoney;
-        MyListView listOrderListView;
     }
 
-
-    void OnClick(View view) {
-        switch (view.getId()) {
-            case R.id.ll_cartorder:
-                CartOrderAddressFragment.launch(getActivity());
-                break;
-        }
-    }
 }

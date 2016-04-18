@@ -4,7 +4,7 @@
     <item android:state_pressed="true">
         <shape>
             <solid android:color="#d9d9d9" />
-           <!--  <stroke android:width="1dp" android:color="@color/bbutton_danger_edge" /> -->
+            <!--  <stroke android:width="1dp" android:color="@color/bbutton_danger_edge" /> -->
             <corners android:radius="@dimen/bbuton_rounded_corner_radius" />
         </shape>
     </item>
@@ -21,7 +21,7 @@
     <item>
         <shape>
             <solid android:color="#ffffff" />
-             <stroke android:width="1dp" android:color="@color/divider_color" />
+            <stroke android:width="1dp" android:color="@color/divider_color" />
             <corners android:radius="@dimen/bbuton_rounded_corner_radius" />
         </shape>
     </item>

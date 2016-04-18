@@ -4,51 +4,52 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white">
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/message_list_item_rl"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#c9c9c9"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:orientation="horizontal">
         <TextView
             android:id="@+id/message_list_order_one"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="订单1"
             android:textColor="@color/black"
             android:textSize="16dp"/>
         <TextView
             android:id="@+id/message_list_order_shopname"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="3"
             android:text="筑城商行"
             android:layout_toRightOf="@+id/message_list_order_one"
             android:textSize="16dp"
             android:textColor="@color/black"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:text="优惠说明"
             android:textSize="16dp"
             android:textColor="@color/black"
-            android:layout_marginRight="10dp"
             android:drawableRight="@drawable/arrow_down"
             android:layout_alignParentRight="true"
             />
-    </RelativeLayout>
-    <com.hardware.view.MyListView
-        android:id="@+id/message_list_listview"
-        android:layout_below="@+id/message_list_item_rl"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-    </com.hardware.view.MyListView>
-    <EditText
+    </LinearLayout>
+    <!--<EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="给卖家留言"
-        android:layout_below="@+id/message_list_listview"/>
+        android:layout_below="@+id/message_list_item_rl"
+        />
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -77,5 +78,5 @@
                 android:textSize="16dp"
                 android:layout_marginLeft="10dp"/>
         </LinearLayout>
-    </RelativeLayout>
+    </RelativeLayout>-->
 </RelativeLayout>
