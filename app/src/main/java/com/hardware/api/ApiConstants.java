@@ -10,6 +10,8 @@ public class ApiConstants {
 
     //商品详情
     public static final String PRODUCTS_DETAIL = "common/aplHome/productsDetail";
+    //添加店铺
+    public static final String PRODUCT_SSKU = "common/aplHome/productssku";
 
     //同店推荐
     public static final String PRODUCTS_SHOPSPRODUCTS = "common/aplHome/shopsProducts";
@@ -60,6 +62,9 @@ public class ApiConstants {
 
     //收货地址(属于47777端口接口)
     public static final String GET_MYADDRESS = "common/MBUser/GetMyAddress" ;
+
+    //加入购物车
+    public static final String ADD_ORDERCAR ="common/aplHome/AddOrderCar";
 
     //以下属于47777端口接口
     //登录

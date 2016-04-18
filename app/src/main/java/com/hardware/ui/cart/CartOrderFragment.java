@@ -28,7 +28,6 @@ import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 
-import java.text.DecimalFormat;
 
 /**
  * Created by Administrator on 16/4/16.
@@ -280,8 +279,6 @@ public class CartOrderFragment extends ABaseFragment {
         LinearLayout list_item_liuyan;
         TextView listOrderNumber;
         TextView listOrderAllMoney;
-
-
     }
 
     private class MessageViewHodler {

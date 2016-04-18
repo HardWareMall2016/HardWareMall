@@ -1,8 +1,8 @@
 package com.hardware.view;
 
+
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,9 +15,9 @@ import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.tools.ToolsHelper;
+import com.loopj.android.http.RequestHandle;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.zhan.framework.utils.ToastUtils;
 
 /**
  * Created by Administrator on 2016/4/15.
@@ -27,6 +27,7 @@ public class ActionSheetDialog {
     private Context context;
     private Display display;
     private Dialog dialog;
+    private int id;
 
     private DisplayImageOptions options;
 
@@ -34,29 +35,40 @@ public class ActionSheetDialog {
     private ImageView productUrl;
     private TextView mProductName;
     private TextView mProductPrice;
+    private TextView mProductStock;
 
     private String imgUrl;
     private String productName;
     private String productPrice;
+    private String mDialog_skuId;
+    private int mDialog_Stock;
 
     private ImageView mSubduction;
     private ImageView mPlus;
     private TextView mNumber;
 
-    private RelativeLayout mConfirm ;
+    private RelativeLayout mConfirm;
 
     private int count = 1;
 
-    public ActionSheetDialog(Context content, String imgUrl, String productName, String productPrice) {
+    private RequestHandle mUpgradeHandle;
+
+    private View.OnClickListener mOnConformClickListener;
+
+
+    public ActionSheetDialog(Context content, String mDialog_skuId, String imgUrl, String productName, String productPrice, int mDialog_Stock) {
         this.context = content;
         this.imgUrl = imgUrl;
         this.productName = productName;
         this.productPrice = productPrice;
+        this.mDialog_skuId = mDialog_skuId;
+        this.mDialog_Stock = mDialog_Stock;
         WindowManager windowManager = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
         display = windowManager.getDefaultDisplay();
         options = ToolsHelper.buldDefDisplayImageOptions();
     }
+
 
     public ActionSheetDialog builder() {
 
@@ -80,32 +92,29 @@ public class ActionSheetDialog {
         mSubduction = (ImageView) view.findViewById(R.id.view_imageview_subduction);
         mPlus = (ImageView) view.findViewById(R.id.view_imageview_plus);
         mNumber = (TextView) view.findViewById(R.id.view_textview_num);
+        mProductStock = (TextView) view.findViewById(R.id.view_stock);
+        mProductStock.setText("剩余" + mDialog_Stock + "件");
 
         mConfirm = (RelativeLayout) view.findViewById(R.id.product_confirm);
-        mConfirm.setOnClickListener(new View.OnClickListener() {
+        mConfirm.setOnClickListener(mOnConformClickListener);
+
+        mSubduction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.toast("确定");
+                if (count < 1) {
+                    count = 1;
+                    mNumber.setText(count + "");
+                } else {
+                    --count;
+                    mNumber.setText(count + "");
+                }
             }
         });
-
-            mSubduction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (count < 1) {
-                        count = 1;
-                        mNumber.setText(count+"");
-                    } else {
-                        -- count;
-                        mNumber.setText(count + "");
-                    }
-                }
-            });
 
         mPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                count = ++ count ;
+                count = ++count;
                 mNumber.setText(count + "");
             }
         });
@@ -127,6 +136,35 @@ public class ActionSheetDialog {
         dialogWindow.setAttributes(lp);
 
         return this;
+    }
+
+  /*  private void Data() {
+        RequestParams requestParams = new RequestParams();
+        if(mNumber.getText().toString().equals("0")){
+            requestParams.put("Quantity",1);
+        }else{
+            requestParams.put("Quantity", Integer.parseInt(mNumber.getText().toString()));
+        }
+        requestParams.put("Token", App.sToken);
+        requestParams.put("skuId",mDialog_skuId);
+        startRequest(ApiConstants.ADD_ORDERCAR, requestParams, new HttpRequestHandler() {
+            @Override
+            public void onRequestFinished(ResultCode resultCode, String result) {
+                switch (resultCode) {
+                    case success:
+                        break;
+                    case canceled:
+                        break;
+                    default:
+                        ToastUtils.toast(result);
+                        break;
+                }
+            }
+        }, HttpRequestUtils.RequestType.POST);
+    }*/
+
+    public void setOnConformClickListener(View.OnClickListener onClickListener) {
+        mOnConformClickListener = onClickListener;
     }
 
     public ActionSheetDialog setCancelable(boolean cancel) {
