@@ -33,6 +33,7 @@ import com.hardware.bean.ProductSskuRespon;
 import com.hardware.bean.ProductsDetailResponse;
 import com.hardware.bean.ShopRecommendListRespon;
 import com.hardware.tools.ToolsHelper;
+import com.hardware.ui.cart.CartImmediatelyOrderFragment;
 import com.hardware.ui.main.LoginFragment;
 import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.view.ActionSheetDialog;
@@ -588,7 +589,7 @@ public class ProductDetailFragment extends ABaseFragment {
                         }
                     }, HttpRequestUtils.RequestType.POST);
                 }else{
-                    ToastUtils.toast("123");
+                    CartImmediatelyOrderFragment.lunch(getActivity(),mDialog_SKUId);
                 }
             }else{
                 LoginFragment.launch(getActivity());
