@@ -161,18 +161,22 @@ public class CartFragment extends ABaseFragment {
                 }
                 break;
             case R.id.to_pay:
-                boolean hasSelect=false;
+                String selectedSkuIds=null;
                 for (ShopOrderInfo shopOrderInfo:mOrderList){
                     for(ProductOrderInfo orderInfo:shopOrderInfo.productOrderList){
                         if(orderInfo.isSelelcted){
-                            hasSelect=true;
+                            if(TextUtils.isEmpty(selectedSkuIds)){
+                                selectedSkuIds=orderInfo.skuId;
+                            }else{
+                                selectedSkuIds+=","+orderInfo.skuId;
+                            }
                         }
                     }
                 }
-                if(!hasSelect){
+                if(TextUtils.isEmpty(selectedSkuIds)){
                     ToastUtils.toast("请选择产品!");
                 }else {
-                    CartOrderFragment.launch(getActivity());
+                    CartOrderFragment.launch(getActivity(),selectedSkuIds);
                 }
                 break;
             case R.id.move_to_fav:
@@ -198,8 +202,6 @@ public class CartFragment extends ABaseFragment {
                     RequestParams requestParams=new RequestParams();
                     requestParams.put("Token",App.sToken);
                     requestParams.put("goodsids",goodsId);//,分割
-                    /*Log.i("wuyue", "goodsids = " + goodsId);
-                    Log.i("wuyue","Token = "+App.sToken);*/
 
                     final String finalSkuIds = skuIds;
                     startRequest(Constants.BASE_URL_2,ApiConstants.SHOPPING_REMOVE_COLLECTION, requestParams, new HttpRequestHandler() {

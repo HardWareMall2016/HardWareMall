@@ -22,6 +22,7 @@ import com.hardware.view.MyListView;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zhan.framework.component.container.FragmentArgs;
 import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
@@ -35,6 +36,8 @@ import java.util.List;
  * Created by Administrator on 16/4/16.
  */
 public class CartOrderFragment extends ABaseFragment {
+
+    private final static String ARG_KEY="arg_key";
 
     @ViewInject(id = R.id.tv_cartorder_writes)
     TextView mTvCartOrderWrites;
@@ -64,17 +67,30 @@ public class CartOrderFragment extends ABaseFragment {
     @ViewInject(id = R.id.cartorder_productcount)
     TextView mProductCount ;
 
+    private String mSelectedSkuIds;
+
 
     private List<CartOrderResponse.MessageBean> messageBeanList = new ArrayList<>();
     private DisplayImageOptions options;
 
 
+    public static void launch(FragmentActivity activity,String selectedSkuIds) {
+        FragmentArgs args = new FragmentArgs();
+        args.add(ARG_KEY, selectedSkuIds);
+        FragmentContainerActivity.launch(activity, CartOrderFragment.class, args);
+    }
 
-    public static void launch(FragmentActivity activity) {
-        //FragmentArgs args = new FragmentArgs();
-        //args.add(ARG_KEY, mTitle);
-        FragmentContainerActivity.launch(activity, CartOrderFragment.class, null);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mSelectedSkuIds = savedInstanceState == null ? (String) getArguments().getSerializable(ARG_KEY)
+                : (String) savedInstanceState.getSerializable(ARG_KEY);
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(ARG_KEY, mSelectedSkuIds);
     }
 
     @Override
@@ -99,7 +115,7 @@ public class CartOrderFragment extends ABaseFragment {
     public void requestData() {
         RequestParams requestParams = new RequestParams();
         requestParams.put("Token", App.sToken);
-        requestParams.put("skuId", "");
+        requestParams.put("skuId", mSelectedSkuIds);
         startRequest(ApiConstants.CAR_BYORDER, requestParams, new BaseHttpRequestTask<CartOrderResponse>() {
             @Override
             public CartOrderResponse parseResponseToResult(String content) {
