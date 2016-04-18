@@ -56,4 +56,9 @@
         <item name="android:windowExitAnimation">@anim/actionsheet_dialog_out</item>
     </style>
 
+    <style name="pop_menu_animation">
+        <item name="android:windowEnterAnimation">@anim/bottom_enter</item>
+        <item name="android:windowExitAnimation">@anim/bottom_exit</item>
+    </style>
+
 </resources>

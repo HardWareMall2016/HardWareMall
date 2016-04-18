@@ -71,6 +71,12 @@ public class ApiConstants {
     public static final String LOGIN = "common/MBUser/Login";
     //移至收藏夹
     public static final String SHOPPING_REMOVE_COLLECTION = "common/MBUser/ShoppingRemoveCollection ";
-    //
-
+    //获取省份
+    public static final String GET_PROVINCE = "common/MBUser/GetProvince";
+    //根据省份获取城市
+    public static final String GET_CITY = "common/MBUser/GetCity";
+    //根据城市获取区
+    public static final String GET_COUNTY = "common/MBUser/GetCounty";
+    //新增收货地址
+    public static final String ADD_MY_ADDRESS_INFO = "common/MBUser/AddMyAddressInfo";
 }

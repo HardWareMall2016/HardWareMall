@@ -39,6 +39,7 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
    <Button
+       android:id="@+id/submit"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:text="button"
