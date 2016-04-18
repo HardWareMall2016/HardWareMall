@@ -17,7 +17,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
-;
+
 
 public class GridViewAdapter extends BaseAdapter {
 

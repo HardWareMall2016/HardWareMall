@@ -38,6 +38,9 @@
         <activity
             android:name=".ui.activity.GoodsListActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.GoodsListActivity2"
+            android:screenOrientation="portrait" />
 
     </application>
 

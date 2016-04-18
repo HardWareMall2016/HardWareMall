@@ -6,6 +6,7 @@ import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,14 @@ import android.widget.Toast;
 
 import com.hardware.R;
 import com.hardware.adapter.GoodsListAdapter;
+import com.hardware.bean.GoodsListBean;
+import com.hardware.bean.GoodsListBean.GoodsInfo;
+import com.hardware.common.HardWareApi;
+import com.hardware.network.callback.StringCallback;
+import com.hardware.utils.JsonHelper;
+import com.squareup.okhttp.Request;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,16 +61,32 @@ public class GoodsListFragment extends MBaseFragment implements SwipeRefreshLayo
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        goodsListAdapter = new GoodsListAdapter(context);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(goodsListAdapter);
         mSwipeRefreshLayout.setColorSchemeColors(
                 getResources().getColor(R.color.gplus_color_1),
                 getResources().getColor(R.color.gplus_color_2),
                 getResources().getColor(R.color.gplus_color_3),
                 getResources().getColor(R.color.gplus_color_4));
         mSwipeRefreshLayout.setOnRefreshListener(this);
+        loadData();
+    }
 
+    private void loadData() {
+        HardWareApi.getInstance().getGoodsList(new StringCallback() {
+            @Override
+            public void onError(Request request, Exception e) {
+                Log.i("tag", "getGoodsList onError = " + e.toString());
+            }
+
+            @Override
+            public void onResponse(String response) {
+                Log.i("tag", "getGoodsList onResponse = " + response.toString());
+                GoodsListBean goodsListBean = JsonHelper.getInstance().getObject(response, GoodsListBean.class);
+                List<GoodsInfo> datas = goodsListBean.getMessage();
+                goodsListAdapter = new GoodsListAdapter(getActivity(), datas);
+                recyclerView.setAdapter(goodsListAdapter);
+            }
+        });
     }
 
     @Override

@@ -1,6 +1,9 @@
 package com.hardware.adapter;
 
-import android.content.Context;
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hardware.R;
+import com.hardware.api.ApiConstants;
+import com.hardware.base.Constants;
+import com.hardware.bean.GoodsListBean.GoodsInfo;
+import com.hardware.bean.ProductContent;
+import com.hardware.ui.products.ProductDetailFragment;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,12 +30,23 @@ import butterknife.ButterKnife;
  */
 public class GoodsListAdapter extends RecyclerView.Adapter {
     private LayoutInflater inflater;
-    private Context mContext;
+    private Activity mContext;
+    private List<GoodsInfo> mDatas;
+    private DisplayImageOptions options;
 
-    public GoodsListAdapter(Context context) {
+    public GoodsListAdapter(Activity context, List<GoodsInfo> datas) {
         super();
         mContext = context;
         inflater = LayoutInflater.from(context);
+        this.mDatas = datas;
+        //显示图片的配置
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_launcher)
+                .showImageOnFail(R.drawable.ic_launcher)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 
     @Override
@@ -39,15 +62,15 @@ public class GoodsListAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        final GoodsListViewHolder articleViewHolder =
+        final GoodsListViewHolder goodsListViewHolder =
                 (GoodsListViewHolder) holder;
-//        articleViewHolder.setData(datas.get(position));
-//        articleViewHolder.bind(datas.get(position));
+        goodsListViewHolder.setData(mDatas.get(position));
+        goodsListViewHolder.bind(mDatas.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return mDatas.size();
     }
 
 
@@ -58,6 +81,8 @@ public class GoodsListAdapter extends RecyclerView.Adapter {
         TextView goodsTitle;
         @Bind(R.id.goods_price)
         TextView goodsPrice;
+        @Bind(R.id.goods_count)
+        TextView goodsCount;
         private IMyViewHolderClicks mListener;
         private View mItemView;
 
@@ -68,24 +93,31 @@ public class GoodsListAdapter extends RecyclerView.Adapter {
             mItemView = itemView;
             itemView.setOnClickListener(this);
         }
-//
-//        public void setData(@NonNull final CompanyInfo companyInfo) {
-//            tvCoName.setText(companyInfo.getCompanyName());
-//            tvCoLocation.setText(companyInfo.getDetailAddress());
-//            tvCoTel.setText(companyInfo.getPhoneNo());
-//        }
 
-//        private void bind(CompanyInfo companyInfo) {
-//            mItemView.setTag(companyInfo);
-//            mItemView.setClickable(true);
-//        }
+        public void setData(@NonNull final GoodsInfo goodsInfo) {
+            if (null != goodsInfo) {
+                ImageLoader.getInstance().displayImage(ApiConstants.IMG_BASE_URL + goodsInfo.getImgUrl(), goodsImg, options);
+                goodsTitle.setText(goodsInfo.getProductName());
+                goodsPrice.setText(String.valueOf(goodsInfo.getMarketPrice()));
+                goodsCount.setText("成交" + goodsInfo.getSaleCounts() + "笔");
+            }
+
+        }
+
+        private void bind(GoodsInfo goodsInfo) {
+            mItemView.setTag(goodsInfo);
+            mItemView.setClickable(true);
+        }
 
         @Override
         public void onClick(View v) {//String.valueOf(((CompanyInfo) mItemView.getTag()).getCity())
             if (itemView.equals(v)) {
-//                int city = ((CompanyInfo) mItemView.getTag()).getCity();
-//                String cityStr = queryCity(city);
-//                mListener.onItemClick(cityStr, ((CompanyInfo) mItemView.getTag()).getDetailAddress(), ((CompanyInfo) mItemView.getTag()).getCompanyName(), ((CompanyInfo) mItemView.getTag()).getPhoneNo());
+                int priductId = ((GoodsInfo) mItemView.getTag()).getId();
+                ProductContent content = new ProductContent();
+                content.setId(priductId);
+                content.setDistrict(Constants.REGION_NAME);
+                ProductDetailFragment.launch((FragmentActivity) mContext, content);
+
             }
         }
 

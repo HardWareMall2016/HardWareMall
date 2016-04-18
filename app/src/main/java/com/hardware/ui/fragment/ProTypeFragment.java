@@ -19,7 +19,7 @@ import com.hardware.bean.GoodsThirdCategoryBean.MessageBean;
 import com.hardware.bean.Type;
 import com.hardware.common.HardWareApi;
 import com.hardware.network.callback.StringCallback;
-import com.hardware.ui.activity.GoodsListActivity;
+import com.hardware.ui.activity.GoodsListActivity2;
 import com.hardware.ui.activity.GoodsRecommendActivity;
 import com.hardware.utils.JsonHelper;
 import com.squareup.okhttp.Request;
@@ -86,7 +86,7 @@ public class ProTypeFragment extends MBaseFragment {
                     case 8:
                         break;
                 }
-                readyGo(GoodsListActivity.class);
+                readyGo(GoodsListActivity2.class);
             }
         });
 

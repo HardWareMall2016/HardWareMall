@@ -52,4 +52,25 @@ public class HardWareApi {
                 .execute(callback);
     }
 
+    //
+    public void getGoodsList(StringCallback callback){
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("Token", "");
+        params.put("brandName", "");
+        params.put("categoryId", "3350");
+        params.put("keyWords", "");
+        params.put("latitude", "31.24092916960943");
+        params.put("longitude", "121.4727160335718");
+        params.put("page", "1");
+        params.put("productSort", "2");
+        params.put("regionName", "上海市,上海市");
+        params.put("shopName", "");
+        String url = ApiConstants.GOODS_LIST;
+        OkHttpUtils//
+                .post()//
+                .url(url)//
+                .params(params)//
+                .build()//
+                .execute(callback);
+    }
 }

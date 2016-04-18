@@ -52,6 +52,8 @@ public class ApiConstants {
     public static final String GOODS_FIRST_CATEGORY = BASE_URL + "common/aplHome/oneCategories";
     //二，三级分类
     public static final String GOODS_SECOND_CATEGORY = BASE_URL + "common/aplHome/twoCategories";
+    //
+    public static final String GOODS_LIST= BASE_URL + "common/aplHome/productsList";
 
     //确认订单(购物提交订单显示)
     public static final String CAR_BYORDER ="common/aplHome/CarByOrder";
