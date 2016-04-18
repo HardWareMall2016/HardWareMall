@@ -533,6 +533,7 @@ public class ProductDetailFragment extends ABaseFragment {
                         .setCancelable(false)
                         .setCanceledOnTouchOutside(false)
                         .show();
+
                 break;
             case R.id.products_detail_order:
                 new ActionSheetDialog(getActivity(),imgUrl,productName,productPrice)

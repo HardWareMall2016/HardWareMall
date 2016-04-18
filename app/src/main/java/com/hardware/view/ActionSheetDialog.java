@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.tools.ToolsHelper;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zhan.framework.utils.ToastUtils;
 
 /**
  * Created by Administrator on 2016/4/15.
@@ -40,6 +42,9 @@ public class ActionSheetDialog {
     private ImageView mSubduction;
     private ImageView mPlus;
     private TextView mNumber;
+
+    private RelativeLayout mConfirm ;
+
     private int count = 1;
 
     public ActionSheetDialog(Context content, String imgUrl, String productName, String productPrice) {
@@ -76,6 +81,13 @@ public class ActionSheetDialog {
         mPlus = (ImageView) view.findViewById(R.id.view_imageview_plus);
         mNumber = (TextView) view.findViewById(R.id.view_textview_num);
 
+        mConfirm = (RelativeLayout) view.findViewById(R.id.product_confirm);
+        mConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtils.toast("确定");
+            }
+        });
 
             mSubduction.setOnClickListener(new View.OnClickListener() {
                 @Override
