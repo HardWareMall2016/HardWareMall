@@ -577,7 +577,7 @@ public class ProductDetailFragment extends ABaseFragment {
                                     AddOrderCarRespon response = ToolsHelper.parseJson(result, AddOrderCarRespon.class);
                                     if(response != null && response.getFlag() == 1){
                                         ToastUtils.toast(response.getMessage());
-
+                                        
                                     }
                                     break;
                                 case canceled:

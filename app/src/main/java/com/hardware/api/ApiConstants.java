@@ -79,4 +79,7 @@ public class ApiConstants {
     public static final String GET_COUNTY = "common/MBUser/GetCounty";
     //新增收货地址
     public static final String ADD_MY_ADDRESS_INFO = "common/MBUser/AddMyAddressInfo";
+
+    //点击立即订购跳转到确认订单
+    public static final String PRODUCT_BYORDER = "common/aplHome/ProductByOrder";
 }

@@ -1,6 +1,364 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/min_item_height">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_cartorder_immed"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp"
+        android:paddingTop="8dp">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="2" />
+
+        <RelativeLayout
+            android:id="@+id/rl_cartorder_immed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="5">
+
+            <TextView
+                android:id="@+id/tv_cartorder_writes_immed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+                android:id="@+id/tv_cartorder_phone_immed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_cartorder_writes_immed"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/text_color"
+                android:textSize="10sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_cartorder_address_immed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_cartorder_phone_immed"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/text_color"
+                android:textSize="10sp"
+                />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/rl_cartorder_immed"
+            android:src="@drawable/arrow_right" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/huopinqingdan"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:padding="20dp"
+        android:text="货品清单" />
+    <LinearLayout
+        android:id="@+id/message_list_item_rl_immed"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/message_list_order_one_immed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="订单:"
+            android:textColor="@color/black"
+            android:textSize="16dp"/>
+        <TextView
+            android:id="@+id/message_list_order_shopname_immed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:layout_toRightOf="@+id/message_list_order_one"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="10dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#f5f5f5"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp"
+        android:paddingTop="8dp">
+
+        <ImageView
+            android:id="@+id/cart_immed_url"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_weight="2" />
+
+        <TextView
+            android:id="@+id/tv_cartorder_product_name_immed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            android:text="螺丝钉"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+        <TextView
+            android:id="@+id/message_list_item_item_standard_immed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="规格："
+            android:padding="10dp"
+            android:textSize="12dp"/>
+        <TextView
+            android:id="@+id/message_list_item_item_allprice_immed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_alignParentRight="true"
+            android:textSize="12dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white">
+        <TextView
+            android:id="@+id/message_list_item_item_oneprice_immed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="单价："
+            android:padding="10dp"
+            android:textSize="12dp"/>
+        <TextView
+            android:id="@+id/message_list_item_item_number_immed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:padding="10dp"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="购买数量"
+            android:textSize="14dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_subduction"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textSize="12dp"
+                android:textColor="@color/text_color"
+                android:layout_marginLeft="16dp"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_plus"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="运费计算"/>
+        <TextView
+            android:id="@+id/message_list_item_item_express_immed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/arrow_right"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="给卖家留言"
+        android:minHeight="@dimen/min_item_height"
+        android:paddingLeft="10dp"
+        android:background="@drawable/bg_white_rounded_with_border_selector"
+        />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true">
+            <TextView
+                android:id="@+id/message_list_order_number_immed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:text="21件"/>
+            <TextView
+                android:id="@+id/message_list_order_allmoney_immed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="小计：￥7.00"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/cartorder_favourable_immed"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="20dp"
+                android:text="店铺优惠：¥0"
+                android:textColor="@color/text_color_sub"
+                android:textSize="10dp" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/cartorder_express_immed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="运费总计：¥0.00"
+                    android:textColor="@color/text_color_sub"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:id="@+id/cartorder_summoney_immed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="总计：¥85"
+                    android:textColor="@color/text_color_sub"
+                    android:textSize="16dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/huokuan"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    android:id="@+id/cartorder_productallmoney_immed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="货款总计：¥0.00"
+                    android:textColor="@color/text_color_sub"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:id="@+id/cartorder_productcount_immed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:text="1件含运费"
+                    android:textColor="@color/text_color_sub"
+                    android:textSize="10dp" />
+            </RelativeLayout>
+              </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue"
+        android:minHeight="@dimen/min_item_height"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="提交订单"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+</RelativeLayout>
