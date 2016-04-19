@@ -1,12 +1,12 @@
 package com.hardware.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Administrator on 16/4/17.
  */
 public class CartOrderAddressResponse {
-
     private boolean success;
     private int status;
     private List<AddressInfo> msg;
@@ -35,7 +35,7 @@ public class CartOrderAddressResponse {
         this.msg = msg;
     }
 
-    public static class AddressInfo {
+    public static class AddressInfo implements Serializable{
         private int AddressId;
         private String ReceiverPerson;
         private String ReceiverPhone;

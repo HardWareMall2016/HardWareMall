@@ -1,5 +1,7 @@
 package com.hardware.ui.cart;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.App;
 import com.hardware.base.Constants;
+import com.hardware.bean.CartOrderAddressResponse;
 import com.hardware.bean.CartOrderResponse;
 import com.hardware.bean.ProductContent;
 import com.hardware.tools.ToolsHelper;
@@ -33,7 +36,7 @@ import com.zhan.framework.ui.fragment.ABaseFragment;
  * Created by Administrator on 16/4/16.
  */
 public class CartOrderFragment extends ABaseFragment {
-
+    private final static int REQUEST_CODE_SELECTED_ADDR=102;
     private final static String ARG_KEY = "arg_key";
 
     @ViewInject(id = R.id.cartorder_listview)
@@ -244,7 +247,7 @@ public class CartOrderFragment extends ABaseFragment {
                     mCartOrderAddress.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            CartOrderAddressFragment.launch(getActivity());
+                            CartOrderAddressFragment.launch(CartOrderFragment.this,REQUEST_CODE_SELECTED_ADDR);
                         }
                     });
 
@@ -265,6 +268,16 @@ public class CartOrderFragment extends ABaseFragment {
                 }
             }
         }, HttpRequestUtils.RequestType.GET);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==REQUEST_CODE_SELECTED_ADDR&&resultCode== Activity.RESULT_OK){
+            CartOrderAddressResponse.AddressInfo addressInfo= (CartOrderAddressResponse.AddressInfo) data.getSerializableExtra(CartOrderAddressFragment.KEY_SELECTED_ADDRESS);
+            mTvCartOrderWrites.setText(addressInfo.getReceiverPerson());
+            mTvPhone.setText(addressInfo.getReceiverPhone());
+            mTvAddress.setText(addressInfo.getAddress());
+        }
     }
 
     private class MessageListViewHolder {

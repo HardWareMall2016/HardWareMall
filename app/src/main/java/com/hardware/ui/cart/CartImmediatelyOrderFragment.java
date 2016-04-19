@@ -1,5 +1,7 @@
 package com.hardware.ui.cart;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.FragmentActivity;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.App;
+import com.hardware.bean.CartOrderAddressResponse;
 import com.hardware.bean.CartOrderImmedResponse;
 import com.hardware.tools.ToolsHelper;
 import com.loopj.android.http.RequestParams;
@@ -34,6 +37,8 @@ import java.util.List;
  */
 public class CartImmediatelyOrderFragment extends ABaseFragment {
     private final static String ARG_KEY = "arg_key";
+
+    private final static int REQUEST_CODE_SELECTED_ADDR=101;
 
     @ViewInject(id = R.id.tv_cartorder_writes_immed)
     TextView mWritImmed ;
@@ -164,8 +169,18 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
     void OnClick(View view){
         switch (view.getId()){
             case R.id.rl_cartorder_immed:
-                CartOrderAddressFragment.launch(getActivity());
+                CartOrderAddressFragment.launch(this,REQUEST_CODE_SELECTED_ADDR);
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==REQUEST_CODE_SELECTED_ADDR&&resultCode== Activity.RESULT_OK){
+            CartOrderAddressResponse.AddressInfo addressInfo= (CartOrderAddressResponse.AddressInfo) data.getSerializableExtra(CartOrderAddressFragment.KEY_SELECTED_ADDRESS);
+            mWritImmed.setText(addressInfo.getReceiverPerson());
+            mPhoneImmed.setText(addressInfo.getReceiverPhone());
+            mAddressImmed.setText(addressInfo.getAddress());
         }
     }
 
