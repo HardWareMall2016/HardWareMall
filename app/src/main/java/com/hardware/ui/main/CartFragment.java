@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 import com.zhan.framework.utils.ToastUtils;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,11 +50,11 @@ import java.util.List;
 public class CartFragment extends ABaseFragment {
     @ViewInject(id = R.id.my_order_list)
     private PullToRefreshExpandableListView mMyOrderListView;
-
+    
     private ExpandableListView mExpandableListView;
 
-    @ViewInject(id = R.id.sel_all)
-    private CheckBox mckSelelctAll;
+    @ViewInject(id = R.id.sel_all_order)
+    private CheckBox mCkSelelctAll;
 
     @ViewInject(id = R.id.all_product_total_price)
     private TextView mTvTotalPrice;
@@ -94,7 +96,8 @@ public class CartFragment extends ABaseFragment {
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         mInflater=inflater;
         mIsEditMode=false;
-        mckSelelctAll.setChecked(false);
+        options= ToolsHelper.buldDefDisplayImageOptions();
+        mOrderList.clear();
         refreshViewsByEditMode();
         mMyOrderListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         mMyOrderListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ExpandableListView>(){
@@ -115,10 +118,8 @@ public class CartFragment extends ABaseFragment {
             }
         });
 
-
-        options= ToolsHelper.buldDefDisplayImageOptions();
-
-        mckSelelctAll.setOnCheckedChangeListener((new CompoundButton.OnCheckedChangeListener() {
+        mCkSelelctAll.setChecked(false);
+        mCkSelelctAll.setOnCheckedChangeListener((new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 for (ShopOrderInfo shopOrderInfo : mOrderList) {
@@ -127,9 +128,22 @@ public class CartFragment extends ABaseFragment {
                         orderInfo.isSelelcted = isChecked;
                     }
                 }
+                Log.i("wuyue", "setOnCheckedChangeListener isChecked = " + isChecked);
                 refreshAllView();
             }
         }));
+    }
+
+    @Override
+    protected void taskStateChanged(ABaseTaskState state, Serializable tag) {
+        super.taskStateChanged(state, tag);
+        if (state == ABaseTaskState.success){
+            if (isContentEmpty()){
+                mTvRightMenu.setVisibility(View.GONE);
+            }else{
+                mTvRightMenu.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     void OnClick(View v) {
@@ -242,10 +256,10 @@ public class CartFragment extends ABaseFragment {
                     case success:
                         DefResponseBean responseBean = ToolsHelper.parseJson(result, DefResponseBean.class);
                         if (responseBean != null && responseBean.getFlag() == 1) {
-                            requestData();
-                            mIsEditMode=false;
+                            mIsEditMode = false;
                             refreshViewsByEditMode();
-                        }else{
+                            requestData();
+                        } else {
                             ToastUtils.toast("删除失败!");
                         }
                         break;
@@ -338,6 +352,7 @@ public class CartFragment extends ABaseFragment {
             public void onRequestFinished(ResultCode resultCode, String result) {
                 super.onRequestFinished(resultCode, result);
                 mMyOrderListView.onRefreshComplete();
+                mCkSelelctAll.setChecked(false);
             }
         }, HttpRequestUtils.RequestType.GET);
     }
@@ -365,6 +380,10 @@ public class CartFragment extends ABaseFragment {
         mTvTotalCount.setText(String.format("%d件不含运费", totalCount));
         mTvTotalPrice.setText(df.format(totalPrice));
 
+        if(mOrderList.size()==0){
+            mIsEditMode=false;
+            refreshViewsByEditMode();
+        }
     }
 
     private void refreshViewsByEditMode(){

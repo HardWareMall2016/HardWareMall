@@ -43,7 +43,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/layoutContent"
+        android:id="@id/layoutContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/card_header"
@@ -70,7 +70,7 @@
             android:background="#dedede">
 
             <CheckBox
-                android:id="@+id/sel_all"
+                android:id="@+id/sel_all_order"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"

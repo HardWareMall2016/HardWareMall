@@ -48,17 +48,16 @@ public abstract class ABaseFragment extends Fragment {
     private ViewGroup rootView;// 根视图
 
     @ViewInject(idStr = "layoutLoading")
-    protected
-    View loadingLayout;// 加载中视图
+    protected View loadingLayout;// 加载中视图
+
     @ViewInject(idStr = "layoutLoadFailed")
-    protected
-    View loadFailureLayout;// 加载失败视图
+    protected View loadFailureLayout;// 加载失败视图
+
     @ViewInject(idStr = "layoutContent")
-    protected
-    View contentLayout;// 内容视图
+    protected View contentLayout;// 内容视图
+
     @ViewInject(idStr = "layoutEmpty")
-    protected
-    View emptyLayout;// 空视图
+    protected View emptyLayout;// 空视图
 
     // 标志是否ContentView是否为空
     private boolean contentEmpty = true;
