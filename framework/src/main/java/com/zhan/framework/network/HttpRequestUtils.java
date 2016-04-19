@@ -26,6 +26,7 @@ import com.zhan.framework.common.setting.SettingUtility;
 import com.zhan.framework.utils.Consts;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -338,6 +339,17 @@ public class HttpRequestUtils {
                 requestCallback.onRequestFailedNoNetwork();
             }
             return null;
+        }
+
+        if(requestParams!=null&requestParams.size()>0){
+            Iterator uee = requestParams.entrySet().iterator();
+            while(uee.hasNext()) {
+                java.util.Map.Entry entry = (java.util.Map.Entry)uee.next();
+                if(entry.getValue()==null){
+                    entry.setValue("");
+                }
+                Log.i(TAG, "Key = " + entry.getKey()+", Value = "+entry.getValue());
+            }
         }
 
         int method = Request.Method.POST;

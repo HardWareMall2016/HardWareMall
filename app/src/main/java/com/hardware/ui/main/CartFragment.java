@@ -26,10 +26,8 @@ import com.hardware.bean.DefResponseBean2;
 import com.hardware.bean.MyCartOrderCarResponse;
 import com.hardware.bean.ProductContent;
 import com.hardware.tools.ToolsHelper;
-import com.hardware.ui.address.AddNewAddressFragment;
 import com.hardware.ui.cart.CartOrderFragment;
 import com.hardware.ui.products.ProductDetailFragment;
-import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhan.framework.network.HttpRequestHandler;
@@ -96,6 +94,7 @@ public class CartFragment extends ABaseFragment {
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         mInflater=inflater;
         mIsEditMode=false;
+        mckSelelctAll.setChecked(false);
         refreshViewsByEditMode();
         mMyOrderListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         mMyOrderListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ExpandableListView>(){
@@ -128,7 +127,7 @@ public class CartFragment extends ABaseFragment {
                         orderInfo.isSelelcted = isChecked;
                     }
                 }
-                refeshAllView();
+                refreshAllView();
             }
         }));
     }
@@ -332,7 +331,7 @@ public class CartFragment extends ABaseFragment {
 
                     mOrderList.add(shopOrderInfo);
                 }
-                refeshAllView();
+                refreshAllView();
             }
 
             @Override
@@ -343,7 +342,7 @@ public class CartFragment extends ABaseFragment {
         }, HttpRequestUtils.RequestType.GET);
     }
 
-    private void refeshAllView(){
+    private void refreshAllView(){
         mAdapter.notifyDataSetChanged();
         //默认展开
         for (int i=0;i<mOrderList.size();i++){
@@ -353,7 +352,7 @@ public class CartFragment extends ABaseFragment {
         int totalCount=0;
         double totalPrice=0;
         DecimalFormat df = new DecimalFormat();
-        df.applyPattern("总计:￥###.00");
+        df.applyPattern("总计:￥##0.00");
         for (ShopOrderInfo shopOrderInfo:mOrderList){
             for(ProductOrderInfo orderInfo:shopOrderInfo.productOrderList){
                 if(orderInfo.isSelelcted){
@@ -435,7 +434,7 @@ public class CartFragment extends ABaseFragment {
                     for(ProductOrderInfo item:mOrderList.get(groupPosition).productOrderList){
                         item.isSelelcted=isChecked;
                     }
-                    refeshAllView();
+                    refreshAllView();
                 }
             }));
 
@@ -494,7 +493,7 @@ public class CartFragment extends ABaseFragment {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
                     productOrderInfo.isSelelcted=isChecked;
-                    refeshAllView();
+                    refreshAllView();
                 }
             }));
 
@@ -519,7 +518,7 @@ public class CartFragment extends ABaseFragment {
                                             productOrderInfo.amount = productOrderInfo.price * productOrderInfo.count;
                                             mOrderList.get(groupPosition).productsNum--;
                                             mOrderList.get(groupPosition).totalPrice -= productOrderInfo.price;
-                                            refeshAllView();
+                                            refreshAllView();
                                         }
                                         break;
                                     case canceled:
@@ -556,7 +555,7 @@ public class CartFragment extends ABaseFragment {
                                         mOrderList.get(groupPosition).productsNum++;
                                         mOrderList.get(groupPosition).totalPrice += productOrderInfo.price;
 
-                                        refeshAllView();
+                                        refreshAllView();
                                     }
                                     break;
                                 case canceled:
@@ -581,7 +580,7 @@ public class CartFragment extends ABaseFragment {
 
             holder.productName.setText(productOrderInfo.ProductName);
             DecimalFormat df = new DecimalFormat();
-            df.applyPattern("￥###.00");
+            df.applyPattern("￥##0.00");
             holder.unitPrice.setText("单价:" + df.format(productOrderInfo.price));
             holder.totalPrice.setText(df.format(productOrderInfo.price * productOrderInfo.count));
 

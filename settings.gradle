@@ -1,1 +1,1 @@
-include ':app', ':framework', ':pulltorefresh', ':volley'
+include ':app', ':framework', ':pulltorefresh'
