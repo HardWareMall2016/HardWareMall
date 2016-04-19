@@ -160,6 +160,8 @@ public class ProductDetailFragment extends ABaseFragment {
     private int mDialog_Stock;
     private boolean flag = true;
 
+    private ActionSheetDialog dialog ;
+
 
 
     public static void launch(FragmentActivity activity, ProductContent content) {
@@ -577,7 +579,6 @@ public class ProductDetailFragment extends ABaseFragment {
                                     AddOrderCarRespon response = ToolsHelper.parseJson(result, AddOrderCarRespon.class);
                                     if(response != null && response.getFlag() == 1){
                                         ToastUtils.toast(response.getMessage());
-                                        
                                     }
                                     break;
                                 case canceled:
@@ -617,12 +618,14 @@ public class ProductDetailFragment extends ABaseFragment {
                             mDialog_SalePrice = response.getMessage().getSalePrice() ;
                             mDialog_Stock = response.getMessage().getStock() ;
 
-                            ActionSheetDialog dialog= new ActionSheetDialog(getActivity(),mDialog_SKUId,imgUrl,productName,productPrice,mDialog_Stock);
+                            dialog= new ActionSheetDialog(getActivity(),mDialog_SKUId,imgUrl,productName,productPrice,mDialog_Stock);
                             dialog.setOnConformClickListener(mOnConformClickListener);// 回调（点击确定）
                             dialog.builder();
-                            dialog.setCancelable(false);
+                            dialog.setCancelable(true);
                             dialog.setCanceledOnTouchOutside(false);
                             dialog.show();
+
+
                         }
 
                         break;

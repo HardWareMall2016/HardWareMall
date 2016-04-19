@@ -138,31 +138,6 @@ public class ActionSheetDialog {
         return this;
     }
 
-  /*  private void Data() {
-        RequestParams requestParams = new RequestParams();
-        if(mNumber.getText().toString().equals("0")){
-            requestParams.put("Quantity",1);
-        }else{
-            requestParams.put("Quantity", Integer.parseInt(mNumber.getText().toString()));
-        }
-        requestParams.put("Token", App.sToken);
-        requestParams.put("skuId",mDialog_skuId);
-        startRequest(ApiConstants.ADD_ORDERCAR, requestParams, new HttpRequestHandler() {
-            @Override
-            public void onRequestFinished(ResultCode resultCode, String result) {
-                switch (resultCode) {
-                    case success:
-                        break;
-                    case canceled:
-                        break;
-                    default:
-                        ToastUtils.toast(result);
-                        break;
-                }
-            }
-        }, HttpRequestUtils.RequestType.POST);
-    }*/
-
     public void setOnConformClickListener(View.OnClickListener onClickListener) {
         mOnConformClickListener = onClickListener;
     }
