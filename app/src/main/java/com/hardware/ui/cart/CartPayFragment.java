@@ -32,7 +32,7 @@ public class CartPayFragment extends ABaseFragment{
     public static void lauch(FragmentActivity activity, int amount) {
         FragmentArgs args = new FragmentArgs();
         args.add(ARG_KEY, amount);
-        FragmentContainerActivity.launch(activity, CartOrderFragment.class, args);
+        FragmentContainerActivity.launch(activity, CartPayFragment.class, args);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class CartPayFragment extends ABaseFragment{
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
         getActivity().setTitle("支付方式");
-        mCostPrice.setText("￥"+amount+"");
+        mCostPrice.setText("￥" + amount + "");
         mPayPrice.setText("￥"+amount+"");
     }
 }

@@ -346,6 +346,7 @@
     </ScrollView>
 
     <RelativeLayout
+        android:id="@+id/cart_immed_order"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/blue"

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,10 @@ import android.widget.TextView;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.App;
+import com.hardware.bean.AddByOrderRespon;
 import com.hardware.bean.CartOrderAddressResponse;
 import com.hardware.bean.CartOrderImmedResponse;
+import com.hardware.bean.CartOrderResponse;
 import com.hardware.tools.ToolsHelper;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -78,9 +81,15 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
     TextView mProductAllmoneyImmed ;
     @ViewInject(id = R.id.cartorder_productcount_immed)
     TextView mproductCount ;
+    @ViewInject(id = R.id.cart_immed_order,click = "OnClick")
+    RelativeLayout mImmedOrder ;
 
     private String mSelectedSkuIds;
     private DisplayImageOptions options;
+    private CartOrderImmedResponse response ;
+
+    private int mAddressId ;
+    private String cardIds="";
 
     private List<CartOrderImmedResponse.MessageEntity.CartItemModelsEntity> mCartItemModelList = new ArrayList<>();
 
@@ -128,7 +137,7 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
             public void onRequestFinished(ResultCode resultCode, String result) {
                 switch (resultCode) {
                     case success:
-                        CartOrderImmedResponse response = ToolsHelper.parseJson(result, CartOrderImmedResponse.class);
+                        response = ToolsHelper.parseJson(result, CartOrderImmedResponse.class);
                         if(response != null && response.getFlag() == 1){
                             mCartItemModelList = response.getMessage().getCartItemModels();
                             mWritImmed.setText(response.getAddress().getShipTo());
@@ -154,6 +163,8 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
                             mProductAllmoneyImmed.setText("货款总计：¥"+response.getSumMoney()+"");
                             mproductCount.setText(response.getSumnumber()+"件含运费");
 
+                            mAddressId = response.getAddress().getId();
+
                         }
                         break;
                     case canceled:
@@ -171,6 +182,43 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
             case R.id.rl_cartorder_immed:
                 CartOrderAddressFragment.launch(this,REQUEST_CODE_SELECTED_ADDR);
                 break;
+            case R.id.cart_immed_order:
+                if(response.getAddress() == null){
+                    ToastUtils.toast("请添加地址");
+                }else{
+                    cardIds=String.valueOf(response.getMessage().getCartItemModels().get(0).getCarId());
+                    Log.e("------cardIds---",cardIds);
+                    Log.e("-----recieveAddressId--",mAddressId+"");
+                    final RequestParams requestParams = new RequestParams();
+                    requestParams.put("Token",App.sToken);
+                    requestParams.put("cartItemIds",cardIds);
+                    requestParams.put("recieveAddressId",mAddressId);
+                    startRequest(ApiConstants.ADD_BY_ORDER, requestParams, new HttpRequestHandler() {
+                        @Override
+                        public void onRequestFinished(ResultCode resultCode, String result) {
+                            switch (resultCode) {
+                                case success:
+                                    AddByOrderRespon response = ToolsHelper.parseJson(result, AddByOrderRespon.class);
+                                    if(response != null && response.getFlag() == 1){
+                                        ToastUtils.toast("提交订单成功");
+                                        /*Long orderId = null;
+                                        for(AddByOrderRespon.OrderPayEntity orderPayEntity :response.getOrderPay()){
+                                            Log.e("----------",orderPayEntity.getOrderId()+"");
+                                            orderId = orderPayEntity.getOrderId() ;
+                                        }*/
+                                        CartPayFragment.lauch(getActivity(),response.getAmount());
+                                    }
+                                    break;
+                                case canceled:
+                                    break;
+                                default:
+                                    ToastUtils.toast(result);
+                                    break;
+                            }
+                        }
+                    }, HttpRequestUtils.RequestType.POST);
+                }
+                break;
         }
     }
 
@@ -181,6 +229,7 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
             mWritImmed.setText(addressInfo.getReceiverPerson());
             mPhoneImmed.setText(addressInfo.getReceiverPhone());
             mAddressImmed.setText(addressInfo.getAddress());
+            mAddressId = addressInfo.getAddressId();
         }
     }
 

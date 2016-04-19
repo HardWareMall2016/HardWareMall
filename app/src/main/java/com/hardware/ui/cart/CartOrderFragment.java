@@ -128,7 +128,7 @@ public class CartOrderFragment extends ABaseFragment {
         mCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mResponseBean.getMessage().size() == 0){
+                if(mResponseBean.getAddress() == null){
                     ToastUtils.toast("请添加地址");
                 }else{
                     for(CartOrderResponse.MessageBean messageBean:mResponseBean.getMessage()){
@@ -152,11 +152,11 @@ public class CartOrderFragment extends ABaseFragment {
                                     AddByOrderRespon response = ToolsHelper.parseJson(result, AddByOrderRespon.class);
                                     if(response != null && response.getFlag() == 1){
                                         ToastUtils.toast("提交订单成功");
-                                        Long orderId = null;
+                                        /*Long orderId = null;
                                         for(AddByOrderRespon.OrderPayEntity orderPayEntity :response.getOrderPay()){
                                             Log.e("----------",orderPayEntity.getOrderId()+"");
                                             orderId = orderPayEntity.getOrderId() ;
-                                        }
+                                        }*/
                                         CartPayFragment.lauch(getActivity(),response.getAmount());
                                     }
                                     break;
