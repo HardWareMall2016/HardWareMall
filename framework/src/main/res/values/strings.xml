@@ -4,4 +4,7 @@
     <string name="network_disconnect">没有可用网络!</string>
     <string name="request_canceled">取消请求!</string>
     <string name="go_back">返回</string>
+    <string name="no_internet">无网络连接~！</string>
+    <string name="generic_server_down">连接服务器失败~！</string>
+    <string name="generic_error">网络异常,请稍后再试~！</string>
 </resources>

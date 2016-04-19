@@ -20,6 +20,8 @@ import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 
+import java.util.HashMap;
+
 /**
  * Created by Administrator on 2016/4/16.
  */
@@ -47,7 +49,8 @@ public class LoginFragment extends ABaseFragment {
         String account = mAccount.getText().toString().trim();
         String password = mPassword.getText().toString().trim();
         if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(password)) {
-            RequestParams requestParams = new RequestParams();
+            //RequestParams requestParams = new RequestParams();
+            HashMap<String,String> requestParams=new HashMap<>();
             requestParams.put("password", password);
             requestParams.put("phone", account);
             startRequest(Constants.BASE_URL_2, ApiConstants.LOGIN, requestParams, new HttpRequestHandler() {

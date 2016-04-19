@@ -22,6 +22,7 @@ import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 import com.zhan.framework.utils.ToastUtils;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 
 /**
  * Created by Administrator on 2016/4/12.
@@ -110,8 +111,8 @@ public class CompangyInfoFragment extends ABaseFragment {
     @Override
     public void requestData() {
         if (flag == 0) {
-            RequestParams requestParams = new RequestParams();
-            requestParams.put("id", mShopId);
+            HashMap<String,String> requestParams=new HashMap<>();
+            requestParams.put("id", String.valueOf(mShopId));
             startRequest(ApiConstants.SHOP_BASICALLY, requestParams, new HttpRequestHandler() {
                 @Override
                 public void onRequestFinished(ResultCode resultCode, String result) {
@@ -140,8 +141,8 @@ public class CompangyInfoFragment extends ABaseFragment {
                 }
             }, HttpRequestUtils.RequestType.GET);
         } else {
-            RequestParams requestParams = new RequestParams();
-            requestParams.put("id", mShopId);
+            HashMap<String,String> requestParams=new HashMap<>();
+            requestParams.put("id", String.valueOf(mShopId));
             startRequest(ApiConstants.SHOP_DETAILS, requestParams, new HttpRequestHandler() {
                 @Override
                 public void onRequestFinished(ResultCode resultCode, String result) {

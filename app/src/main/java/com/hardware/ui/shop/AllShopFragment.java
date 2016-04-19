@@ -33,6 +33,7 @@ import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.activity.ActionBarActivity;
 import com.zhan.framework.utils.ToastUtils;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -126,9 +127,9 @@ public class AllShopFragment extends APullToRefreshListFragment<AllShopFragment.
 
     @Override
     protected void requestData(RefreshMode mode) {
-        RequestParams requestParams = new RequestParams();
-        requestParams.put("id", mShopTypeId);
-        requestParams.put("page", getNextPage(mode));
+        HashMap<String,String> requestParams=new HashMap<>();
+        requestParams.put("id", String.valueOf(mShopTypeId));
+        requestParams.put("page", String.valueOf(getNextPage(mode)));
         requestParams.put("regionName", Constants.REGION_NAME);
         requestParams.put("Categoryid","");
 

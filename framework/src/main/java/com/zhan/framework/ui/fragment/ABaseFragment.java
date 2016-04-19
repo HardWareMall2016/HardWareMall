@@ -6,7 +6,6 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.android.volley.toolbox.StringRequest;
 import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 import com.zhan.framework.R;
@@ -26,15 +26,13 @@ import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.InjectUtility;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.activity.BaseActivity;
-import com.zhan.framework.ui.activity.BaseActivityHelper;
+import com.zhan.framework.utils.Consts;
 import com.zhan.framework.utils.DialogUtils;
 import com.zhan.framework.utils.ViewUtils;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,8 +64,8 @@ public abstract class ABaseFragment extends Fragment {
     private boolean contentEmpty = true;
     private boolean mFirstCreateView=true;
 
-    //private List<RequestHandle> mRequestHandleList = new LinkedList<>();
-    private HashMap<String,RequestHandle> mRequestHandleList=new HashMap<>();
+    private HashMap<String,RequestHandle> mAsyncRequestHandleList =new HashMap<>();
+    private HashMap<String,StringRequest> mVolleyRequestHandleList =new HashMap<>();
 
     private Dialog mProgressDlg;
 
@@ -165,9 +163,6 @@ public abstract class ABaseFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        /*for (RequestHandle request : mRequestHandleList) {
-            HttpRequestUtils.releaseRequest(request);
-        }*/
         releaseAllRequest();
         closeRotateProgressDialog();
         if (mHelper != null)
@@ -176,15 +171,19 @@ public abstract class ABaseFragment extends Fragment {
     }
 
     public void releaseAllRequest(){
-        Iterator<Map.Entry<String, RequestHandle>> iterator = mRequestHandleList.entrySet().iterator();
+        Iterator<Map.Entry<String, RequestHandle>> iterator = mAsyncRequestHandleList.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, RequestHandle> entry = iterator.next();
             HttpRequestUtils.releaseRequest(entry.getValue());
         }
-        /*for (RequestHandle request : mRequestHandleList) {
-            HttpRequestUtils.releaseRequest(request);
-        }*/
-        mRequestHandleList.clear();
+        mAsyncRequestHandleList.clear();
+
+        Iterator<Map.Entry<String, StringRequest>> iterator2 = mVolleyRequestHandleList.entrySet().iterator();
+        while (iterator2.hasNext()) {
+            Map.Entry<String, StringRequest> entry = iterator2.next();
+            releaseRequest(entry.getValue());
+        }
+        mVolleyRequestHandleList.clear();
     }
 
     /**
@@ -517,24 +516,17 @@ public abstract class ABaseFragment extends Fragment {
         }
     }
 
-    /***
-     * 网络请求
-     *
-     * @param apiUrl
-     * @param requestParams
-     * @param requestCallback
-     * @param requestType
-     * @return
-     */
-    public RequestHandle startRequest(String apiUrl, RequestParams requestParams, HttpRequestCallback requestCallback, HttpRequestUtils.RequestType requestType) {
-        //先释放上次的请求
+
+    public void startRequest(String apiUrl, HashMap<String,String>  requestParams, HttpRequestCallback requestCallback, HttpRequestUtils.RequestType requestType) {
+        /*//先释放上次的请求
         releaseRequest(apiUrl);
         RequestHandle handle = HttpRequestUtils.startRequest(apiUrl, requestParams, requestCallback, requestType);
         if (handle != null) {
-            //mRequestHandleList.add(handle);
-            mRequestHandleList.put(apiUrl,handle);
+            //mAsyncRequestHandleList.add(handle);
+            mAsyncRequestHandleList.put(apiUrl, handle);
         }
-        return handle;
+        return handle;*/
+        startRequest(null, apiUrl, requestParams, requestCallback, requestType);
     }
 
     /***
@@ -546,34 +538,58 @@ public abstract class ABaseFragment extends Fragment {
      * @param requestType
      * @return
      */
-    public RequestHandle startRequest(String urlSettingKey,String apiUrl, RequestParams requestParams, HttpRequestCallback requestCallback, HttpRequestUtils.RequestType requestType) {
+    /*public RequestHandle startRequest(String urlSettingKey,String apiUrl, RequestParams requestParams, HttpRequestCallback requestCallback, HttpRequestUtils.RequestType requestType) {
         //先释放上次的请求
         releaseRequest(apiUrl);
         RequestHandle handle = HttpRequestUtils.startRequest(urlSettingKey,apiUrl, requestParams, requestCallback, requestType);
         if (handle != null) {
-            //mRequestHandleList.add(handle);
-            mRequestHandleList.put(apiUrl,handle);
+            //mAsyncRequestHandleList.add(handle);
+            mAsyncRequestHandleList.put(apiUrl, handle);
         }
         return handle;
+    }*/
+
+    public void startRequest(String urlSettingKey,String apiUrl, HashMap<String,String> requestParams, HttpRequestCallback requestCallback, HttpRequestUtils.RequestType requestType) {
+        //先释放上次的请求
+        releaseRequest(apiUrl);
+        if(isAsyncHttpRequest()){
+            RequestParams asyncRequestParams=new RequestParams(requestParams);
+            RequestHandle handle = HttpRequestUtils.startRequest(urlSettingKey,apiUrl, asyncRequestParams, requestCallback, requestType);
+            if (handle != null) {
+                mAsyncRequestHandleList.put(apiUrl, handle);
+            }
+        }else{
+            StringRequest request=HttpRequestUtils.startVolleyRequest(urlSettingKey, apiUrl, requestParams, requestCallback, requestType);
+            if (request != null) {
+                mVolleyRequestHandleList.put(apiUrl,request);
+            }
+        }
     }
 
-    /***
-     * 网络请求
-     * @param apiUrl
-     * @param requestJsonBean
-     * @param requestCallback
-     * @return
-     */
-    public RequestHandle startRequest(String apiUrl, Object requestJsonBean, HttpRequestCallback requestCallback) {
+    private boolean isAsyncHttpRequest(){
+        boolean isAsyncHttpRequest;
+        String http_request_framework=Consts.ASYNC_HTTP_REQUEST_FRAMEWORK;
+        if(SettingUtility.getSetting(Consts.HTTP_REQUEST_FRAMEWORK)!=null){
+            http_request_framework=SettingUtility.getSetting(Consts.HTTP_REQUEST_FRAMEWORK).getValue();
+        }
+        if(http_request_framework.equals(Consts.ASYNC_HTTP_REQUEST_FRAMEWORK)){
+            isAsyncHttpRequest=true;
+        }else{
+            isAsyncHttpRequest=false;
+        }
+        return isAsyncHttpRequest;
+    }
+
+
+    /*public RequestHandle startRequest(String apiUrl, Object requestJsonBean, HttpRequestCallback requestCallback) {
         //先释放上次的请求
         releaseRequest(apiUrl);
         RequestHandle handle = HttpRequestUtils.startRequest(apiUrl, requestJsonBean, requestCallback);
         if (handle != null) {
-            //mRequestHandleList.add(handle);
-            mRequestHandleList.put(apiUrl, handle);
+            mAsyncRequestHandleList.put(apiUrl, handle);
         }
         return handle;
-    }
+    }*/
 
     /***
      * 下载文件
@@ -588,8 +604,8 @@ public abstract class ABaseFragment extends Fragment {
         releaseRequest(serviceFileUrl);
         RequestHandle handle = HttpRequestUtils.downloadFile(serviceFileUrl, saveFilePath, callback);
         if (handle != null) {
-            //mRequestHandleList.add(handle);
-            mRequestHandleList.put(serviceFileUrl,handle);
+            //mAsyncRequestHandleList.add(handle);
+            mAsyncRequestHandleList.put(serviceFileUrl, handle);
         }
         return handle;
     }
@@ -601,6 +617,12 @@ public abstract class ABaseFragment extends Fragment {
      */
     public void releaseRequest(RequestHandle request) {
         HttpRequestUtils.releaseRequest(request);
+    }
+
+    public void releaseRequest(StringRequest request) {
+        if(request!=null){
+            request.cancel();
+        }
     }
 
     /***
@@ -616,14 +638,26 @@ public abstract class ABaseFragment extends Fragment {
         return false;
     }
 
+    public boolean isRequestProcessing(StringRequest request) {
+        if (request != null && !request.hasHadResponseDelivered()&&!request.isCanceled()) {
+            return true;
+        }
+        return false;
+    }
+
     /***
      * 释放网络请求
      *
      * @param apiUrl
      */
     public void releaseRequest(String apiUrl) {
-        RequestHandle request=mRequestHandleList.get(apiUrl);
-        releaseRequest(request);
+        if(isAsyncHttpRequest()){
+            RequestHandle request= mAsyncRequestHandleList.get(apiUrl);
+            releaseRequest(request);
+        }else{
+            StringRequest request=mVolleyRequestHandleList.get(apiUrl);
+            releaseRequest(request);
+        }
     }
 
     /***
@@ -633,7 +667,12 @@ public abstract class ABaseFragment extends Fragment {
      * @return
      */
     public boolean isRequestProcessing(String apiUrl) {
-        RequestHandle request=mRequestHandleList.get(apiUrl);
-        return isRequestProcessing(request);
+        if(isAsyncHttpRequest()) {
+            RequestHandle request = mAsyncRequestHandleList.get(apiUrl);
+            return isRequestProcessing(request);
+        }else{
+            StringRequest request = mVolleyRequestHandleList.get(apiUrl);
+            return isRequestProcessing(request);
+        }
     }
 }

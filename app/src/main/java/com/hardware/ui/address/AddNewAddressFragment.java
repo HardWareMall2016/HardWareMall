@@ -36,6 +36,7 @@ import com.zhan.framework.view.pickerview.LoopListener;
 import com.zhan.framework.view.pickerview.LoopView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AddNewAddressFragment extends ABaseFragment  {
 
@@ -192,8 +193,8 @@ public class AddNewAddressFragment extends ABaseFragment  {
         mGetCityResponseBean = null;
         mGetCountyResponseBean = null;
         mPickViewCity.setVisibility(View.INVISIBLE);
-        RequestParams requestParams = new RequestParams();
-        requestParams.put("provinceid", provinceId);
+        HashMap<String,String> requestParams=new HashMap<>();
+        requestParams.put("provinceid",String.valueOf(provinceId));
         startRequest(Constants.BASE_URL_2, ApiConstants.GET_CITY, requestParams, new HttpRequestHandler() {
             @Override
             public void onRequestSucceeded(String content) {
@@ -224,9 +225,9 @@ public class AddNewAddressFragment extends ABaseFragment  {
 
     private void queryCounties (int provinceId,int cityId){
         mGetCountyResponseBean=null;
-        RequestParams requestParams = new RequestParams();
-        requestParams.put("provinceid", provinceId);
-        requestParams.put("cityid", cityId);
+        HashMap<String,String> requestParams=new HashMap<>();
+        requestParams.put("provinceid", String.valueOf(provinceId));
+        requestParams.put("cityid", String.valueOf(cityId));
         startRequest(Constants.BASE_URL_2, ApiConstants.GET_COUNTY, requestParams, new HttpRequestHandler() {
             @Override
             public void onRequestSucceeded(String content) {
@@ -274,12 +275,12 @@ public class AddNewAddressFragment extends ABaseFragment  {
             return;
         }
         //
-        RequestParams requestParams = new RequestParams();
+        HashMap<String,String> requestParams=new HashMap<>();
         requestParams.put("Address", specificAddress);
-        requestParams.put("IsDefault", mCkSetDef.isChecked());
+        requestParams.put("IsDefault", String.valueOf(mCkSetDef.isChecked()));
         requestParams.put("ReceiverPerson", name);
         requestParams.put("ReceiverPhone", phone);
-        requestParams.put("RegionId", mCountryId);
+        requestParams.put("RegionId", String.valueOf(mCountryId));
         requestParams.put("token", App.sToken);
 
         startRequest(Constants.BASE_URL_2, ApiConstants.ADD_MY_ADDRESS_INFO, requestParams, new HttpRequestHandler() {

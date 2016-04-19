@@ -37,6 +37,8 @@ import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 import com.zhan.framework.utils.ToastUtils;
 
+import java.util.HashMap;
+
 
 /**
  * Created by Administrator on 16/4/16.
@@ -140,10 +142,10 @@ public class CartOrderFragment extends ABaseFragment {
                             }
                         }
                     }
-                    final RequestParams requestParams = new RequestParams();
+                    final HashMap<String,String> requestParams=new HashMap<>();
                     requestParams.put("Token",App.sToken);
                     requestParams.put("cartItemIds",cardIds);
-                    requestParams.put("recieveAddressId",mAddressId);
+                    requestParams.put("recieveAddressId",String.valueOf(mAddressId));
                     startRequest(ApiConstants.ADD_BY_ORDER, requestParams, new HttpRequestHandler() {
                         @Override
                         public void onRequestFinished(ResultCode resultCode, String result) {
@@ -281,7 +283,7 @@ public class CartOrderFragment extends ABaseFragment {
 
     @Override
     public void requestData() {
-        RequestParams requestParams = new RequestParams();
+        HashMap<String,String> requestParams=new HashMap<>();
         requestParams.put("Token", App.sToken);
         requestParams.put("skuId", mSelectedSkuIds);
         startRequest(ApiConstants.CAR_BYORDER, requestParams, new BaseHttpRequestTask<CartOrderResponse>() {

@@ -22,6 +22,8 @@ import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 import com.zhan.framework.utils.ToastUtils;
 
+import java.util.HashMap;
+
 /**
  * Created by Administrator on 2016/4/12.
  */
@@ -72,8 +74,8 @@ public class ProductsTypeFragment extends ABaseFragment{
 
     @Override
     public void requestData() {
-        RequestParams requestParams = new RequestParams();
-        requestParams.put("shopId", mShopId);
+        HashMap<String,String> requestParams=new HashMap<>();
+        requestParams.put("shopId", String.valueOf(mShopId));
         startRequest(ApiConstants.SHOP_CATEGORIES, requestParams, new HttpRequestHandler() {
             @Override
             public void onRequestFinished(ResultCode resultCode, String result) {

@@ -33,6 +33,7 @@ import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ARefreshFragment;
 import com.zhan.framework.utils.ToastUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -107,9 +108,9 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
 
     @Override
     protected void requestData(RefreshMode mode) {
-        RequestParams requestParams = new RequestParams();
+        HashMap<String,String> requestParams=new HashMap<>();
         requestParams.put("token", App.sToken);
-        requestParams.put("Page", getNextPage(mode));
+        requestParams.put("Page", String.valueOf(getNextPage(mode)));
         startRequest(Constants.BASE_URL_2, ApiConstants.GET_MYADDRESS, requestParams, new PagingTask<CartOrderAddressResponse>(mode) {
             @Override
             public CartOrderAddressResponse parseResponseToResult(String content) {
@@ -146,9 +147,9 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
                         }
                     }
                     if(data!=null){
-                        RequestParams requestParams = new RequestParams();
+                        HashMap<String,String> requestParams=new HashMap<>();
                         requestParams.put("token", App.sToken);
-                        requestParams.put("addressid", data.getAddressId());
+                        requestParams.put("addressid", String.valueOf(data.getAddressId()));
                         startRequest(Constants.BASE_URL_2, ApiConstants.DELETE_MY_ADDRESS, requestParams,new HttpRequestHandler(){
                             @Override
                             public void onRequestFinished(ResultCode resultCode, String result) {

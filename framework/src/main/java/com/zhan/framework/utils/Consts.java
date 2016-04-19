@@ -17,4 +17,9 @@ public class Consts {
 	// 内存缓存有效时间
 	public static final String MEMORY_CACHE_VALIDITY = "memory_cache_validity";
 
+	// Http请求框架
+	public static final String HTTP_REQUEST_FRAMEWORK = "http_request_framework";
+
+
+	public static final String ASYNC_HTTP_REQUEST_FRAMEWORK = "android-async-http";
 }

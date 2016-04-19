@@ -8,6 +8,14 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestHandle;
@@ -18,6 +26,9 @@ import com.zhan.framework.common.setting.SettingUtility;
 import com.zhan.framework.utils.Consts;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
@@ -26,6 +37,10 @@ import cz.msebera.android.httpclient.message.BasicHeader;
 
 public class HttpRequestUtils {
     private final static String TAG = "HttpRequestUtils";
+
+    public static final String DRF_REQUEST_TAG = "VolleyPatterns";
+
+    private static RequestQueue sRequestQueue;
 
     public enum RequestType {GET, POST}
 
@@ -277,5 +292,134 @@ public class HttpRequestUtils {
         if (request != null && !request.isFinished()) {
             request.cancel(true);
         }
+    }
+
+    //下面是Volley框架的请求
+    public static RequestQueue getRequestQueue(){
+        if (sRequestQueue == null) {
+            sRequestQueue = Volley.newRequestQueue(GlobalContext.getInstance());
+        }
+        return sRequestQueue;
+    }
+
+    public static <T> void addToRequestQueue(Request<T> req, String apiUrl) {
+        req.setTag(TextUtils.isEmpty(apiUrl) ? DRF_REQUEST_TAG : apiUrl);
+        getRequestQueue().add(req);
+    }
+
+    public static <T> void addToRequestQueue(Request<T> req) {
+        req.setTag(DRF_REQUEST_TAG);
+        getRequestQueue().add(req);
+    }
+
+    public static void cancelPendingRequests(String apiUrl) {
+        if (sRequestQueue != null) {
+            sRequestQueue.cancelAll(apiUrl);
+        }
+    }
+
+    public static StringRequest startVolleyRequest(String baseUrlSettingKey,String apiUrl, final HashMap<String,String> requestParams, final HttpRequestCallback requestCallback, final RequestType requestType) {
+        String requestUrl;
+        if (TextUtils.isEmpty(baseUrlSettingKey)) {
+            requestUrl = SettingUtility.getSetting(Consts.BASE_URL).getValue() + apiUrl;
+        } else {
+            requestUrl = SettingUtility.getSetting(baseUrlSettingKey).getValue() + apiUrl;
+        }
+        //String requestUrl = SettingUtility.getSetting(Consts.BASE_URL).getValue() + apiUrl;
+
+        Log.i(TAG, "requestType = " + requestType);
+
+        if (requestCallback != null) {
+            requestCallback.onPrepare();
+        }
+
+        if (!Connectivity.isConnected(GlobalContext.getInstance())) {
+            if (requestCallback != null) {
+                requestCallback.onRequestFailedNoNetwork();
+            }
+            return null;
+        }
+
+        int method = Request.Method.POST;
+        if (requestType == RequestType.GET) {
+            method = Request.Method.GET;
+            //Get请求参数
+            if (requestParams != null && requestParams.size() > 0) {
+                StringBuilder result = new StringBuilder();
+                Map.Entry entry;
+                Iterator params = requestParams.entrySet().iterator();
+                while (params.hasNext()) {
+                    entry = (Map.Entry) params.next();
+                    if (result.length() > 0) {
+                        result.append("&");
+                    }
+                    result.append(entry.getKey());
+                    result.append("=");
+                    result.append(entry.getValue());
+                }
+                requestUrl += "?" + result.toString();
+            }
+        }
+        Log.i(TAG, "requestUrl = " + requestUrl);
+        //这里要可以换JsonRequest,做Json请求
+        StringRequest stringRequest = new StringRequest(method, requestUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String responseStr) {
+                Log.i(TAG, "onResponse = " + responseStr);
+                requestCallback.onRequestSucceeded(responseStr);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (requestCallback == null) {
+                    return;
+                }
+                if (volleyError instanceof TimeoutError) {
+                    requestCallback.onTimeout();
+                } else {
+                    String errorMsg = VolleyErrorHelper.getMessage(volleyError, GlobalContext.getInstance());
+                    requestCallback.onRequestFailed(errorMsg);
+                }
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                //默认返回空集合
+                return super.getHeaders();
+                //可以如下
+                /*HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Accept", "application/json");
+                headers.put("Content-Type", "application/json; charset=UTF-8");*/
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return super.getBodyContentType();
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                return super.getBody();
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                if (requestType == RequestType.GET){
+                    return super.getParams();
+                }else{
+                    return requestParams;
+                }
+            }
+
+            @Override
+            public void onCanceled() {
+                Log.i(TAG, "onCanceled requestUrl = "+getUrl());
+                if (requestCallback != null) {
+                    requestCallback.onRequestCanceled();
+                }
+            }
+        };
+        addToRequestQueue(stringRequest, apiUrl);
+        return stringRequest;
     }
 }

@@ -40,6 +40,7 @@ import com.zhan.framework.utils.ToastUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -202,7 +203,7 @@ public class CartFragment extends ABaseFragment {
                 if(TextUtils.isEmpty(goodsId)){
                     ToastUtils.toast("请选择产品!");
                 }else {
-                    RequestParams requestParams=new RequestParams();
+                    HashMap<String,String> requestParams=new HashMap<>();
                     requestParams.put("Token",App.sToken);
                     requestParams.put("goodsids",goodsId);//,分割
 
@@ -232,7 +233,7 @@ public class CartFragment extends ABaseFragment {
     }
 
     private void deleteOrderCar(String skuIds) {
-        RequestParams requestParams=new RequestParams();
+        HashMap<String,String> requestParams=new HashMap<>();
         requestParams.put("Token", App.sToken);
         requestParams.put("skuId",skuIds);//,分割
         startRequest(ApiConstants.DELETE_ORDER_CAR, requestParams, new HttpRequestHandler() {
@@ -268,7 +269,7 @@ public class CartFragment extends ABaseFragment {
 
     @Override
     public void requestData() {
-        RequestParams requestParams = new RequestParams();
+        HashMap<String,String> requestParams=new HashMap<>();
         requestParams.put("Token", App.sToken);
         startRequest(ApiConstants.MY_CART_ORDER_CAR, requestParams, new BaseHttpRequestTask<MyCartOrderCarResponse>() {
             @Override
@@ -502,8 +503,8 @@ public class CartFragment extends ABaseFragment {
                 public void onClick(View v) {
                     final ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
                     if(productOrderInfo.count>1){
-                        RequestParams requestParams=new RequestParams();
-                        requestParams.put("Quantity", productOrderInfo.count-1);
+                        HashMap<String,String> requestParams=new HashMap<>();
+                        requestParams.put("Quantity", String.valueOf(productOrderInfo.count-1));
                         requestParams.put("Token",App.sToken);
                         requestParams.put("skuId", productOrderInfo.skuId);
                         startRequest(ApiConstants.UPDATE_CART_ORDER_CAR, requestParams, new HttpRequestHandler() {
@@ -537,8 +538,8 @@ public class CartFragment extends ABaseFragment {
                 public void onClick(View v) {
                     final ProductOrderInfo productOrderInfo = mOrderList.get(groupPosition).productOrderList.get(childPosition);
 
-                    RequestParams requestParams=new RequestParams();
-                    requestParams.put("Quantity", productOrderInfo.count+1);
+                    HashMap<String,String> requestParams=new HashMap<>();
+                    requestParams.put("Quantity", String.valueOf(productOrderInfo.count+1));
                     requestParams.put("Token",App.sToken);
                     requestParams.put("skuId", productOrderInfo.skuId);
                     startRequest(ApiConstants.UPDATE_CART_ORDER_CAR, requestParams, new HttpRequestHandler() {

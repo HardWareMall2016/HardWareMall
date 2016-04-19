@@ -51,6 +51,7 @@ import com.zhan.framework.ui.fragment.ABaseFragment;
 import com.zhan.framework.utils.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -201,8 +202,8 @@ public class ProductDetailFragment extends ABaseFragment {
     public void requestData() {
 
         if (RecommendFrameLayoutfalg == 0) {
-            final RequestParams requestParams = new RequestParams();
-            requestParams.put("id", id);
+            final HashMap<String,String> requestParams=new HashMap<>();
+            requestParams.put("id", String.valueOf(id));
             requestParams.put("district", district);
 
             startRequest(ApiConstants.PRODUCTS_DETAIL, requestParams, new HttpRequestHandler() {
@@ -275,9 +276,9 @@ public class ProductDetailFragment extends ABaseFragment {
                 }
             }, HttpRequestUtils.RequestType.GET);
         } else {
-            RequestParams requestParams = new RequestParams();
-            requestParams.put("shopid", shopid);
-            requestParams.put("page", 1);
+            HashMap<String,String> requestParams=new HashMap<>();
+            requestParams.put("shopid", String.valueOf(shopid));
+            requestParams.put("page", String.valueOf(1));
             startRequest(ApiConstants.PRODUCTS_SHOPSPRODUCTS, requestParams, new HttpRequestHandler() {
                 @Override
                 public void onRequestFinished(ResultCode resultCode, String result) {
@@ -563,9 +564,9 @@ public class ProductDetailFragment extends ABaseFragment {
         public void onClick(View v) {
             if(App.sToken != null){
                 if(flag){
-                    RequestParams requestParams = new RequestParams();
+                    HashMap<String,String> requestParams=new HashMap<>();
             /*if(mNumber.getText().toString().equals("0")){*/
-                    requestParams.put("Quantity",1);
+                    requestParams.put("Quantity",String.valueOf(1));
            /* }else{
                 requestParams.put("Quantity", Integer.parseInt(mNumber.getText().toString()));
             }*/
@@ -599,11 +600,11 @@ public class ProductDetailFragment extends ABaseFragment {
     };
 
     private void refersh() {
-        RequestParams requestParams = new RequestParams();
+        HashMap<String,String> requestParams=new HashMap<>();
         requestParams.put("Color",mColor);
         requestParams.put("Size",mSize);
         requestParams.put("Version",mVersion);
-        requestParams.put("id", id);
+        requestParams.put("id", String.valueOf(id));
         startRequest(ApiConstants.PRODUCT_SSKU, requestParams, new HttpRequestHandler() {
             @Override
             public void onRequestFinished(ResultCode resultCode, String result) {

@@ -15,4 +15,9 @@
 		<value>https://raw.githubusercontent.com/HardWareMall2016/HardWareMall/master/update.json</value>
 	</setting>
 
+	<setting type="http_request_framework">
+		<des>Http请求框架volley/android-async-http</des>
+		<value>volley</value>
+	</setting>
+
 </app-settings>

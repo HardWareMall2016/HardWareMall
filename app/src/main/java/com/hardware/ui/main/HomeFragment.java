@@ -37,6 +37,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
+import com.zhan.framework.utils.Consts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -160,9 +161,10 @@ public class HomeFragment extends ABaseFragment{
 
     @Override
     public void requestData() {
-        RequestParams requestParams=new RequestParams();
+        //RequestParams requestParams=new RequestParams();
+        HashMap<String,String> requestParams=new HashMap<>();
         requestParams.put("regionName", Constants.REGION_NAME);
-        startRequest(ApiConstants.MOBILE_HOME_PRODUCTS_LIST, requestParams, new BaseHttpRequestTask<HomeProductsBean>() {
+        startRequest(Consts.BASE_URL,ApiConstants.MOBILE_HOME_PRODUCTS_LIST, requestParams, new BaseHttpRequestTask<HomeProductsBean>() {
             @Override
             public HomeProductsBean parseResponseToResult(String content) {
                 return ToolsHelper.parseJson(content, HomeProductsBean.class);

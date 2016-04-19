@@ -24,6 +24,7 @@ import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -227,9 +228,9 @@ public class MoreDiscountShopFragment extends ABaseFragment {
 
     @Override
     public void requestData() {
-        RequestParams requestParams = new RequestParams();
-        requestParams.put("Page", getNextPage());
-        requestParams.put("regionName", 1);
+        HashMap<String,String> requestParams=new HashMap<>();
+        requestParams.put("Page", String.valueOf(getNextPage()));
+        requestParams.put("regionName", String.valueOf(1));
         startRequest(ApiConstants.MORE_POPULARITY_SHOP_LIST, requestParams, new BaseHttpRequestTask<MoreDiscountShopResponse>() {
             @Override
             public MoreDiscountShopResponse parseResponseToResult(String content) {

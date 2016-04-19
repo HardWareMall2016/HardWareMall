@@ -26,6 +26,7 @@ import com.zhan.framework.support.adapter.ABaseAdapter;
 import com.zhan.framework.support.inject.ViewInject;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -82,8 +83,8 @@ public class DiscountProductsFragment extends APullToRefreshListFragment<Discoun
     }
     @Override
     protected void requestData(RefreshMode mode) {
-        RequestParams requestParams = new RequestParams();
-        requestParams.put("Page", getNextPage(mode));
+        HashMap<String,String> requestParams=new HashMap<>();
+        requestParams.put("Page", String.valueOf(getNextPage(mode)));
         requestParams.put("regionName", Constants.REGION_NAME);
 
         startRequest(ApiConstants.DISCOUNT_PRODUCTSLIST, requestParams, new PagingTask<DiscountProductsResponse>(mode) {

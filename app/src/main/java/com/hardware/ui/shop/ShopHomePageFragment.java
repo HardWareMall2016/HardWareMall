@@ -39,6 +39,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -238,10 +239,10 @@ public class ShopHomePageFragment extends ABaseFragment implements AdapterView.O
     @Override
     public void requestData() {
         mPullRefreshGridView.onRefreshComplete();
-        RequestParams requestParams = new RequestParams();
-        requestParams.put("shopId", mShopId);
-        requestParams.put("shopSort", shopSort);
-        requestParams.put("page", getNextPage());
+        HashMap<String,String> requestParams=new HashMap<>();
+        requestParams.put("shopId", String.valueOf(mShopId));
+        requestParams.put("shopSort", String.valueOf(shopSort));
+        requestParams.put("page", String.valueOf(getNextPage()));
         requestParams.put("Categoryid","");
         startRequest(ApiConstants.SHOP_PRODUCTS_LIST, requestParams, new HttpRequestHandler() {
             @Override
