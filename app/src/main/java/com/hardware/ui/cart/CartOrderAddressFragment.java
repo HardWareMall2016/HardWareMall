@@ -3,7 +3,7 @@ package com.hardware.ui.cart;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -39,6 +39,7 @@ import java.util.List;
  * Created by Administrator on 16/4/16.
  */
 public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrderAddressResponse.AddressInfo> {
+    public final static String KEY_SELECTED_ADDRESS ="selected_addr";
 
     private final static int REQUEST_CODE=100;
 
@@ -50,8 +51,8 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
     private boolean mEditMode=false;
     private TextView mActionBarMenu;
 
-    public static void launch(FragmentActivity activity) {
-        FragmentContainerActivity.launch(activity, CartOrderAddressFragment.class, null);
+    public static void launch(Fragment fragment,int requestCode) {
+        FragmentContainerActivity.launchForResult(fragment, CartOrderAddressFragment.class, null, requestCode);
     }
 
     @Override
@@ -181,8 +182,8 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        int selPos=(int) id;
         if(mEditMode){
-            int selPos=(int) id;
             for(int i=0;i<getAdapterItems().size();i++){
                 if(selPos==i){
                     getAdapterItems().get(i).setIsSelected(true);
@@ -191,6 +192,11 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
                 }
             }
             notifyDataSetChanged();
+        }else{
+            Intent intent=new Intent();
+            intent.putExtra(KEY_SELECTED_ADDRESS,getAdapterItems().get(selPos));
+            getActivity().setResult(Activity.RESULT_OK,intent);
+            getActivity().finish();
         }
     }
 
