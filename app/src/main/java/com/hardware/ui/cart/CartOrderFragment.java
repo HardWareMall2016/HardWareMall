@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +13,14 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.App;
 import com.hardware.base.Constants;
+import com.hardware.bean.AddByOrderRespon;
 import com.hardware.bean.CartOrderAddressResponse;
 import com.hardware.bean.CartOrderResponse;
 import com.hardware.bean.ProductContent;
@@ -27,9 +31,11 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhan.framework.component.container.FragmentArgs;
 import com.zhan.framework.component.container.FragmentContainerActivity;
+import com.zhan.framework.network.HttpRequestHandler;
 import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
+import com.zhan.framework.utils.ToastUtils;
 
 
 /**
@@ -50,11 +56,15 @@ public class CartOrderFragment extends ABaseFragment {
     private TextView mProductCount;
     private TextView mExpress ;
     private LinearLayout mCartOrderAddress ;
+    private RelativeLayout mCommit ;
 
     private String mSelectedSkuIds;
     private DisplayImageOptions options;
     private ExpandableAdapter mAdapter;
     private CartOrderResponse mResponseBean;
+
+    private int mAddressId ;
+    private String cardIds="";
 
 
     public static void launch(FragmentActivity activity, String selectedSkuIds) {
@@ -114,7 +124,54 @@ public class CartOrderFragment extends ABaseFragment {
         mProductAllMoney = (TextView) bottomView.findViewById(R.id.cartorder_productallmoney);
         mProductCount = (TextView) bottomView.findViewById(R.id.cartorder_productcount);
         mExpress = (TextView) bottomView.findViewById(R.id.cartorder_express);
+        mCommit = (RelativeLayout) bottomView.findViewById(R.id.cartorder_commit);
+        mCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mResponseBean.getMessage().size() == 0){
+                    ToastUtils.toast("请添加地址");
+                }else{
+                    for(CartOrderResponse.MessageBean messageBean:mResponseBean.getMessage()){
+                        for(CartOrderResponse.MessageBean.CartItemModelsBean card:messageBean.getCartItemModels()){
+                            if(TextUtils.isEmpty(cardIds)){
+                                cardIds=String.valueOf(card.getCarId());
+                            }else{
+                                cardIds+=","+card.getCarId();
+                            }
+                        }
+                    }
+                    final RequestParams requestParams = new RequestParams();
+                    requestParams.put("Token",App.sToken);
+                    requestParams.put("cartItemIds",cardIds);
+                    requestParams.put("recieveAddressId",mAddressId);
+                    startRequest(ApiConstants.ADD_BY_ORDER, requestParams, new HttpRequestHandler() {
+                        @Override
+                        public void onRequestFinished(ResultCode resultCode, String result) {
+                            switch (resultCode) {
+                                case success:
+                                    AddByOrderRespon response = ToolsHelper.parseJson(result, AddByOrderRespon.class);
+                                    if(response != null && response.getFlag() == 1){
+                                        ToastUtils.toast("提交订单成功");
+                                        Long orderId = null;
+                                        for(AddByOrderRespon.OrderPayEntity orderPayEntity :response.getOrderPay()){
+                                            Log.e("----------",orderPayEntity.getOrderId()+"");
+                                            orderId = orderPayEntity.getOrderId() ;
+                                        }
+                                        CartPayFragment.lauch(getActivity(),response.getAmount());
+                                    }
+                                    break;
+                                case canceled:
+                                    break;
+                                default:
+                                    ToastUtils.toast(result);
+                                    break;
+                            }
+                        }
+                    }, HttpRequestUtils.RequestType.POST);
 
+                }
+            }
+        });
     }
 
     private class ExpandableAdapter extends BaseExpandableListAdapter {
@@ -184,6 +241,7 @@ public class CartOrderFragment extends ABaseFragment {
                 viewHolder = (MessageListViewHolder) convertView.getTag();
             }
 
+
             String imgUrl = ApiConstants.IMG_BASE_URL + mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getImgUrl();
             ImageLoader.getInstance().displayImage(imgUrl, viewHolder.productImage, options);
 
@@ -241,15 +299,18 @@ public class CartOrderFragment extends ABaseFragment {
 
                     mAdapter.notifyDataSetChanged();
 
+                    mAddressId = response.getAddress().getId();
+
                     mTvCartOrderWrites.setText(response.getAddress().getShipTo());
                     mTvPhone.setText(response.getAddress().getPhone());
                     mTvAddress.setText(response.getAddress().getFullRegionName() + mResponseBean.getAddress().getAddress());
                     mCartOrderAddress.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            CartOrderAddressFragment.launch(CartOrderFragment.this,REQUEST_CODE_SELECTED_ADDR);
+                            CartOrderAddressFragment.launch(CartOrderFragment.this, REQUEST_CODE_SELECTED_ADDR);
                         }
                     });
+
 
                     mSummoney.setText("总计：¥" + response.getSumMoney() + "");
                     mProductAllMoney.setText("货款总计：¥" + response.getSumMoney() + "");
@@ -277,6 +338,7 @@ public class CartOrderFragment extends ABaseFragment {
             mTvCartOrderWrites.setText(addressInfo.getReceiverPerson());
             mTvPhone.setText(addressInfo.getReceiverPhone());
             mTvAddress.setText(addressInfo.getAddress());
+            mAddressId = addressInfo.getAddressId();
         }
     }
 

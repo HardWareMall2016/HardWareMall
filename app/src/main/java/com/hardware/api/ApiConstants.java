@@ -82,4 +82,7 @@ public class ApiConstants {
     public static final String PRODUCT_BYORDER = "common/aplHome/ProductByOrder";
     //收货地址
     public static final String GET_MYADDRESS = "common/MBUser/GetMyAddress" ;
+
+    //提交订单
+    public static final String ADD_BY_ORDER = "common/aplHome/AddByOrder";
 }
