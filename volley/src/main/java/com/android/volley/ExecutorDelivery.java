@@ -90,6 +90,7 @@ public class ExecutorDelivery implements ResponseDelivery {
         public void run() {
             // If this request has canceled, finish it and don't deliver.
             if (mRequest.isCanceled()) {
+                mRequest.onCanceled();
                 mRequest.finish("canceled-at-delivery");
                 return;
             }

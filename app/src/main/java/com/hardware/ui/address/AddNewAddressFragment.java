@@ -151,9 +151,9 @@ public class AddNewAddressFragment extends ABaseFragment  {
         });
 
         showPopMenu();
-        if(mGetProvinceReponseBean==null){
-            queryProvinces();
-        }
+
+        queryProvinces();
+
     }
 
     private void queryProvinces(){

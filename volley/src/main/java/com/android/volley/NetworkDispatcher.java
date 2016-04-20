@@ -102,6 +102,7 @@ public class NetworkDispatcher extends Thread {
                 // If the request was cancelled already, do not perform the
                 // network request.
                 if (request.isCanceled()) {
+                    request.onCanceled();
                     request.finish("network-discard-cancelled");
                     continue;
                 }

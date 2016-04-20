@@ -321,6 +321,8 @@ public class HttpRequestUtils {
 
     public static StringRequest startVolleyRequest(String baseUrlSettingKey,String apiUrl, final HashMap<String,String> requestParams, final HttpRequestCallback requestCallback, final RequestType requestType) {
         String requestUrl;
+        final boolean[] hasFinished = {false};
+
         if (TextUtils.isEmpty(baseUrlSettingKey)) {
             requestUrl = SettingUtility.getSetting(Consts.BASE_URL).getValue() + apiUrl;
         } else {
@@ -335,23 +337,22 @@ public class HttpRequestUtils {
         }
 
         if (!Connectivity.isConnected(GlobalContext.getInstance())) {
+            hasFinished[0] =true;
             if (requestCallback != null) {
                 requestCallback.onRequestFailedNoNetwork();
             }
             return null;
         }
-
-        if(requestParams!=null&requestParams.size()>0){
+        if (requestParams != null && requestParams.size() > 0) {
             Iterator uee = requestParams.entrySet().iterator();
-            while(uee.hasNext()) {
-                java.util.Map.Entry entry = (java.util.Map.Entry)uee.next();
-                if(entry.getValue()==null){
+            while (uee.hasNext()) {
+                java.util.Map.Entry entry = (java.util.Map.Entry) uee.next();
+                if (entry.getValue() == null) {
                     entry.setValue("");
                 }
-                Log.i(TAG, "Key = " + entry.getKey()+", Value = "+entry.getValue());
+                Log.i(TAG, "Key = " + entry.getKey() + ", Value = " + entry.getValue());
             }
         }
-
         int method = Request.Method.POST;
         if (requestType == RequestType.GET) {
             method = Request.Method.GET;
@@ -378,11 +379,13 @@ public class HttpRequestUtils {
             @Override
             public void onResponse(String responseStr) {
                 Log.i(TAG, "onResponse = " + responseStr);
+                hasFinished[0] =true;
                 requestCallback.onRequestSucceeded(responseStr);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                hasFinished[0] =true;
                 if (requestCallback == null) {
                     return;
                 }
@@ -426,8 +429,21 @@ public class HttpRequestUtils {
             @Override
             public void onCanceled() {
                 Log.i(TAG, "onCanceled requestUrl = "+getUrl());
+                hasFinished[0] =true;
                 if (requestCallback != null) {
                     requestCallback.onRequestCanceled();
+                }
+            }
+
+            @Override
+            protected void finish(String tag) {
+                super.finish(tag);
+                //如果都请求各个分支都没有返回，在这里认为是取消了
+                if(!hasFinished[0]){
+                    hasFinished[0] =true;
+                    if (requestCallback != null) {
+                        requestCallback.onRequestCanceled();
+                    }
                 }
             }
         };
