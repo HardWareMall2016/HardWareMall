@@ -334,6 +334,7 @@ public abstract class ABaseFragment extends Fragment {
 
             if (isContentEmpty()) {
                 setViewVisiable(emptyLayout, View.VISIBLE);
+                setViewVisiable(contentLayout, View.GONE);
             } else {
                 setViewVisiable(contentLayout, View.VISIBLE);
             }
