@@ -303,9 +303,9 @@ public class CartOrderFragment extends ABaseFragment {
 
                     mAddressId = response.getAddress().getId();
 
-                    mTvCartOrderWrites.setText(response.getAddress().getShipTo());
-                    mTvPhone.setText(response.getAddress().getPhone());
-                    mTvAddress.setText(response.getAddress().getFullRegionName() + mResponseBean.getAddress().getAddress());
+                    mTvCartOrderWrites.setText(response.getAddress().getShipTo()+"");
+                    mTvPhone.setText(response.getAddress().getPhone()+"");
+                    mTvAddress.setText(response.getAddress().getFullRegionName() + mResponseBean.getAddress().getAddress()+"");
                     mCartOrderAddress.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

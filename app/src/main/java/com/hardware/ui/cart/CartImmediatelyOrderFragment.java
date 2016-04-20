@@ -17,6 +17,7 @@ import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.App;
 import com.hardware.bean.AddByOrderRespon;
+import com.hardware.bean.CartImmedOrderRespon;
 import com.hardware.bean.CartOrderAddressResponse;
 import com.hardware.bean.CartOrderImmedResponse;
 import com.hardware.bean.CartOrderResponse;
@@ -42,55 +43,55 @@ import java.util.List;
 public class CartImmediatelyOrderFragment extends ABaseFragment {
     private final static String ARG_KEY = "arg_key";
 
-    private final static int REQUEST_CODE_SELECTED_ADDR=101;
+    private final static int REQUEST_CODE_SELECTED_ADDR = 101;
 
     @ViewInject(id = R.id.tv_cartorder_writes_immed)
-    TextView mWritImmed ;
+    TextView mWritImmed;
     @ViewInject(id = R.id.tv_cartorder_phone_immed)
-    TextView mPhoneImmed ;
+    TextView mPhoneImmed;
     @ViewInject(id = R.id.tv_cartorder_address_immed)
-    TextView mAddressImmed ;
-    @ViewInject(id = R.id.rl_cartorder_immed,click = "OnClick")
-    RelativeLayout mRlCartorderImmed ;
+    TextView mAddressImmed;
+    @ViewInject(id = R.id.rl_cartorder_immed, click = "OnClick")
+    RelativeLayout mRlCartorderImmed;
 
     @ViewInject(id = R.id.message_list_order_shopname_immed)
-    TextView mShopName ;
+    TextView mShopName;
     @ViewInject(id = R.id.cart_immed_url)
-    ImageView mCartImmedUrl ;
+    ImageView mCartImmedUrl;
     @ViewInject(id = R.id.tv_cartorder_product_name_immed)
-    TextView mProductNameImmed ;
+    TextView mProductNameImmed;
 
     @ViewInject(id = R.id.message_list_item_item_standard_immed)
-    TextView mStandardImmed ;
+    TextView mStandardImmed;
     @ViewInject(id = R.id.message_list_item_item_allprice_immed)
-    TextView mAllpriceImmed ;
+    TextView mAllpriceImmed;
     @ViewInject(id = R.id.message_list_item_item_oneprice_immed)
-    TextView mOnePrice ;
+    TextView mOnePrice;
     @ViewInject(id = R.id.message_list_item_item_number_immed)
-    TextView mNumberImmed ;
+    TextView mNumberImmed;
     @ViewInject(id = R.id.message_list_item_item_express_immed)
-    TextView mExpressImmed ;
+    TextView mExpressImmed;
     @ViewInject(id = R.id.message_list_order_number_immed)
-    TextView mOrderNumberImmed ;
+    TextView mOrderNumberImmed;
     @ViewInject(id = R.id.message_list_order_allmoney_immed)
-    TextView mOrderAllMoneyImmed ;
+    TextView mOrderAllMoneyImmed;
     @ViewInject(id = R.id.cartorder_express_immed)
-    TextView mAllExpressImmed ;
+    TextView mAllExpressImmed;
     @ViewInject(id = R.id.cartorder_summoney_immed)
-    TextView mSummoneyImmed ;
+    TextView mSummoneyImmed;
     @ViewInject(id = R.id.cartorder_productallmoney_immed)
-    TextView mProductAllmoneyImmed ;
+    TextView mProductAllmoneyImmed;
     @ViewInject(id = R.id.cartorder_productcount_immed)
-    TextView mproductCount ;
-    @ViewInject(id = R.id.cart_immed_order,click = "OnClick")
-    RelativeLayout mImmedOrder ;
+    TextView mproductCount;
+    @ViewInject(id = R.id.cart_immed_order, click = "OnClick")
+    RelativeLayout mImmedOrder;
 
     private String mSelectedSkuIds;
     private DisplayImageOptions options;
-    private CartOrderImmedResponse response ;
+    private CartOrderImmedResponse response;
 
-    private int mAddressId ;
-    private String cardIds="";
+    private int mAddressId;
+    private String skuId = "";
 
     private List<CartOrderImmedResponse.MessageEntity.CartItemModelsEntity> mCartItemModelList = new ArrayList<>();
 
@@ -139,7 +140,7 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
                 switch (resultCode) {
                     case success:
                         response = ToolsHelper.parseJson(result, CartOrderImmedResponse.class);
-                        if(response != null && response.getFlag() == 1){
+                        if (response != null && response.getFlag() == 1) {
                             mCartItemModelList = response.getMessage().getCartItemModels();
                             mWritImmed.setText(response.getAddress().getShipTo());
                             mPhoneImmed.setText(response.getAddress().getPhone());
@@ -151,18 +152,18 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
                             mProductNameImmed.setText(response.getMessage().getCartItemModels().get(0).getProductName());
 
                             mStandardImmed.setText("规格：");
-                            mAllpriceImmed.setText("￥"+response.getMessage().getCarMoney()+"");
-                            mOnePrice.setText("单价："+response.getMessage().getCarMoney()+"");
-                            mNumberImmed.setText(response.getMessage().getNumber()+"个");
-                            mExpressImmed.setText("￥"+response.getMessage().getExpress()+"");
+                            mAllpriceImmed.setText("￥" + response.getMessage().getCartItemModels().get(0).getPrice() + "");
+                            mOnePrice.setText("单价：" + response.getMessage().getCartItemModels().get(0).getPrice() + "");
+                            mNumberImmed.setText(response.getMessage().getCartItemModels().get(0).getCount() + "个");
+                            mExpressImmed.setText("￥" + response.getMessage().getExpress() + "");
 
-                            mOrderNumberImmed.setText(response.getSumnumber()+"件");
-                            mOrderAllMoneyImmed.setText("￥"+response.getSumMoney()+"");
+                            mOrderNumberImmed.setText(response.getSumnumber() + "件");
+                            mOrderAllMoneyImmed.setText("￥" + response.getSumMoney() + "");
 
-                            mAllExpressImmed.setText("运费总计：¥"+response.getMessage().getExpress()+"");
-                            mSummoneyImmed.setText("总计：¥"+response.getSumMoney()+"");
-                            mProductAllmoneyImmed.setText("货款总计：¥"+response.getSumMoney()+"");
-                            mproductCount.setText(response.getSumnumber()+"件含运费");
+                            mAllExpressImmed.setText("运费总计：¥" + response.getMessage().getExpress() + "");
+                            mSummoneyImmed.setText("总计：¥" + response.getSumMoney() + "");
+                            mProductAllmoneyImmed.setText("货款总计：¥" + response.getSumMoney() + "");
+                            mproductCount.setText(response.getSumnumber() + "件含运费");
 
                             mAddressId = response.getAddress().getId();
 
@@ -178,36 +179,30 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
         }, HttpRequestUtils.RequestType.POST);
     }
 
-    void OnClick(View view){
-        switch (view.getId()){
+    void OnClick(View view) {
+        switch (view.getId()) {
             case R.id.rl_cartorder_immed:
-                CartOrderAddressFragment.launch(this,REQUEST_CODE_SELECTED_ADDR);
+                CartOrderAddressFragment.launch(this, REQUEST_CODE_SELECTED_ADDR);
                 break;
             case R.id.cart_immed_order:
-                if(response.getAddress() == null){
+                if (response.getAddress() == null) {
                     ToastUtils.toast("请添加地址");
-                }else{
-                    cardIds=String.valueOf(response.getMessage().getCartItemModels().get(0).getCarId());
-                    Log.e("------cardIds---",cardIds);
-                    Log.e("-----recieveAddressId--",mAddressId+"");
+                } else {
+                    skuId = response.getMessage().getCartItemModels().get(0).getSkuId();
                     final HashMap<String,String> requestParams=new HashMap<>();
-                    requestParams.put("Token",App.sToken);
-                    requestParams.put("cartItemIds",cardIds);
-                    requestParams.put("recieveAddressId",String.valueOf(mAddressId));
-                    startRequest(ApiConstants.ADD_BY_ORDER, requestParams, new HttpRequestHandler() {
+                    requestParams.put("Quantity", String.valueOf(1));
+                    requestParams.put("Token", App.sToken);
+                    requestParams.put("recieveAddressId", String.valueOf(mAddressId));
+                    requestParams.put("skuIds", skuId);
+                    startRequest(ApiConstants.SUBMIT_ORDERBYPRODUCTID, requestParams, new HttpRequestHandler() {
                         @Override
                         public void onRequestFinished(ResultCode resultCode, String result) {
                             switch (resultCode) {
                                 case success:
-                                    AddByOrderRespon response = ToolsHelper.parseJson(result, AddByOrderRespon.class);
-                                    if(response != null && response.getFlag() == 1){
+                                    CartImmedOrderRespon response = ToolsHelper.parseJson(result, CartImmedOrderRespon.class);
+                                    if (response != null && response.getFlag() == 1) {
                                         ToastUtils.toast("提交订单成功");
-                                        /*Long orderId = null;
-                                        for(AddByOrderRespon.OrderPayEntity orderPayEntity :response.getOrderPay()){
-                                            Log.e("----------",orderPayEntity.getOrderId()+"");
-                                            orderId = orderPayEntity.getOrderId() ;
-                                        }*/
-                                        CartPayFragment.lauch(getActivity(),response.getAmount());
+                                        CartPayFragment.lauch(getActivity(), response.getAmount());
                                     }
                                     break;
                                 case canceled:
@@ -225,8 +220,8 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==REQUEST_CODE_SELECTED_ADDR&&resultCode== Activity.RESULT_OK){
-            CartOrderAddressResponse.AddressInfo addressInfo= (CartOrderAddressResponse.AddressInfo) data.getSerializableExtra(CartOrderAddressFragment.KEY_SELECTED_ADDRESS);
+        if (requestCode == REQUEST_CODE_SELECTED_ADDR && resultCode == Activity.RESULT_OK) {
+            CartOrderAddressResponse.AddressInfo addressInfo = (CartOrderAddressResponse.AddressInfo) data.getSerializableExtra(CartOrderAddressFragment.KEY_SELECTED_ADDRESS);
             mWritImmed.setText(addressInfo.getReceiverPerson());
             mPhoneImmed.setText(addressInfo.getReceiverPhone());
             mAddressImmed.setText(addressInfo.getAddress());

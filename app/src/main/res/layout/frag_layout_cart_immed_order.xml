@@ -23,9 +23,11 @@
         android:paddingTop="8dp">
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_weight="2" />
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_location"
+            android:layout_gravity="center"
+            />
 
         <RelativeLayout
             android:id="@+id/rl_cartorder_immed"
