@@ -149,7 +149,7 @@ public class ProductDetailFragment extends ABaseFragment {
     private String productName ;
     private String productPrice ;
 
-    private String mColor ;
+    private String mColor = null;
     private String mSize ;
     private String mVersion ;
 
@@ -262,7 +262,9 @@ public class ProductDetailFragment extends ABaseFragment {
                                     }
                                 });
 
-                                mColor = response.getMessage().getColor();
+                                if(response.getMessage().getColor() != null){
+                                    mColor = response.getMessage().getColor().get(0).getColor();
+                                }
                                 mSize = response.getMessage().getSize();
                                 mVersion = response.getMessage().getVersion();
                             }
@@ -601,7 +603,8 @@ public class ProductDetailFragment extends ABaseFragment {
 
     private void refersh() {
         HashMap<String,String> requestParams=new HashMap<>();
-        requestParams.put("Color",null);//mColor,这个是数组不对，要改改 ，少了选规格的功能
+        //Log.e("---mColor--",mColor);
+        requestParams.put("Color",mColor);//mColor,这个是数组不对，要改改 ，少了选规格的功能
         requestParams.put("Size",mSize);
         requestParams.put("Version",mVersion);
         requestParams.put("id", String.valueOf(id));
