@@ -189,7 +189,7 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
                     ToastUtils.toast("请添加地址");
                 } else {
                     skuId = response.getMessage().getCartItemModels().get(0).getSkuId();
-                    final HashMap<String,String> requestParams=new HashMap<>();
+                    HashMap<String,String> requestParams=new HashMap<>();
                     requestParams.put("Quantity", String.valueOf(1));
                     requestParams.put("Token", App.sToken);
                     requestParams.put("recieveAddressId", String.valueOf(mAddressId));
