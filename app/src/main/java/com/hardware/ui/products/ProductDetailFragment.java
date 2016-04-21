@@ -601,7 +601,7 @@ public class ProductDetailFragment extends ABaseFragment {
 
     private void refersh() {
         HashMap<String,String> requestParams=new HashMap<>();
-        requestParams.put("Color",mColor);
+        requestParams.put("Color",null);//mColor,这个是数组不对，要改改 ，少了选规格的功能
         requestParams.put("Size",mSize);
         requestParams.put("Version",mVersion);
         requestParams.put("id", String.valueOf(id));
