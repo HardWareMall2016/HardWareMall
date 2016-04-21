@@ -26,7 +26,6 @@ import com.zhan.framework.common.setting.SettingUtility;
 import com.zhan.framework.utils.Consts;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
