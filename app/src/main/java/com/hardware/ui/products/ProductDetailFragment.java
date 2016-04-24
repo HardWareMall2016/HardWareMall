@@ -22,6 +22,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.GridViewWithHeaderAndFooter;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshGridViewWithHeaderAndFooter;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.App;
@@ -109,10 +112,10 @@ public class ProductDetailFragment extends ABaseFragment {
     TextView mDetailDeliveryMark;
     @ViewInject(id = R.id.products_detail_type, click = "OnClick")
     RelativeLayout mProductsDetailType;
-    @ViewInject(id = R.id.products_detail_cart,click = "OnClick")
-    RelativeLayout mProductCart ;
-    @ViewInject(id = R.id.products_detail_order,click = "OnClick")
-    RelativeLayout mProductOrder ;
+    @ViewInject(id = R.id.products_detail_cart, click = "OnClick")
+    RelativeLayout mProductCart;
+    @ViewInject(id = R.id.products_detail_order, click = "OnClick")
+    RelativeLayout mProductOrder;
 
     //第二页
     @ViewInject(id = R.id.detail_picture, click = "OnClick")
@@ -130,8 +133,15 @@ public class ProductDetailFragment extends ABaseFragment {
     @ViewInject(id = R.id.detail_picture_framelayout_detail)
     TextView mProductDetailPrictue;
     @ViewInject(id = R.id.detail_recommend_gridview)
-    MyGridView mRecommengGridView;
+    PullToRefreshGridViewWithHeaderAndFooter mPullRefreshGridView;
 
+
+    private final static int PAGE_SIZE=10;
+    private GridViewWithHeaderAndFooter mGridView;
+    private RecommendAdpater mRecommendAdpater = new RecommendAdpater();
+    private List<Recommend> mProducts = new ArrayList<>();
+    private boolean QueryMore=false;
+    private boolean HasMoreData=true;
 
     private ProductContent content;
     private int id;
@@ -139,30 +149,28 @@ public class ProductDetailFragment extends ABaseFragment {
     private String district;
     private int RecommendFrameLayoutfalg = 0;
     private List<ShopRecommendListRespon.MessageEntity> mRecommendList = new ArrayList<>();
-    private RecommendAdpater mRecommendAdpater;
     private DisplayImageOptions options;
     private int CommentSum;
     private int PackMark;
     private int ServiceMark;
     private int DeliveryMark;
-    private String imgUrl ;
-    private String productName ;
-    private String productPrice ;
+    private String imgUrl;
+    private String productName;
+    private String productPrice;
 
     private String mColor = null;
-    private String mSize ;
-    private String mVersion ;
+    private String mSize;
+    private String mVersion;
 
-    private String mDialog_SKUId ;
-    private String mDialog_Version ;
-    private String mDialog_Color ;
-    private String mDialog_Size ;
-    private double mDialog_SalePrice ;
+    private String mDialog_SKUId;
+    private String mDialog_Version;
+    private String mDialog_Color;
+    private String mDialog_Size;
+    private double mDialog_SalePrice;
     private int mDialog_Stock;
     private boolean flag = true;
 
-    private ActionSheetDialog dialog ;
-
+    private ActionSheetDialog dialog;
 
 
     public static void launch(FragmentActivity activity, ProductContent content) {
@@ -196,13 +204,48 @@ public class ProductDetailFragment extends ABaseFragment {
         id = content.getId();
         district = content.getDistrict();
         options = ToolsHelper.buldDefDisplayImageOptions();
+
+        mGridView = mPullRefreshGridView.getRefreshableView();
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ProductContent content = new ProductContent();
+                content.setId(mProducts.get(position).getId());
+                content.setDistrict(Constants.REGION_NAME);
+                ProductDetailFragment.launch(getActivity(), content);
+            }
+        });
+
+        mPullRefreshGridView.setAdapter(mRecommendAdpater);
+        mPullRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridViewWithHeaderAndFooter>() {
+
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> refreshView) {
+                QueryMore = false;
+                RecommendFrameLayoutfalg = 1;
+                requestData();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> refreshView) {
+                if (!HasMoreData) {
+                    mPullRefreshGridView.onRefreshComplete();
+                    return;
+                }
+                QueryMore = true;
+                RecommendFrameLayoutfalg = 1;
+                requestData();
+            }
+
+        });
+
     }
 
     @Override
     public void requestData() {
 
         if (RecommendFrameLayoutfalg == 0) {
-            final HashMap<String,String> requestParams=new HashMap<>();
+            final HashMap<String, String> requestParams = new HashMap<>();
             requestParams.put("id", String.valueOf(id));
             requestParams.put("district", district);
 
@@ -219,7 +262,7 @@ public class ProductDetailFragment extends ABaseFragment {
                                 productName = response.getMessage().getProductName();
                                 //mProductsWholesale.setText(tempProducts.get(0).get);
                                 mProductsWholesalePrice.setText("￥" + response.getMessage().getMarketPrice() + "");
-                                productPrice = response.getMessage().getMarketPrice()+"";
+                                productPrice = response.getMessage().getMarketPrice() + "";
                                 mProductsExpress.setText("快递 ￥" + response.getMessage().getDeliveryMark());
                                 mPrductsSalesVolume.setText("成交 " + response.getMessage().getSaleCount() + "个");
 //                                mProductsPlace.setText("发货地址: "+response.getMessage().getCompanyRegionName());
@@ -262,7 +305,7 @@ public class ProductDetailFragment extends ABaseFragment {
                                     }
                                 });
 
-                                if(response.getMessage().getColor() != null){
+                                if (response.getMessage().getColor() != null) {
                                     mColor = response.getMessage().getColor().get(0).getColor();
                                 }
                                 mSize = response.getMessage().getSize();
@@ -278,17 +321,22 @@ public class ProductDetailFragment extends ABaseFragment {
                 }
             }, HttpRequestUtils.RequestType.GET);
         } else {
-            HashMap<String,String> requestParams=new HashMap<>();
+            mPullRefreshGridView.onRefreshComplete();
+            HashMap<String, String> requestParams = new HashMap<>();
             requestParams.put("shopid", String.valueOf(shopid));
-            requestParams.put("page", String.valueOf(1));
+            requestParams.put("page", String.valueOf(getNextPage()));
             startRequest(ApiConstants.PRODUCTS_SHOPSPRODUCTS, requestParams, new HttpRequestHandler() {
                 @Override
                 public void onRequestFinished(ResultCode resultCode, String result) {
                     switch (resultCode) {
                         case success:
+                            if (!QueryMore) {
+                                mProducts.clear();
+                            }
+
                             ShopRecommendListRespon response = ToolsHelper.parseJson(result, ShopRecommendListRespon.class);
                             if (response != null && response.getFlag() == 1 && response.getMessage() != null) {
-                                final List<Recommend> tempProducts = new LinkedList<>();
+                                List<Recommend> tempProducts = new LinkedList<>();
                                 for (ShopRecommendListRespon.MessageEntity messageEntity : response.getMessage()) {
                                     Recommend recommend = new Recommend();
                                     recommend.setId(messageEntity.getId());
@@ -298,16 +346,23 @@ public class ProductDetailFragment extends ABaseFragment {
                                     recommend.setMarketPrice(messageEntity.getMarketPrice());
                                     tempProducts.add(recommend);
                                 }
-                                mRecommengGridView.setAdapter(new RecommendAdpater(tempProducts));
-                                mRecommengGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        ProductContent content = new ProductContent();
-                                        content.setId(tempProducts.get(position).getId());
-                                        content.setDistrict(Constants.REGION_NAME);
-                                        ProductDetailFragment.launch(getActivity(), content);
-                                    }
-                                });
+
+
+                                if (tempProducts.size() == PAGE_SIZE) {
+                                    HasMoreData = true;
+                                } else {
+                                    HasMoreData = false;
+                                }
+
+                                mProducts.addAll(tempProducts);
+
+                                mRecommendAdpater.notifyDataSetChanged();
+
+                                if (!QueryMore && mProducts.size() > 0) {
+                                    mGridView.setSelection(0);
+                                }
+
+
                             }
                             break;
                         case canceled:
@@ -316,6 +371,7 @@ public class ProductDetailFragment extends ABaseFragment {
                             ToastUtils.toast(result);
                             break;
                     }
+                    mPullRefreshGridView.onRefreshComplete();
                 }
             }, HttpRequestUtils.RequestType.GET);
         }
@@ -395,20 +451,15 @@ public class ProductDetailFragment extends ABaseFragment {
 
     class RecommendAdpater extends BaseAdapter {
 
-        private List<Recommend> tempProducts = new ArrayList<>();
-
-        public RecommendAdpater(List<Recommend> tempProducts) {
-            this.tempProducts = tempProducts;
-        }
 
         @Override
         public int getCount() {
-            return tempProducts.size();
+            return mProducts.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return tempProducts.get(position);
+            return mProducts.get(position);
         }
 
         @Override
@@ -430,9 +481,10 @@ public class ProductDetailFragment extends ABaseFragment {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            viewHolder.productName.setText("￥" + tempProducts.get(position).getMarketPrice() + "");
-            viewHolder.productName.setText(tempProducts.get(position).getName());
-            String imgUrl = ApiConstants.IMG_BASE_URL + tempProducts.get(position).getImgUrl();
+            Log.e("------->>>>",mProducts.get(position).getName());
+            viewHolder.productName.setText("￥" + mProducts.get(position).getMarketPrice() + "");
+            viewHolder.productName.setText(mProducts.get(position).getName());
+            String imgUrl = ApiConstants.IMG_BASE_URL + mProducts.get(position).getImgUrl();
             ImageLoader.getInstance().displayImage(imgUrl, viewHolder.imageView, options);
 
             return convertView;
@@ -541,6 +593,8 @@ public class ProductDetailFragment extends ABaseFragment {
                 mProductFrameLayout.setVisibility(View.GONE);
 
                 RecommendFrameLayoutfalg = 1;
+                autoRefresh();
+
                 requestData();
                 break;
             case R.id.iv_back:
@@ -561,26 +615,34 @@ public class ProductDetailFragment extends ABaseFragment {
         }
     }
 
+    private void autoRefresh(){
+        //refreshViews();
+        QueryMore=false;
+        HasMoreData=true;
+        mPullRefreshGridView.setRefreshing();
+    }
+
+
     private View.OnClickListener mOnConformClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(App.sToken != null){
-                if(flag){
-                    HashMap<String,String> requestParams=new HashMap<>();
+            if (App.sToken != null) {
+                if (flag) {
+                    HashMap<String, String> requestParams = new HashMap<>();
             /*if(mNumber.getText().toString().equals("0")){*/
-                    requestParams.put("Quantity",String.valueOf(1));
+                    requestParams.put("Quantity", String.valueOf(1));
            /* }else{
                 requestParams.put("Quantity", Integer.parseInt(mNumber.getText().toString()));
             }*/
                     requestParams.put("Token", App.sToken);
-                    requestParams.put("skuId",mDialog_SKUId);
+                    requestParams.put("skuId", mDialog_SKUId);
                     startRequest(ApiConstants.ADD_ORDERCAR, requestParams, new HttpRequestHandler() {
                         @Override
                         public void onRequestFinished(ResultCode resultCode, String result) {
                             switch (resultCode) {
                                 case success:
                                     AddOrderCarRespon response = ToolsHelper.parseJson(result, AddOrderCarRespon.class);
-                                    if(response != null && response.getFlag() == 1){
+                                    if (response != null && response.getFlag() == 1) {
                                         ToastUtils.toast(response.getMessage());
                                     }
                                     break;
@@ -592,21 +654,21 @@ public class ProductDetailFragment extends ABaseFragment {
                             }
                         }
                     }, HttpRequestUtils.RequestType.POST);
-                }else{
-                    CartImmediatelyOrderFragment.lunch(getActivity(),mDialog_SKUId);
+                } else {
+                    CartImmediatelyOrderFragment.lunch(getActivity(), mDialog_SKUId);
                 }
-            }else{
+            } else {
                 LoginFragment.launch(getActivity());
             }
         }
     };
 
     private void refersh() {
-        HashMap<String,String> requestParams=new HashMap<>();
+        HashMap<String, String> requestParams = new HashMap<>();
         //Log.e("---mColor--",mColor);
-        requestParams.put("Color",mColor);//mColor,这个是数组不对，要改改 ，少了选规格的功能
-        requestParams.put("Size",mSize);
-        requestParams.put("Version",mVersion);
+        requestParams.put("Color", mColor);//mColor,这个是数组不对，要改改 ，少了选规格的功能
+        requestParams.put("Size", mSize);
+        requestParams.put("Version", mVersion);
         requestParams.put("id", String.valueOf(id));
         startRequest(ApiConstants.PRODUCT_SSKU, requestParams, new HttpRequestHandler() {
             @Override
@@ -614,15 +676,15 @@ public class ProductDetailFragment extends ABaseFragment {
                 switch (resultCode) {
                     case success:
                         ProductSskuRespon response = ToolsHelper.parseJson(result, ProductSskuRespon.class);
-                        if(response != null && response.getFlag() == 1){
+                        if (response != null && response.getFlag() == 1) {
                             mDialog_SKUId = response.getMessage().getSKUId();
-                            mDialog_Version = response.getMessage().getVersion() ;
-                            mDialog_Color = response.getMessage().getColor() ;
-                            mDialog_Size = response.getMessage().getSize() ;
-                            mDialog_SalePrice = response.getMessage().getSalePrice() ;
-                            mDialog_Stock = response.getMessage().getStock() ;
+                            mDialog_Version = response.getMessage().getVersion();
+                            mDialog_Color = response.getMessage().getColor();
+                            mDialog_Size = response.getMessage().getSize();
+                            mDialog_SalePrice = response.getMessage().getSalePrice();
+                            mDialog_Stock = response.getMessage().getStock();
 
-                            dialog= new ActionSheetDialog(getActivity(),mDialog_SKUId,imgUrl,productName,productPrice,mDialog_Stock);
+                            dialog = new ActionSheetDialog(getActivity(), mDialog_SKUId, imgUrl, productName, productPrice, mDialog_Stock);
                             dialog.setOnConformClickListener(mOnConformClickListener);// 回调（点击确定）
                             dialog.builder();
                             dialog.setCancelable(true);
@@ -641,6 +703,14 @@ public class ProductDetailFragment extends ABaseFragment {
                 }
             }
         }, HttpRequestUtils.RequestType.POST);
+    }
+
+    private int getNextPage(){
+        if(!QueryMore){
+            return 1;
+        }
+        int pageIndex=1+mProducts.size()/PAGE_SIZE;
+        return pageIndex;
     }
 
 
