@@ -253,11 +253,12 @@ public class ProductDetailFragment extends ABaseFragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Log.i("wuyue","onScroll firstVisibleItem ="+firstVisibleItem+" , visibleItemCount = "+visibleItemCount);
                 if(firstVisibleItem==0){
                     mScrollViewContainer.setInterceptTouchEvent(false);
+                    mScrollViewContainer.setCanPullDown(true);
                 }else{
                     mScrollViewContainer.setInterceptTouchEvent(true);
+                    mScrollViewContainer.setCanPullDown(false);
                 }
             }
         });
