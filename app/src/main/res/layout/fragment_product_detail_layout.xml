@@ -565,7 +565,7 @@
             </LinearLayout>
         </ScrollView>
 
-        <ScrollView
+        <RelativeLayout
             android:id="@+id/product_scrollview_2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -644,13 +644,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:visibility="gone">
-
-                    <!--<com.hardware.view.MyGridView
-                        android:id="@+id/detail_recommend_gridview"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:numColumns="2"
-                        android:stretchMode="columnWidth" />-->
                     <com.handmark.pulltorefresh.library.PullToRefreshGridView xmlns:ptr="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/detail_recommend_gridview"
                         android:layout_width="fill_parent"
@@ -666,7 +659,7 @@
                 </FrameLayout>
 
             </LinearLayout>
-        </ScrollView>
+        </RelativeLayout>
 
     </com.hardware.view.ScrollViewContainer>
 
