@@ -483,6 +483,17 @@ public class CartFragment extends ABaseFragment {
                 holder=(ChildHolder)convertView.getTag();
             }
 
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProductOrderInfo productOrderInfo=mOrderList.get(groupPosition).productOrderList.get(childPosition);
+                    ProductContent content = new ProductContent();
+                    content.setId(productOrderInfo.id);
+                    content.setDistrict(Constants.REGION_NAME);
+                    ProductDetailFragment.launch(getActivity(), content);
+                }
+            });
+
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
