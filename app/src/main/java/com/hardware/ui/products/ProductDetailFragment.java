@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.GridViewWithHeaderAndFooter;
@@ -200,6 +202,10 @@ public class ProductDetailFragment extends ABaseFragment {
         return R.layout.fragment_product_detail_layout;
     }
 
+
+
+
+
     @Override
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
@@ -207,7 +213,6 @@ public class ProductDetailFragment extends ABaseFragment {
         district = content.getDistrict();
         options = ToolsHelper.buldDefDisplayImageOptions();
 
-        //mGridView = mPullRefreshGridView.getRefreshableView();
         mPullRefreshGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -223,8 +228,7 @@ public class ProductDetailFragment extends ABaseFragment {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
                 QueryMore = false;
-                RecommendFrameLayoutfalg = 1;
-                requestData();
+                showRequestData();
             }
 
             @Override
@@ -234,40 +238,14 @@ public class ProductDetailFragment extends ABaseFragment {
                     return;
                 }
                 QueryMore = true;
-                RecommendFrameLayoutfalg = 1;
-                requestData();
+                showRequestData();
             }
         });
-/*
-        mPullRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridViewWithHeaderAndFooter>() {
-
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> refreshView) {
-                QueryMore = false;
-                RecommendFrameLayoutfalg = 1;
-                requestData();
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> refreshView) {
-                if (!HasMoreData) {
-                    mPullRefreshGridView.onRefreshComplete();
-                    return;
-                }
-                QueryMore = true;
-                RecommendFrameLayoutfalg = 1;
-                requestData();
-            }
-
-        });
-*/
 
     }
 
     @Override
     public void requestData() {
-
-        if (RecommendFrameLayoutfalg == 0) {
             final HashMap<String, String> requestParams = new HashMap<>();
             requestParams.put("id", String.valueOf(id));
             requestParams.put("district", district);
@@ -343,61 +321,6 @@ public class ProductDetailFragment extends ABaseFragment {
                     }
                 }
             }, HttpRequestUtils.RequestType.GET);
-        } else {
-            mPullRefreshGridView.onRefreshComplete();
-            HashMap<String, String> requestParams = new HashMap<>();
-            requestParams.put("shopid", String.valueOf(shopid));
-            requestParams.put("page", String.valueOf(getNextPage()));
-            startRequest(ApiConstants.PRODUCTS_SHOPSPRODUCTS, requestParams, new HttpRequestHandler() {
-                @Override
-                public void onRequestFinished(ResultCode resultCode, String result) {
-                    switch (resultCode) {
-                        case success:
-                            if (!QueryMore) {
-                                mProducts.clear();
-                            }
-
-                            ShopRecommendListRespon response = ToolsHelper.parseJson(result, ShopRecommendListRespon.class);
-                            if (response != null && response.getFlag() == 1 && response.getMessage() != null) {
-                                List<Recommend> tempProducts = new LinkedList<>();
-                                for (ShopRecommendListRespon.MessageEntity messageEntity : response.getMessage()) {
-                                    Recommend recommend = new Recommend();
-                                    recommend.setId(messageEntity.getId());
-                                    recommend.setImgUrl(messageEntity.getImgUrl());
-                                    recommend.setName(messageEntity.getName());
-                                    recommend.setSaleCounts(messageEntity.getSaleCounts());
-                                    recommend.setMarketPrice(messageEntity.getMarketPrice());
-                                    tempProducts.add(recommend);
-                                }
-
-
-                                if (tempProducts.size() == PAGE_SIZE) {
-                                    HasMoreData = true;
-                                } else {
-                                    HasMoreData = false;
-                                }
-
-                                mProducts.addAll(tempProducts);
-
-                                mRecommendAdpater.notifyDataSetChanged();
-
-                                if (!QueryMore && mProducts.size() > 0) {
-                                    //mPullRefreshGridView.setSelection(0);
-                                }
-
-
-                            }
-                            break;
-                        case canceled:
-                            break;
-                        default:
-                            ToastUtils.toast(result);
-                            break;
-                    }
-                    mPullRefreshGridView.onRefreshComplete();
-                }
-            }, HttpRequestUtils.RequestType.GET);
-        }
     }
 
     private void refreshDescribe(int i) {
@@ -602,8 +525,10 @@ public class ProductDetailFragment extends ABaseFragment {
 
                 break;
             case R.id.detail_recommend:
-                int height=getRootView().getHeight();
-                mPullRefreshGridView.setMinimumHeight((height- PixelUtils.dp2px(48)));
+                //int height=getRootView().getHeight();
+                //mPullRefreshGridView.setMinimumHeight((height- PixelUtils.dp2px(48)));
+                mPullRefreshGridView.setMinimumHeight(2800);
+
 
                 mDetailRecommend.setBackgroundResource(R.drawable.bg_dark_blue_underline);
                 mDetailRecommend.setTextColor(getResources().getColor(R.color.blue));
@@ -618,10 +543,8 @@ public class ProductDetailFragment extends ABaseFragment {
                 mPictureFrameLayout.setVisibility(View.GONE);
                 mProductFrameLayout.setVisibility(View.GONE);
 
-                RecommendFrameLayoutfalg = 1;
                 autoRefresh();
-
-                requestData();
+                showRequestData();
                 break;
             case R.id.iv_back:
                 getActivity().finish();
@@ -639,6 +562,63 @@ public class ProductDetailFragment extends ABaseFragment {
                 refersh();
                 break;
         }
+    }
+
+    private void showRequestData() {
+        mPullRefreshGridView.onRefreshComplete();
+        HashMap<String, String> requestParams = new HashMap<>();
+        requestParams.put("shopid", String.valueOf(shopid));
+        requestParams.put("page", String.valueOf(getNextPage()));
+        startRequest(ApiConstants.PRODUCTS_SHOPSPRODUCTS, requestParams, new HttpRequestHandler() {
+            @Override
+            public void onRequestFinished(ResultCode resultCode, String result) {
+                switch (resultCode) {
+                    case success:
+                        if (!QueryMore) {
+                            mProducts.clear();
+                        }
+
+                        ShopRecommendListRespon response = ToolsHelper.parseJson(result, ShopRecommendListRespon.class);
+                        if (response != null && response.getFlag() == 1 && response.getMessage() != null) {
+                            List<Recommend> tempProducts = new LinkedList<>();
+                            for (ShopRecommendListRespon.MessageEntity messageEntity : response.getMessage()) {
+                                Recommend recommend = new Recommend();
+                                recommend.setId(messageEntity.getId());
+                                recommend.setImgUrl(messageEntity.getImgUrl());
+                                recommend.setName(messageEntity.getName());
+                                recommend.setSaleCounts(messageEntity.getSaleCounts());
+                                recommend.setMarketPrice(messageEntity.getMarketPrice());
+                                tempProducts.add(recommend);
+                            }
+
+
+                            if (tempProducts.size() == PAGE_SIZE) {
+                                HasMoreData = true;
+                            } else {
+                                HasMoreData = false;
+                            }
+
+                            mProducts.addAll(tempProducts);
+                            Log.e("-------->>>>>",mProducts.size()+"");
+
+                            mRecommendAdpater.notifyDataSetChanged();
+
+                            //if (!QueryMore && mProducts.size() > 0) {
+                            //mPullRefreshGridView.setSelection(0);
+                            //}
+
+
+                        }
+                        break;
+                    case canceled:
+                        break;
+                    default:
+                        ToastUtils.toast(result);
+                        break;
+                }
+                mPullRefreshGridView.onRefreshComplete();
+            }
+        }, HttpRequestUtils.RequestType.GET);
     }
 
     private void autoRefresh(){
