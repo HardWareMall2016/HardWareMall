@@ -52,6 +52,7 @@ import com.zhan.framework.network.HttpRequestHandler;
 import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
+import com.zhan.framework.utils.PixelUtils;
 import com.zhan.framework.utils.ToastUtils;
 
 import java.util.ArrayList;
@@ -601,6 +602,9 @@ public class ProductDetailFragment extends ABaseFragment {
 
                 break;
             case R.id.detail_recommend:
+                int height=getRootView().getHeight();
+                mPullRefreshGridView.setMinimumHeight((height- PixelUtils.dp2px(48)));
+
                 mDetailRecommend.setBackgroundResource(R.drawable.bg_dark_blue_underline);
                 mDetailRecommend.setTextColor(getResources().getColor(R.color.blue));
 
