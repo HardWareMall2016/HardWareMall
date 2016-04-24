@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.GridViewWithHeaderAndFooter;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshGridViewWithHeaderAndFooter;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
@@ -133,11 +134,11 @@ public class ProductDetailFragment extends ABaseFragment {
     @ViewInject(id = R.id.detail_picture_framelayout_detail)
     TextView mProductDetailPrictue;
     @ViewInject(id = R.id.detail_recommend_gridview)
-    PullToRefreshGridViewWithHeaderAndFooter mPullRefreshGridView;
+    PullToRefreshGridView mPullRefreshGridView;
 
 
     private final static int PAGE_SIZE=10;
-    private GridViewWithHeaderAndFooter mGridView;
+   // private GridViewWithHeaderAndFooter mGridView;
     private RecommendAdpater mRecommendAdpater = new RecommendAdpater();
     private List<Recommend> mProducts = new ArrayList<>();
     private boolean QueryMore=false;
@@ -205,8 +206,8 @@ public class ProductDetailFragment extends ABaseFragment {
         district = content.getDistrict();
         options = ToolsHelper.buldDefDisplayImageOptions();
 
-        mGridView = mPullRefreshGridView.getRefreshableView();
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //mGridView = mPullRefreshGridView.getRefreshableView();
+        mPullRefreshGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ProductContent content = new ProductContent();
@@ -217,6 +218,26 @@ public class ProductDetailFragment extends ABaseFragment {
         });
 
         mPullRefreshGridView.setAdapter(mRecommendAdpater);
+        mPullRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
+                QueryMore = false;
+                RecommendFrameLayoutfalg = 1;
+                requestData();
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
+                if (!HasMoreData) {
+                    mPullRefreshGridView.onRefreshComplete();
+                    return;
+                }
+                QueryMore = true;
+                RecommendFrameLayoutfalg = 1;
+                requestData();
+            }
+        });
+/*
         mPullRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<GridViewWithHeaderAndFooter>() {
 
             @Override
@@ -238,6 +259,7 @@ public class ProductDetailFragment extends ABaseFragment {
             }
 
         });
+*/
 
     }
 
@@ -359,7 +381,7 @@ public class ProductDetailFragment extends ABaseFragment {
                                 mRecommendAdpater.notifyDataSetChanged();
 
                                 if (!QueryMore && mProducts.size() > 0) {
-                                    mGridView.setSelection(0);
+                                    //mPullRefreshGridView.setSelection(0);
                                 }
 
 
