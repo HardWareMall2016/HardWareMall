@@ -15,7 +15,7 @@ public class CartOrderResponse {
      */
 
     private int flag;
-    private int sumMoney;
+    private double sumMoney;
     private int sumnumber;
     private AddressBean Address;
     private List<MessageBean> message;
@@ -29,11 +29,11 @@ public class CartOrderResponse {
         this.flag = flag;
     }
 
-    public int getSumMoney() {
+    public double getSumMoney() {
         return sumMoney;
     }
 
-    public void setSumMoney(int sumMoney) {
+    public void setSumMoney(double sumMoney) {
         this.sumMoney = sumMoney;
     }
 
@@ -119,11 +119,11 @@ public class CartOrderResponse {
     }
 
     public static class MessageBean {
-        private int carMoney;
+        private double carMoney;
         private int number;
         private int shopId;
         private String ShopName;
-        private int Express;
+        private double Express;
         /**
          * color :
          * count : 1
@@ -141,11 +141,11 @@ public class CartOrderResponse {
 
         private List<CartItemModelsBean> CartItemModels;
 
-        public int getCarMoney() {
+        public double getCarMoney() {
             return carMoney;
         }
 
-        public void setCarMoney(int carMoney) {
+        public void setCarMoney(double carMoney) {
             this.carMoney = carMoney;
         }
 
@@ -173,11 +173,11 @@ public class CartOrderResponse {
             this.ShopName = ShopName;
         }
 
-        public int getExpress() {
+        public double getExpress() {
             return Express;
         }
 
-        public void setExpress(int Express) {
+        public void setExpress(double Express) {
             this.Express = Express;
         }
 
@@ -195,7 +195,7 @@ public class CartOrderResponse {
             private int id;
             private String imgUrl;
             private String ProductName;
-            private int price;
+            private double price;
             private String productCode;
             private int shopId;
             private String size;
@@ -243,11 +243,11 @@ public class CartOrderResponse {
                 this.ProductName = ProductName;
             }
 
-            public int getPrice() {
+            public double getPrice() {
                 return price;
             }
 
-            public void setPrice(int price) {
+            public void setPrice(double price) {
                 this.price = price;
             }
 

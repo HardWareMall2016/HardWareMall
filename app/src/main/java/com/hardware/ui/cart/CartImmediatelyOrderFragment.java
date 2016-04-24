@@ -34,6 +34,7 @@ import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 import com.zhan.framework.utils.ToastUtils;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -153,17 +154,33 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
                             mProductNameImmed.setText(response.getMessage().getCartItemModels().get(0).getProductName());
 
                             mStandardImmed.setText("规格：");
-                            mAllpriceImmed.setText("￥" + response.getMessage().getCartItemModels().get(0).getPrice() + "");
-                            mOnePrice.setText("单价：" + response.getMessage().getCartItemModels().get(0).getPrice() + "");
+
+                            DecimalFormat df = new DecimalFormat();
+                            df.applyPattern("￥##0.00");
+                            mAllpriceImmed.setText(df.format(response.getMessage().getCartItemModels().get(0).getPrice()));
+
+                            DecimalFormat df1 = new DecimalFormat();
+                            df1.applyPattern("单价：￥##0.00");
+
+                            mOnePrice.setText(df1.format(response.getMessage().getCartItemModels().get(0).getPrice()));
                             mNumberImmed.setText(response.getMessage().getCartItemModels().get(0).getCount() + "个");
-                            mExpressImmed.setText("￥" + response.getMessage().getExpress() + "");
+
+                            mExpressImmed.setText(df.format(response.getMessage().getExpress()));
 
                             mOrderNumberImmed.setText(response.getSumnumber() + "件");
-                            mOrderAllMoneyImmed.setText("￥" + response.getSumMoney() + "");
+                            mOrderAllMoneyImmed.setText("小计："+df.format(response.getSumMoney()));
 
-                            mAllExpressImmed.setText("运费总计：¥" + response.getMessage().getExpress() + "");
-                            mSummoneyImmed.setText("总计：¥" + response.getSumMoney() + "");
-                            mProductAllmoneyImmed.setText("货款总计：¥" + response.getSumMoney() + "");
+                            DecimalFormat df2 = new DecimalFormat();
+                            df2.applyPattern("运费总计：￥##0.00");
+                            mAllExpressImmed.setText(df2.format(response.getMessage().getExpress()));
+
+                            DecimalFormat df3 = new DecimalFormat();
+                            df3.applyPattern("总计：￥##0.00");
+                            mSummoneyImmed.setText(df3.format(response.getSumMoney()));
+
+                            DecimalFormat df4 = new DecimalFormat();
+                            df4.applyPattern("货款总计：￥##0.00");
+                            mProductAllmoneyImmed.setText(df4.format(response.getSumMoney()));
                             mproductCount.setText(response.getSumnumber() + "件含运费");
 
                             mAddressId = response.getAddress().getId();

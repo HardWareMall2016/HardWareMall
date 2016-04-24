@@ -25,7 +25,7 @@ public class CartOrderImmedResponse {
      */
 
     private MessageEntity message;
-    private int sumMoney;
+    private double sumMoney;
     private int sumnumber;
     /**
      * Id : 66
@@ -46,7 +46,7 @@ public class CartOrderImmedResponse {
         this.message = message;
     }
 
-    public void setSumMoney(int sumMoney) {
+    public void setSumMoney(double sumMoney) {
         this.sumMoney = sumMoney;
     }
 
@@ -66,11 +66,11 @@ public class CartOrderImmedResponse {
         return message;
     }
 
-    public int getSumMoney() {
+    public double getSumMoney() {
         return sumMoney;
     }
 
-    public int getSumnumber() {
+    public double getSumnumber() {
         return sumnumber;
     }
 
@@ -79,7 +79,7 @@ public class CartOrderImmedResponse {
     }
 
     public static class MessageEntity {
-        private int carMoney;
+        private double carMoney;
         private int number;
         private int shopId;
         private String ShopName;
@@ -101,7 +101,7 @@ public class CartOrderImmedResponse {
 
         private List<CartItemModelsEntity> CartItemModels;
 
-        public void setCarMoney(int carMoney) {
+        public void setCarMoney(double carMoney) {
             this.carMoney = carMoney;
         }
 
@@ -125,7 +125,7 @@ public class CartOrderImmedResponse {
             this.CartItemModels = CartItemModels;
         }
 
-        public int getCarMoney() {
+        public double getCarMoney() {
             return carMoney;
         }
 
@@ -155,7 +155,7 @@ public class CartOrderImmedResponse {
             private int id;
             private String imgUrl;
             private String ProductName;
-            private int price;
+            private double price;
             private String productCode;
             private int shopId;
             private String size;
@@ -183,7 +183,7 @@ public class CartOrderImmedResponse {
                 this.ProductName = ProductName;
             }
 
-            public void setPrice(int price) {
+            public void setPrice(double price) {
                 this.price = price;
             }
 
@@ -231,7 +231,7 @@ public class CartOrderImmedResponse {
                 return ProductName;
             }
 
-            public int getPrice() {
+            public double getPrice() {
                 return price;
             }
 

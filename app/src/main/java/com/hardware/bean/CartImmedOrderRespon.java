@@ -13,7 +13,7 @@ public class CartImmedOrderRespon {
      */
 
     private int flag;
-    private int Amount;
+    private double Amount;
     /**
      * Id : null
      * OrderId : 2016041941596047
@@ -28,7 +28,7 @@ public class CartImmedOrderRespon {
         this.flag = flag;
     }
 
-    public void setAmount(int Amount) {
+    public void setAmount(double Amount) {
         this.Amount = Amount;
     }
 
@@ -40,7 +40,7 @@ public class CartImmedOrderRespon {
         return flag;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return Amount;
     }
 

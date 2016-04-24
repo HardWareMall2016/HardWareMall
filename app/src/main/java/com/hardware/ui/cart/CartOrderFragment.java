@@ -39,6 +39,7 @@ import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 import com.zhan.framework.utils.ToastUtils;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 
@@ -256,10 +257,17 @@ public class CartOrderFragment extends ABaseFragment {
             String imgUrl = ApiConstants.IMG_BASE_URL + mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getImgUrl();
             ImageLoader.getInstance().displayImage(imgUrl, viewHolder.productImage, options);
 
+
             viewHolder.productName.setText(mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getProductName());
             viewHolder.productStandard.setText("规格：");
-            viewHolder.productAllPrice.setText("¥" + mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getPrice() + "");
-            viewHolder.productOnePrice.setText("单价：¥" + mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getPrice() + "");
+
+            DecimalFormat df = new DecimalFormat();
+            df.applyPattern("￥##0.00");
+            viewHolder.productAllPrice.setText(df.format(mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getPrice()));
+
+            DecimalFormat df1 = new DecimalFormat();
+            df1.applyPattern("单价：￥##0.00");
+            viewHolder.productOnePrice.setText(df1.format(mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getPrice()));
             viewHolder.productCount.setText(mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getCount() + "件");
 
             final int priductId = mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition).getId();
@@ -277,7 +285,11 @@ public class CartOrderFragment extends ABaseFragment {
             if (isLastChild) {
                 viewHolder.list_item_liuyan.setVisibility(View.VISIBLE);
                 viewHolder.listOrderNumber.setText(mResponseBean.getMessage().get(groupPosition).getNumber() + "");
-                viewHolder.listOrderAllMoney.setText("小计：¥ " + mResponseBean.getMessage().get(groupPosition).getCarMoney() + "");
+
+                DecimalFormat df2 = new DecimalFormat();
+                df2.applyPattern("小计：￥##0.00");
+
+                viewHolder.listOrderAllMoney.setText(df2.format(mResponseBean.getMessage().get(groupPosition).getCarMoney()));
             } else {
                 viewHolder.list_item_liuyan.setVisibility(View.GONE);
             }
@@ -328,15 +340,21 @@ public class CartOrderFragment extends ABaseFragment {
                         }
                     });
 
+                    DecimalFormat df3 = new DecimalFormat();
+                    df3.applyPattern("总计：￥##0.00");
+                    mSummoney.setText(df3.format(response.getSumMoney()));
 
-                    mSummoney.setText("总计：¥" + response.getSumMoney() + "");
-                    mProductAllMoney.setText("货款总计：¥" + response.getSumMoney() + "");
+                    DecimalFormat df4 = new DecimalFormat();
+                    df4.applyPattern("货款总计：￥##0.00");
+                    mProductAllMoney.setText(df4.format(response.getSumMoney()));
                     mProductCount.setText(response.getSumnumber() + "件含运费");
 
                     int express = 0;
                     for (CartOrderResponse.MessageBean cartOrderResponse : mResponseBean.getMessage()) {
                         express += cartOrderResponse.getExpress();
-                        mExpress.setText("运费总计：¥" + express + "");
+                        DecimalFormat df5 = new DecimalFormat();
+                        df5.applyPattern("运费总计：￥##0.00");
+                        mExpress.setText(df5.format(express));
                     }
 
                     //默认展开
