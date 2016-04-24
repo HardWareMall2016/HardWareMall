@@ -229,6 +229,7 @@ public class ProductDetailFragment extends ABaseFragment {
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
                 QueryMore = false;
                 showRequestData();
+
             }
 
             @Override
