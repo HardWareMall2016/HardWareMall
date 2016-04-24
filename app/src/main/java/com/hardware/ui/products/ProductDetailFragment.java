@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
@@ -245,12 +246,31 @@ public class ProductDetailFragment extends ABaseFragment {
             }
         });
 
+        mPullRefreshGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+
+        mPullRefreshGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                Log.i("wuyue","onScroll firstVisibleItem ="+firstVisibleItem+" , visibleItemCount = "+visibleItemCount);
+                if(firstVisibleItem==0){
+                    mScrollViewContainer.setInterceptTouchEvent(false);
+                }else{
+                    mScrollViewContainer.setInterceptTouchEvent(true);
+                }
+            }
+        });
+
     }
 
     @Override
     public void requestData() {
             final HashMap<String, String> requestParams = new HashMap<>();
-            requestParams.put("id", String.valueOf(id));
+        requestParams.put("id", String.valueOf(id));
             requestParams.put("district", district);
 
             startRequest(ApiConstants.PRODUCTS_DETAIL, requestParams, new HttpRequestHandler() {
@@ -497,7 +517,7 @@ public class ProductDetailFragment extends ABaseFragment {
 
 
     void OnClick(View view) {
-        mScrollViewContainer.setInterceptTouchEvent(false);
+        //mScrollViewContainer.setInterceptTouchEvent(false);
         switch (view.getId()) {
             case R.id.detail_picture:
                 mDetailPicture.setBackgroundResource(R.drawable.bg_dark_blue_underline);
@@ -529,7 +549,7 @@ public class ProductDetailFragment extends ABaseFragment {
 
                 break;
             case R.id.detail_recommend:
-                mScrollViewContainer.setInterceptTouchEvent(true);
+                //mScrollViewContainer.setInterceptTouchEvent(true);
                 //int height=getRootView().getHeight();
                 //mPullRefreshGridView.setMinimumHeight((height- PixelUtils.dp2px(48)));
                 mPullRefreshGridView.setMinimumHeight(2800);
