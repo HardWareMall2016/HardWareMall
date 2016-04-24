@@ -302,12 +302,14 @@ public class BaseActivity extends ActionBarActivity  {
             if (handle)
                 return true;
         }
-
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            if (onBackClick())
-                return true;
-        }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!onBackClick()){
+            super.onBackPressed();
+        }
     }
 
     public boolean onBackClick() {
@@ -325,9 +327,7 @@ public class BaseActivity extends ActionBarActivity  {
                 return true;
         }
 
-        finish();
-
-        return true;
+        return false;
     }
 
     /**

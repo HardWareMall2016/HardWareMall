@@ -41,6 +41,7 @@ import java.util.List;
  */
 public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrderAddressResponse.AddressInfo> {
     public final static String KEY_SELECTED_ADDRESS ="selected_addr";
+    public final static String KEY_IS_BACK_FINISH ="is_back_finish";
 
     private final static int REQUEST_CODE=100;
 
@@ -199,6 +200,15 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
             getActivity().setResult(Activity.RESULT_OK,intent);
             getActivity().finish();
         }
+    }
+
+    @Override
+    public boolean onBackClick() {
+        Intent intent=new Intent();
+        intent.putExtra(KEY_IS_BACK_FINISH,true);
+        getActivity().setResult(Activity.RESULT_OK,intent);
+        getActivity().finish();
+        return true;
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.base.App;
 import com.hardware.bean.AddByOrderRespon;
+import com.hardware.bean.AddressInfoResponseBean;
 import com.hardware.bean.CartImmedOrderRespon;
 import com.hardware.bean.CartOrderAddressResponse;
 import com.hardware.bean.CartOrderImmedResponse;
@@ -221,12 +222,48 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_SELECTED_ADDR && resultCode == Activity.RESULT_OK) {
-            CartOrderAddressResponse.AddressInfo addressInfo = (CartOrderAddressResponse.AddressInfo) data.getSerializableExtra(CartOrderAddressFragment.KEY_SELECTED_ADDRESS);
-            mWritImmed.setText(addressInfo.getReceiverPerson());
-            mPhoneImmed.setText(addressInfo.getReceiverPhone());
-            mAddressImmed.setText(addressInfo.getAddress());
-            mAddressId = addressInfo.getAddressId();
+            //通过返回键返回
+            if(data.getBooleanExtra(CartOrderAddressFragment.KEY_IS_BACK_FINISH,false)){
+                //重新请求
+                queryAddress(mAddressId,true);
+            }else{
+                //选地址返回
+                CartOrderAddressResponse.AddressInfo addressInfo = (CartOrderAddressResponse.AddressInfo) data.getSerializableExtra(CartOrderAddressFragment.KEY_SELECTED_ADDRESS);
+                queryAddress(addressInfo.getAddressId(),false);
+            }
         }
     }
+
+    private void queryAddress(int addressId, final boolean isBack){
+        HashMap<String,String> requestParams=new HashMap<>();
+        requestParams.put("addressid",String.valueOf(addressId));
+        startRequest(ApiConstants.GET_MYADDRESS_INFO, requestParams, new HttpRequestHandler() {
+            @Override
+            public void onRequestFinished(ResultCode resultCode, String result) {
+                switch (resultCode) {
+                    case success:
+                        AddressInfoResponseBean response = ToolsHelper.parseJson(result, AddressInfoResponseBean.class);
+                        if (response != null && response.getMsg()!=null&& response.getMsg().getAddressId() !=0) {
+                            mWritImmed.setText(response.getMsg().getReceiverPerson());
+                            mPhoneImmed.setText(response.getMsg().getReceiverPhone());
+                            mAddressImmed.setText(response.getMsg().getRegionIdPath()+" "+response.getMsg().getAddress());
+                            mAddressId = response.getMsg().getAddressId();
+                        }else {
+                            if(isBack) {
+                                //找不到数据，重新请求
+                                requestData();
+                            }
+                        }
+                        break;
+                    case canceled:
+                        break;
+                    default:
+                        ToastUtils.toast(result);
+                        break;
+                }
+            }
+        }, HttpRequestUtils.RequestType.POST);
+    }
+
 
 }
