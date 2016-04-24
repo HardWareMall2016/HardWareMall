@@ -112,7 +112,7 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
     @Override
     public void onResume() {
         super.onResume();
-        requestData();
+        //requestData();
     }
 
     @Override
@@ -208,12 +208,6 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
             }
             notifyDataSetChanged();
         }else{
-            SharedPreferences mySharedPreferences= getActivity().getSharedPreferences("test",
-                    Activity.MODE_PRIVATE);
-            SharedPreferences.Editor editor = mySharedPreferences.edit();
-            editor.putString("flag", "2");
-            editor.commit();
-
             Intent intent=new Intent();
             intent.putExtra(KEY_SELECTED_ADDRESS,getAdapterItems().get(selPos));
             getActivity().setResult(Activity.RESULT_OK,intent);

@@ -297,17 +297,18 @@ public class AddNewAddressFragment extends ABaseFragment  {
                     ToastUtils.toast("提交成功!");
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
-
-                    SharedPreferences mySharedPreferences= getActivity().getSharedPreferences("test",
-                            Activity.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = mySharedPreferences.edit();
-                    editor.putString("flag", "1");
-                    editor.commit();
                 }else{
                     ToastUtils.toast("提交失败!");
                 }
             }
         }, HttpRequestUtils.RequestType.POST);
+    }
+
+    @Override
+    public boolean onBackClick() {
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
+        return true;
     }
 
     private View.OnClickListener mOnCancelClickListener=new View.OnClickListener(){
