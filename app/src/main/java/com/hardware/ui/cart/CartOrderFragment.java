@@ -387,18 +387,7 @@ public class CartOrderFragment extends ABaseFragment {
             }
         }
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        SharedPreferences sharedPreferences= getActivity().getSharedPreferences("test",
-                Activity.MODE_PRIVATE);
-        String name =sharedPreferences.getString("flag", "");
-        if (!TextUtils.isEmpty(name)&&name.equals("1")) {
-            requestData();
-        }
-    }
-
+    
     private void queryAddress(int addressId, final boolean isBack) {
         HashMap<String, String> requestParams = new HashMap<>();
         requestParams.put("addressid", String.valueOf(addressId));
