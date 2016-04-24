@@ -2,6 +2,7 @@ package com.hardware.ui.cart;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -45,29 +46,29 @@ import java.util.HashMap;
  * Created by Administrator on 16/4/16.
  */
 public class CartOrderFragment extends ABaseFragment {
-    private final static int REQUEST_CODE_SELECTED_ADDR=102;
+    private final static int REQUEST_CODE_SELECTED_ADDR = 102;
     private final static String ARG_KEY = "arg_key";
 
     @ViewInject(id = R.id.cartorder_listview)
     ExpandableListView mExpandableListView;
 
-    private TextView mTvCartOrderWrites ;
+    private TextView mTvCartOrderWrites;
     private TextView mTvPhone;
     private TextView mTvAddress;
-    private TextView mSummoney ;
+    private TextView mSummoney;
     private TextView mProductAllMoney;
     private TextView mProductCount;
-    private TextView mExpress ;
-    private LinearLayout mCartOrderAddress ;
-    private RelativeLayout mCommit ;
+    private TextView mExpress;
+    private LinearLayout mCartOrderAddress;
+    private RelativeLayout mCommit;
 
     private String mSelectedSkuIds;
     private DisplayImageOptions options;
     private ExpandableAdapter mAdapter;
     private CartOrderResponse mResponseBean;
 
-    private int mAddressId ;
-    private String cardIds="";
+    private int mAddressId;
+    private String cardIds = "";
 
 
     public static void launch(FragmentActivity activity, String selectedSkuIds) {
@@ -131,36 +132,36 @@ public class CartOrderFragment extends ABaseFragment {
         mCommit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mResponseBean.getAddress() == null){
+                if (mResponseBean.getAddress().getAddress() == null) {
                     ToastUtils.toast("请添加地址");
-                }else{
-                    for(CartOrderResponse.MessageBean messageBean:mResponseBean.getMessage()){
-                        for(CartOrderResponse.MessageBean.CartItemModelsBean card:messageBean.getCartItemModels()){
-                            if(TextUtils.isEmpty(cardIds)){
-                                cardIds=String.valueOf(card.getCarId());
-                            }else{
-                                cardIds+=","+card.getCarId();
+                } else {
+                    for (CartOrderResponse.MessageBean messageBean : mResponseBean.getMessage()) {
+                        for (CartOrderResponse.MessageBean.CartItemModelsBean card : messageBean.getCartItemModels()) {
+                            if (TextUtils.isEmpty(cardIds)) {
+                                cardIds = String.valueOf(card.getCarId());
+                            } else {
+                                cardIds += "," + card.getCarId();
                             }
                         }
                     }
-                    final HashMap<String,String> requestParams=new HashMap<>();
-                    requestParams.put("Token",App.sToken);
-                    requestParams.put("cartItemIds",cardIds);
-                    requestParams.put("recieveAddressId",String.valueOf(mAddressId));
+                    final HashMap<String, String> requestParams = new HashMap<>();
+                    requestParams.put("Token", App.sToken);
+                    requestParams.put("cartItemIds", cardIds);
+                    requestParams.put("recieveAddressId", String.valueOf(mAddressId));
                     startRequest(ApiConstants.ADD_BY_ORDER, requestParams, new HttpRequestHandler() {
                         @Override
                         public void onRequestFinished(ResultCode resultCode, String result) {
                             switch (resultCode) {
                                 case success:
                                     AddByOrderRespon response = ToolsHelper.parseJson(result, AddByOrderRespon.class);
-                                    if(response != null && response.getFlag() == 1){
+                                    if (response != null && response.getFlag() == 1) {
                                         ToastUtils.toast("提交订单成功");
                                         /*Long orderId = null;
                                         for(AddByOrderRespon.OrderPayEntity orderPayEntity :response.getOrderPay()){
                                             Log.e("----------",orderPayEntity.getOrderId()+"");
                                             orderId = orderPayEntity.getOrderId() ;
                                         }*/
-                                        CartPayFragment.lauch(getActivity(),response.getAmount());
+                                        CartPayFragment.lauch(getActivity(), response.getAmount());
                                     }
                                     break;
                                 case canceled:
@@ -182,30 +183,37 @@ public class CartOrderFragment extends ABaseFragment {
         public int getGroupCount() {
             return mResponseBean == null ? 0 : mResponseBean.getMessage().size();
         }
+
         @Override
         public int getChildrenCount(int groupPosition) {
             return mResponseBean == null ? 0 : mResponseBean.getMessage().get(groupPosition).getCartItemModels().size();
         }
+
         @Override
         public Object getGroup(int groupPosition) {
             return mResponseBean.getMessage().get(groupPosition);
         }
+
         @Override
         public Object getChild(int groupPosition, int childPosition) {
             return mResponseBean.getMessage().get(groupPosition).getCartItemModels().get(childPosition);
         }
+
         @Override
         public long getGroupId(int groupPosition) {
             return groupPosition;
         }
+
         @Override
         public long getChildId(int groupPosition, int childPosition) {
             return childPosition;
         }
+
         @Override
         public boolean hasStableIds() {
             return false;
         }
+
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             MessageViewHodler viewHodler;
@@ -266,11 +274,11 @@ public class CartOrderFragment extends ABaseFragment {
             });
 
             //最后一项显示留言
-            if(isLastChild){
+            if (isLastChild) {
                 viewHolder.list_item_liuyan.setVisibility(View.VISIBLE);
                 viewHolder.listOrderNumber.setText(mResponseBean.getMessage().get(groupPosition).getNumber() + "");
                 viewHolder.listOrderAllMoney.setText("小计：¥ " + mResponseBean.getMessage().get(groupPosition).getCarMoney() + "");
-            }else{
+            } else {
                 viewHolder.list_item_liuyan.setVisibility(View.GONE);
             }
             return convertView;
@@ -284,7 +292,7 @@ public class CartOrderFragment extends ABaseFragment {
 
     @Override
     public void requestData() {
-        HashMap<String,String> requestParams=new HashMap<>();
+        HashMap<String, String> requestParams = new HashMap<>();
         requestParams.put("Token", App.sToken);
         requestParams.put("skuId", mSelectedSkuIds);
         startRequest(ApiConstants.CAR_BYORDER, requestParams, new BaseHttpRequestTask<CartOrderResponse>() {
@@ -303,10 +311,16 @@ public class CartOrderFragment extends ABaseFragment {
                     mAdapter.notifyDataSetChanged();
 
                     mAddressId = response.getAddress().getId();
+                    if(response.getAddress().getShipTo() !=  null){
+                        mTvCartOrderWrites.setText(response.getAddress().getShipTo() + "");
+                    }
+                    if(response.getAddress().getPhone() != null){
+                        mTvPhone.setText(response.getAddress().getPhone() + "");
+                    }
 
-                    mTvCartOrderWrites.setText(response.getAddress().getShipTo()+"");
-                    mTvPhone.setText(response.getAddress().getPhone()+"");
-                    mTvAddress.setText(response.getAddress().getFullRegionName() + mResponseBean.getAddress().getAddress()+"");
+                    if(response.getAddress().getFullRegionName() != null){
+                        mTvAddress.setText(response.getAddress().getFullRegionName() + mResponseBean.getAddress().getAddress() + "");
+                    }
                     mCartOrderAddress.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -320,13 +334,13 @@ public class CartOrderFragment extends ABaseFragment {
                     mProductCount.setText(response.getSumnumber() + "件含运费");
 
                     int express = 0;
-                    for(CartOrderResponse.MessageBean cartOrderResponse : mResponseBean.getMessage()){
+                    for (CartOrderResponse.MessageBean cartOrderResponse : mResponseBean.getMessage()) {
                         express += cartOrderResponse.getExpress();
-                        mExpress.setText("运费总计：¥" +express+"");
+                        mExpress.setText("运费总计：¥" + express + "");
                     }
 
                     //默认展开
-                    for (int i=0;i<mResponseBean.getMessage().size();i++){
+                    for (int i = 0; i < mResponseBean.getMessage().size(); i++) {
                         mExpandableListView.expandGroup(i);
                     }
                 }
@@ -339,33 +353,44 @@ public class CartOrderFragment extends ABaseFragment {
 
         if (requestCode == REQUEST_CODE_SELECTED_ADDR && resultCode == Activity.RESULT_OK) {
             //通过返回键返回
-            if(data.getBooleanExtra(CartOrderAddressFragment.KEY_IS_BACK_FINISH,false)){
+            if (data.getBooleanExtra(CartOrderAddressFragment.KEY_IS_BACK_FINISH, false)) {
                 //重新请求
-                queryAddress(mAddressId,true);
-            }else{
+                queryAddress(mAddressId, true);
+            } else {
                 //选地址返回
                 CartOrderAddressResponse.AddressInfo addressInfo = (CartOrderAddressResponse.AddressInfo) data.getSerializableExtra(CartOrderAddressFragment.KEY_SELECTED_ADDRESS);
-                queryAddress(addressInfo.getAddressId(),false);
+                queryAddress(addressInfo.getAddressId(), false);
             }
         }
     }
 
-    private void queryAddress(int addressId, final boolean isBack){
-        HashMap<String,String> requestParams=new HashMap<>();
-        requestParams.put("addressid",String.valueOf(addressId));
-        startRequest(Constants.BASE_URL_2,ApiConstants.GET_MYADDRESS_INFO, requestParams, new HttpRequestHandler() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences= getActivity().getSharedPreferences("test",
+                Activity.MODE_PRIVATE);
+        String name =sharedPreferences.getString("flag", "");
+        if (!TextUtils.isEmpty(name)&&name.equals("1")) {
+            requestData();
+        }
+    }
+
+    private void queryAddress(int addressId, final boolean isBack) {
+        HashMap<String, String> requestParams = new HashMap<>();
+        requestParams.put("addressid", String.valueOf(addressId));
+        startRequest(Constants.BASE_URL_2, ApiConstants.GET_MYADDRESS_INFO, requestParams, new HttpRequestHandler() {
             @Override
             public void onRequestFinished(ResultCode resultCode, String result) {
                 switch (resultCode) {
                     case success:
                         AddressInfoResponseBean response = ToolsHelper.parseJson(result, AddressInfoResponseBean.class);
-                        if (response != null && response.getMsg()!=null&& response.getMsg().getAddressId() !=0) {
+                        if (response != null && response.getMsg() != null && response.getMsg().getAddressId() != 0) {
                             mTvCartOrderWrites.setText(response.getMsg().getReceiverPerson());
                             mTvPhone.setText(response.getMsg().getReceiverPhone());
-                            mTvAddress.setText(response.getMsg().getRegionIdPath()+" "+response.getMsg().getAddress());
+                            mTvAddress.setText(response.getMsg().getRegionIdPath() + " " + response.getMsg().getAddress());
                             mAddressId = response.getMsg().getAddressId();
-                        }else {
-                            if(isBack) {
+                        } else {
+                            if (isBack) {
                                 //找不到数据，重新请求
                                 requestData();
                             }

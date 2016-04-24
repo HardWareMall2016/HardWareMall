@@ -2,6 +2,7 @@ package com.hardware.ui.cart;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -108,6 +109,12 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        requestData();
+    }
+
+    @Override
     protected void requestData(RefreshMode mode) {
         HashMap<String,String> requestParams=new HashMap<>();
         requestParams.put("token", App.sToken);
@@ -195,6 +202,12 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
             }
             notifyDataSetChanged();
         }else{
+            SharedPreferences mySharedPreferences= getActivity().getSharedPreferences("test",
+                    Activity.MODE_PRIVATE);
+            SharedPreferences.Editor editor = mySharedPreferences.edit();
+            editor.putString("flag", "2");
+            editor.commit();
+
             Intent intent=new Intent();
             intent.putExtra(KEY_SELECTED_ADDRESS,getAdapterItems().get(selPos));
             getActivity().setResult(Activity.RESULT_OK,intent);

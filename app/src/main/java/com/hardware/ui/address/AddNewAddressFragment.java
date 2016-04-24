@@ -1,6 +1,7 @@
 package com.hardware.ui.address;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -296,6 +297,12 @@ public class AddNewAddressFragment extends ABaseFragment  {
                     ToastUtils.toast("提交成功!");
                     getActivity().setResult(Activity.RESULT_OK);
                     getActivity().finish();
+
+                    SharedPreferences mySharedPreferences= getActivity().getSharedPreferences("test",
+                            Activity.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = mySharedPreferences.edit();
+                    editor.putString("flag", "1");
+                    editor.commit();
                 }else{
                     ToastUtils.toast("提交失败!");
                 }
