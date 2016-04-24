@@ -30,7 +30,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/products_detail_item_productname"
         android:gravity="center"
-        android:text="8729.0元"
         android:textColor="#ff7300"
         android:textSize="12sp"
         android:layout_marginTop="4dp" />

@@ -206,9 +206,6 @@ public class ProductDetailFragment extends ABaseFragment {
     }
 
 
-
-
-
     @Override
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
@@ -232,7 +229,6 @@ public class ProductDetailFragment extends ABaseFragment {
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
                 QueryMore = false;
                 showRequestData();
-
             }
 
             @Override
@@ -431,8 +427,7 @@ public class ProductDetailFragment extends ABaseFragment {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            Log.e("------->>>>",mProducts.get(position).getName());
-            viewHolder.productName.setText("￥" + mProducts.get(position).getMarketPrice() + "");
+            viewHolder.productPrice.setText("￥" + mProducts.get(position).getMarketPrice() + "");
             viewHolder.productName.setText(mProducts.get(position).getName());
             String imgUrl = ApiConstants.IMG_BASE_URL + mProducts.get(position).getImgUrl();
             ImageLoader.getInstance().displayImage(imgUrl, viewHolder.imageView, options);
