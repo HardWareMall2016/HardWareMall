@@ -43,6 +43,7 @@ public class ScrollViewContainer extends RelativeLayout {
     private MyTimer mTimer;
     private float mLastY;
     private int mEvents;
+    private boolean mInterceptTouchEvent=false;
 
     private Handler handler = new Handler() {
 
@@ -93,6 +94,9 @@ public class ScrollViewContainer extends RelativeLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        if(mInterceptTouchEvent){
+            return super.dispatchTouchEvent(ev);
+        }
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 if (vt == null)
@@ -214,6 +218,9 @@ public class ScrollViewContainer extends RelativeLayout {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            if(mInterceptTouchEvent){
+                return false;
+            }
             ScrollView sv = (ScrollView) v;
             if (sv.getScrollY() == 0 && mCurrentViewIndex == 1)
                 canPullDown = true;
@@ -262,6 +269,10 @@ public class ScrollViewContainer extends RelativeLayout {
             }
 
         }
+    }
+
+    public  void setInterceptTouchEvent(boolean intercept){
+        mInterceptTouchEvent=intercept;
     }
 
 }
