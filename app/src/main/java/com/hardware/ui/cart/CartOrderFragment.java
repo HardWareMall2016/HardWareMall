@@ -323,15 +323,21 @@ public class CartOrderFragment extends ABaseFragment {
                     mAdapter.notifyDataSetChanged();
 
                     mAddressId = response.getAddress().getId();
-                    if(response.getAddress().getShipTo() !=  null){
-                        mTvCartOrderWrites.setText(response.getAddress().getShipTo() + "");
+                    if(TextUtils.isEmpty(response.getAddress().getShipTo())){
+                        mTvCartOrderWrites.setText("");
+                    }else{
+                        mTvCartOrderWrites.setText(response.getAddress().getShipTo());
                     }
-                    if(response.getAddress().getPhone() != null){
-                        mTvPhone.setText(response.getAddress().getPhone() + "");
+                    if(TextUtils.isEmpty(response.getAddress().getPhone())){
+                        mTvPhone.setText("");
+                    }else{
+                        mTvPhone.setText(response.getAddress().getPhone() );
                     }
 
-                    if(response.getAddress().getFullRegionName() != null){
-                        mTvAddress.setText(response.getAddress().getFullRegionName() + mResponseBean.getAddress().getAddress() + "");
+                    if(TextUtils.isEmpty(response.getAddress().getFullRegionName())){
+                        mTvAddress.setText("");
+                    }else{
+                        mTvAddress.setText(response.getAddress().getFullRegionName() + mResponseBean.getAddress().getAddress());
                     }
                     mCartOrderAddress.setOnClickListener(new View.OnClickListener() {
                         @Override

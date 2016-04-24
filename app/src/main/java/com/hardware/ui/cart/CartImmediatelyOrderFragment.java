@@ -261,9 +261,21 @@ public class CartImmediatelyOrderFragment extends ABaseFragment {
                     case success:
                         AddressInfoResponseBean response = ToolsHelper.parseJson(result, AddressInfoResponseBean.class);
                         if (response != null && response.getMsg()!=null&& response.getMsg().getAddressId() !=0) {
-                            mWritImmed.setText(response.getMsg().getReceiverPerson());
-                            mPhoneImmed.setText(response.getMsg().getReceiverPhone());
-                            mAddressImmed.setText(response.getMsg().getRegionIdPath()+" "+response.getMsg().getAddress());
+                            if(TextUtils.isEmpty(response.getMsg().getReceiverPerson())){
+                                mWritImmed.setText("");
+                            }else{
+                                mWritImmed.setText(response.getMsg().getReceiverPerson());
+                            }
+                            if(TextUtils.isEmpty(response.getMsg().getReceiverPhone())){
+                                mPhoneImmed.setText("");
+                            }else{
+                                mPhoneImmed.setText(response.getMsg().getReceiverPhone());
+                            }
+                            if(TextUtils.isEmpty(response.getMsg().getAddress())){
+                                mAddressImmed.setText("");
+                            }else{
+                                mAddressImmed.setText(response.getMsg().getRegionIdPath()+" "+response.getMsg().getAddress());
+                            }
                             mAddressId = response.getMsg().getAddressId();
                         }else {
                             if(isBack) {
