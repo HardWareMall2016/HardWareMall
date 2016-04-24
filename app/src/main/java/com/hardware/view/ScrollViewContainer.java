@@ -221,11 +221,12 @@ public class ScrollViewContainer extends RelativeLayout {
             if(mInterceptTouchEvent){
                 return false;
             }
-            ScrollView sv = (ScrollView) v;
+            canPullDown = true;
+            /*ScrollView sv = (ScrollView) v;
             if (sv.getScrollY() == 0 && mCurrentViewIndex == 1)
                 canPullDown = true;
             else
-                canPullDown = false;
+                canPullDown = false;*/
             return false;
         }
     };

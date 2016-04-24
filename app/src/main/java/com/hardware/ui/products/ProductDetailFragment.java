@@ -45,6 +45,7 @@ import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.view.ActionSheetDialog;
 import com.hardware.view.MyGridView;
 import com.hardware.view.RatingBar;
+import com.hardware.view.ScrollViewContainer;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -139,6 +140,8 @@ public class ProductDetailFragment extends ABaseFragment {
     @ViewInject(id = R.id.detail_recommend_gridview)
     PullToRefreshGridView mPullRefreshGridView;
 
+    @ViewInject(id = R.id.scroll_view_container)
+    ScrollViewContainer mScrollViewContainer;
 
     private final static int PAGE_SIZE=10;
    // private GridViewWithHeaderAndFooter mGridView;
@@ -494,6 +497,7 @@ public class ProductDetailFragment extends ABaseFragment {
 
 
     void OnClick(View view) {
+        mScrollViewContainer.setInterceptTouchEvent(false);
         switch (view.getId()) {
             case R.id.detail_picture:
                 mDetailPicture.setBackgroundResource(R.drawable.bg_dark_blue_underline);
@@ -525,6 +529,7 @@ public class ProductDetailFragment extends ABaseFragment {
 
                 break;
             case R.id.detail_recommend:
+                mScrollViewContainer.setInterceptTouchEvent(true);
                 //int height=getRootView().getHeight();
                 //mPullRefreshGridView.setMinimumHeight((height- PixelUtils.dp2px(48)));
                 mPullRefreshGridView.setMinimumHeight(2800);
