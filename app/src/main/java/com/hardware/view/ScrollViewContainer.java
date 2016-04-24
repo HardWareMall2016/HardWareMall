@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -274,6 +275,10 @@ public class ScrollViewContainer extends RelativeLayout {
 
     public  void setInterceptTouchEvent(boolean intercept){
         mInterceptTouchEvent=intercept;
+    }
+
+    public void setCanPullDown(boolean canPullDown){
+        this.canPullDown=canPullDown;
     }
 
 }
