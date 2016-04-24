@@ -34,6 +34,7 @@ import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ARefreshFragment;
 import com.zhan.framework.utils.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -122,7 +123,12 @@ public class CartOrderAddressFragment extends APullToRefreshListFragment<CartOrd
         startRequest(Constants.BASE_URL_2, ApiConstants.GET_MYADDRESS, requestParams, new PagingTask<CartOrderAddressResponse>(mode) {
             @Override
             public CartOrderAddressResponse parseResponseToResult(String content) {
-                return ToolsHelper.parseJson(content, CartOrderAddressResponse.class);
+                CartOrderAddressResponse bean=ToolsHelper.parseJson(content, CartOrderAddressResponse.class);
+                if(bean==null){
+                    bean=new CartOrderAddressResponse();
+                    bean.setMsg(new ArrayList<CartOrderAddressResponse.AddressInfo>());
+                }
+                return bean;
             }
 
             @Override
